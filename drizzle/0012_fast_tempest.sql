@@ -1,0 +1,1 @@
+ALTER TABLE "table_records" ALTER COLUMN "data" SET NOT NULL;
