@@ -1,7 +1,7 @@
 import { ErrorBoundary } from "react-error-boundary"
 
 import { AllUserTables } from "@/widgets/dashboard/tables"
-import { TableFilters } from "@/widgets/table"
+// import { TableFilters } from "@/widgets/table"
 import { FallbackComponentErrorCard } from "@/entities/cards/error"
 import { AddNewTableCard } from "@/entities/cards/table"
 import {
@@ -24,7 +24,7 @@ const TablesPage = async () => {
             Управляйте своими таблицами
           </PageHeaderDescription>
         </PageHeader>
-        <TableFilters />
+        {/* <TableFilters /> */}
         <section
           id="dashboard-invoice-tables-page-invoice-tables"
           aria-labelledby="dashboard-invoice-tables-page-invoice-tables-heading"

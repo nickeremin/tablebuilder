@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation"
 
-import { EmailAlert } from "@/entities/account"
 import {
   Card,
   CardContent,
@@ -36,9 +35,7 @@ const AccountPage = async () => {
             <CardDescription>{session.user.email}</CardDescription>
           </div> */}
         </CardHeader>
-        <CardContent>
-          <EmailAlert isEmailVerified={true} />
-        </CardContent>
+        <CardContent>{/* <EmailAlert isEmailVerified={true} /> */}</CardContent>
       </Card>
     </Shell>
   )

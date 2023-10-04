@@ -4,8 +4,9 @@ import { currentUser } from "@clerk/nextjs"
 import { and, eq } from "drizzle-orm"
 import { ErrorBoundary } from "react-error-boundary"
 
-import { TableHeading, TableWithRecords } from "@/widgets/table"
-import { Shell } from "@/shared/components/shells"
+import { RecordsTableShell } from "@/widgets/dashboard/tables"
+import TableHeading from "@/widgets/layout/headings/table-heading"
+import { Shell } from "@/shared/components/ui/shell"
 import { db } from "@/shared/db"
 import { tables } from "@/shared/db/schema"
 import Loading from "@/app/(dashboard)/dashboard/tables/[tableId]/loading"
@@ -34,7 +35,7 @@ const TablePage = async ({ params }: TablePageProps) => {
       <Suspense fallback={<Loading />}>
         <Shell variant="sidebar">
           <TableHeading tableId={tableId} />
-          <TableWithRecords tableId={tableId} />
+          {/* <RecordsTableShell tableId={tableId} /> */}
         </Shell>
       </Suspense>
     </ErrorBoundary>

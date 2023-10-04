@@ -1,11 +1,11 @@
 import React from "react"
 
-import { Shell } from "@/shared/components/shells"
 import {
   PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/shared/components/ui/page-header"
+import { Shell } from "@/shared/components/ui/shell"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 
 const TableLoading = () => {

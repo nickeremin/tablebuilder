@@ -30,7 +30,7 @@ export const tables = pgTable("tables", {
   id: text("id").notNull().primaryKey(),
   userId: text("user_id").notNull(),
   name: text("name").notNull(),
-  columns: json("columns").$type<TableColumnDef[] | null>().default(null),
+  columns: json("columns").$type<TableColumnDef[]>().notNull(),
   description: text("description"),
   createdAt: timestamp("created_at").defaultNow(),
 })

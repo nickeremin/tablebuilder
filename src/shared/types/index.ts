@@ -41,6 +41,11 @@ export interface Option {
   icon?: React.ComponentType<{ className?: string }>
 }
 
+export interface DataTableSearchableColumn<TData> {
+  id: string
+  title: string
+}
+
 export type Prettify<T> = {
   [K in keyof T]: T[K]
 } & {}

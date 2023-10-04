@@ -1,5 +1,5 @@
 import { ErrorCard } from "@/entities/cards/error"
-import { Shell } from "@/shared/components/shells"
+import { Shell } from "@/shared/components/ui/shell"
 
 const TableNotFound = () => {
   return (

@@ -28,7 +28,7 @@ import {
 } from "@/shared/components/ui/popover"
 import { catchError, cn } from "@/shared/lib/utils"
 import { tableRecordSchema } from "@/shared/lib/validations/table-record"
-import { addRecord } from "@/app/_actions/record"
+import { addRecord } from "@/app/_actions/table-record"
 import { trpc } from "@/app/_trpc/client"
 
 type Inputs = z.infer<typeof tableRecordSchema>

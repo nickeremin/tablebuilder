@@ -1,7 +1,9 @@
 import { useCallback } from "react"
 import { ReadonlyURLSearchParams } from "next/navigation"
 
-export const useCreateQueryString = (searchParams: ReadonlyURLSearchParams) => {
+export const useCreateQueryString = (
+  searchParams: ReadonlyURLSearchParams | null
+) => {
   return useCallback(
     (params: Record<string, string | number | null>) => {
       const newSearchParams = new URLSearchParams(searchParams?.toString())

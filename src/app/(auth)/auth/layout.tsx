@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-import { ThemeToggler } from "@/features/tools"
+import { ThemeToggler } from "@/shared/components/theme-toggler"
 
 interface AuthLayoutProps {
   children: React.ReactNode
