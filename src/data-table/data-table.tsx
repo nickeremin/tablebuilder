@@ -133,6 +133,7 @@ const DataTable = <TData, TValue>({
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    manualSorting: true,
   })
 
   return (
