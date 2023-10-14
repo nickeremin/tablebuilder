@@ -3,6 +3,7 @@ import Link from "next/link"
 
 import { SignInForm } from "@/features/forms/auth"
 import { env } from "@/shared/components/env.mjs"
+import { Shell } from "@/shared/components/shells/shell"
 import {
   Card,
   CardContent,
@@ -11,7 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/components/ui/card"
-import { Shell } from "@/shared/components/ui/shell"
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),

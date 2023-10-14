@@ -1,7 +1,9 @@
 "use client"
 
+import { error } from "console"
 import { useMemo, useState, useTransition } from "react"
 import Link from "next/link"
+import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation"
 import { DataTable } from "@/data-table"
 import DataTableColumnCell from "@/data-table/data-table-column-cell"
 import DataTableColumnHeader from "@/data-table/data-table-column-header"
@@ -25,26 +27,38 @@ import {
 import { catchError } from "@/shared/lib/utils"
 import {
   DataTableSearchableColumn,
+  TableColumn,
   TableColumnData,
-  TableColumnDef,
   TableRecord,
 } from "@/shared/types"
 import { deleteRecord } from "@/app/_actions/table-record"
 import { trpc } from "@/app/_trpc/client"
 
-interface RecordsTableShellProps {
-  data: TableRecord[]
-  columnValues: TableColumnDef[]
-  pageCount: number
+interface UserRecordsTableProps {
   tableId: string
 }
 
-const RecordsTableShell = ({
-  data,
-  columnValues,
-  pageCount,
-  tableId,
-}: RecordsTableShellProps) => {
+const UserRecordsTable = ({ tableId }: UserRecordsTableProps) => {
+  const { data: table } = trpc.table.getUserTableById.useQuery(
+    {
+      tableId,
+    },
+    {
+      suspense: true,
+    }
+  )
+
+  if (!table) return null
+
+  const searchParams = useSearchParams() as ReadonlyURLSearchParams
+
+  const per_page = searchParams.get("per_page")
+
+  // Number of items per page
+  const limit = typeof per_page === "string" ? parseInt(per_page) : 10
+
+  const pageCount = Math.ceil(table.tableRecords.length / limit)
+
   const [isPending, startTransition] = useTransition()
   const [selectedRowIds, setSelectedRowIds] = useState<string[]>([])
 
@@ -52,15 +66,17 @@ const RecordsTableShell = ({
     () => [
       {
         id: "select",
-        header: ({ table }) => (
+        header: ({ table: t }) => (
           <Checkbox
             aria-label="Выбрать все"
             className="translate-y-[2px]"
-            checked={table.getIsAllRowsSelected()}
+            checked={t.getIsAllRowsSelected()}
             onCheckedChange={(value) => {
-              table.toggleAllPageRowsSelected(!!value)
+              t.toggleAllPageRowsSelected(!!value)
               setSelectedRowIds((prev) =>
-                prev.length === data.length ? [] : data.map((row) => row.id)
+                prev.length === table.tableRecords.length
+                  ? []
+                  : table.tableRecords.map((row) => row.id)
               )
             }}
           />
@@ -83,7 +99,7 @@ const RecordsTableShell = ({
         enableSorting: false,
         enableHiding: false,
       },
-      ...columnValues.map(
+      ...table.columns.map(
         (tableColumn, index) =>
           ({
             id: tableColumn.name,
@@ -154,15 +170,30 @@ const RecordsTableShell = ({
         ),
       },
     ],
-    [data, isPending, tableId]
+    [isPending, tableId, table.tableRecords]
   )
 
-  function deleteSelectedRows() {}
+  function deleteSelectedRows() {
+    toast.promise(
+      Promise.all(selectedRowIds.map((id) => deleteRecord({ id, tableId }))),
+      {
+        loading: "Удаление...",
+        success: () => {
+          setSelectedRowIds([])
+          return "Записи успешно удалены."
+        },
+        error: (error: unknown) => {
+          setSelectedRowIds([])
+          return catchError(error)
+        },
+      }
+    )
+  }
 
   return (
     <DataTable
       columns={columns}
-      data={data}
+      data={table.tableRecords}
       pageCount={pageCount}
       // searchableColumns={table.columns
       //   .filter((column) => column.type === "text")
@@ -176,4 +207,4 @@ const RecordsTableShell = ({
   )
 }
 
-export default RecordsTableShell
+export default UserRecordsTable

@@ -9,19 +9,15 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-  type ColumnFiltersState,
   type PaginationState,
   type SortingState,
   type VisibilityState,
 } from "@tanstack/react-table"
 
-import { useCreateQueryString, useDebounce } from "@/shared/lib/hooks"
+import { useCreateQueryString } from "@/shared/lib/hooks"
 import { type DataTableSearchableColumn } from "@/shared/types"
 
 import {
@@ -32,6 +28,7 @@ import {
   TableHeader,
   TableRow,
 } from "../shared/components/ui/table"
+import { DataTablePagination } from "./data-table-pagination"
 import DataTableToolbar from "./data-table-toolbar"
 
 interface DataTableProps<TData, TValue> {
@@ -58,8 +55,6 @@ const DataTable = <TData, TValue>({
   // Search params
   const page = searchParams?.get("page") ?? "1"
   const per_page = searchParams?.get("per_page") ?? "10"
-  const sort = searchParams?.get("sort")
-  const [column, order] = sort?.split(".") ?? []
 
   // Create query string
   const createQueryString = useCreateQueryString(searchParams)
@@ -67,73 +62,59 @@ const DataTable = <TData, TValue>({
   // Table states
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = useState<SortingState>([])
 
-  // Handle server-side pagination
-  // const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
-  //   pageIndex: Number(page) - 1,
-  //   pageSize: Number(per_page),
-  // })
+  // Handle pagination
+  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
+    pageIndex: Number(page) - 1,
+    pageSize: Number(per_page),
+  })
 
-  // const pagination = useMemo(
-  //   () => ({
-  //     pageIndex,
-  //     pageSize,
-  //   }),
-  //   [pageIndex, pageSize]
-  // )
+  const pagination = useMemo(
+    () => ({
+      pageIndex,
+      pageSize,
+    }),
+    [pageIndex, pageSize]
+  )
 
-  // useEffect(() => {
-  //   setPagination({
-  //     pageIndex: Number(page) - 1,
-  //     pageSize: Number(per_page),
-  //   })
-  // }, [page, per_page])
-
-  // useEffect(() => {
-  //   router.push(
-  //     `${pathname}?${createQueryString({
-  //       page: pageIndex + 1,
-  //       per_page: pageSize,
-  //     })}`,
-  //     {
-  //       scroll: false,
-  //     }
-  //   )
-  // }, [pageIndex, pageSize])
-
-  // Handle server-side sorting
-  const [sorting, setSorting] = useState<SortingState>([
-    {
-      id: column ?? "",
-      desc: order === "desc",
-    },
-  ])
+  useEffect(() => {
+    setPagination({
+      pageIndex: Number(page) - 1,
+      pageSize: Number(per_page),
+    })
+  }, [page, per_page])
 
   useEffect(() => {
     router.push(
       `${pathname}?${createQueryString({
-        page,
-        sort: sorting[0]?.id
-          ? `${sorting[0]?.id}.${sorting[0]?.desc ? "desc" : "asc"}`
-          : null,
+        page: pageIndex + 1,
+        per_page: pageSize,
       })}`,
       {
         scroll: false,
       }
     )
-  }, [sorting])
+  }, [pageIndex, pageSize])
 
   const table = useReactTable({
     data,
     columns,
+    pageCount: pageCount ?? -1,
     state: {
       sorting,
+      pagination,
+      rowSelection,
+      columnVisibility,
     },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
+    onColumnVisibilityChange: setColumnVisibility,
     onSortingChange: setSorting,
+    onPaginationChange: setPagination,
+    getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    manualSorting: true,
   })
 
   return (
@@ -194,6 +175,7 @@ const DataTable = <TData, TValue>({
           </TableBody>
         </Table>
       </div>
+      <DataTablePagination table={table} />
     </div>
   )
 }

@@ -23,8 +23,8 @@ export async function updateUser(user: UserJSON) {
     .set({
       emailAddress:
         user.email_addresses.find((e) => e.id === user.primary_email_address_id)
-          ?.email_address || "",
-      username: user.username,
+          ?.email_address ?? "",
+      username: user.username ?? "",
       imageUrl: user.image_url,
     })
     .where(eq(users.id, user.id))

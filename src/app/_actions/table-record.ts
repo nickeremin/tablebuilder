@@ -21,7 +21,7 @@ export async function addRecord(tableId: string, input: TableColumnData[]) {
   })
 }
 
-export async function deleteRecord(input: TableRecord) {
+export async function deleteRecord(input: { id: string; tableId: string }) {
   const tableRecord = await db.query.tableRecords.findFirst({
     where: and(
       eq(tableRecords.id, input.id),

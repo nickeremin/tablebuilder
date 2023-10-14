@@ -2,7 +2,7 @@
 
 import { FallbackProps } from "react-error-boundary"
 
-import { Shell } from "@/shared/components/ui/shell"
+import { Shell } from "@/shared/components/shells/shell"
 
 import { ErrorCard } from "."
 

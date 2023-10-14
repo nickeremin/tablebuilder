@@ -30,7 +30,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <html lang="en" suppressHydrationWarning className={notoSans.className}>
         <body suppressHydrationWarning>
           <TRPCQueryProvider>
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
               {children}
             </ThemeProvider>
             <ReactQueryDevtools initialIsOpen={false} />

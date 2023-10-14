@@ -1,5 +1,4 @@
-import SidebarNav from "./sidebar-nav"
-import SiteFooter from "./site-footer"
-import SiteHeader from "./site-header"
+import DashboardFooter from "./dashboard-footer"
+import DashboardNav from "./dashboard-nav"
 
-export { SiteHeader, SiteFooter, SidebarNav }
+export { DashboardFooter, DashboardNav }

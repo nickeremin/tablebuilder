@@ -1,4 +1,5 @@
 import { AddNewTableForm } from "@/features/forms/table"
+import { Shell } from "@/shared/components/shells/shell"
 import {
   Card,
   CardContent,
@@ -11,7 +12,6 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/shared/components/ui/page-header"
-import { Shell } from "@/shared/components/ui/shell"
 import Loading from "@/app/(dashboard)/dashboard/tables/new/loading"
 
 const AddNewTablePage = () => {

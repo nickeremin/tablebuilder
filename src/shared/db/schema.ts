@@ -1,21 +1,23 @@
 import { InferInsertModel, InferSelectModel, relations } from "drizzle-orm"
 import {
+  boolean,
   decimal,
   integer,
   json,
+  pgEnum,
   pgTable,
   text,
   timestamp,
 } from "drizzle-orm/pg-core"
 
-import { TableColumnData, TableColumnDef } from "../types"
+import { TableColumn, TableColumnData } from "../types"
 
 // Users
 export const users = pgTable("user", {
   id: text("id").notNull().primaryKey(),
-  emailAddress: text("email_address").notNull(),
-  username: text("username"),
   imageUrl: text("image_url"),
+  email: text("email").notNull(),
+  username: text("username").notNull(),
 })
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -30,8 +32,8 @@ export const tables = pgTable("tables", {
   id: text("id").notNull().primaryKey(),
   userId: text("user_id").notNull(),
   name: text("name").notNull(),
-  columns: json("columns").$type<TableColumnDef[]>().notNull(),
   description: text("description"),
+  columns: json("columns").$type<TableColumn[]>().notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 })
 
@@ -62,3 +64,22 @@ export const tableRecordsRelations = relations(tableRecords, ({ one }) => ({
     references: [tables.id],
   }),
 }))
+
+export const notificationPreferencesEnum = pgEnum(
+  "notification_preferences_type",
+  ["web", "email"]
+)
+
+export const notificationPreferences = pgTable("notification_prefernces", {
+  id: text("id").notNull().primaryKey(),
+  userId: text("user_id").notNull(),
+  type: notificationPreferencesEnum("type").notNull(),
+  tableFailures: boolean("table_failures").notNull().default(true),
+  newUpdates: boolean("new_updates").notNull().default(true),
+  subscriptionExpiration: boolean("subscription_expiration")
+    .notNull()
+    .default(true),
+  teamTableChanges: boolean("team_table_changes").notNull().default(true),
+  teamJoinRequests: boolean("team_join_requests").notNull().default(true),
+  warnings: boolean("warnings").notNull().default(true),
+})

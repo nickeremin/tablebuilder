@@ -37,4 +37,5 @@ export const Icons = {
   emailNotVerified: MailX,
   add: Plus,
   spinner: Loader2,
+  logo: Table2,
 }

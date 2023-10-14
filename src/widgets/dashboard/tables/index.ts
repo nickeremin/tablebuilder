@@ -1,4 +1,4 @@
 import AllUserTables from "./all-user-tables"
-import RecordsTableShell from "./records-table-shell"
+import UserRecordsTable from "./user-records-table"
 
-export { AllUserTables, RecordsTableShell }
+export { AllUserTables, UserRecordsTable }

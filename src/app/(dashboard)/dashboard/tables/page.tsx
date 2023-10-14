@@ -4,12 +4,12 @@ import { AllUserTables } from "@/widgets/dashboard/tables"
 // import { TableFilters } from "@/widgets/table"
 import { FallbackComponentErrorCard } from "@/entities/cards/error"
 import { AddNewTableCard } from "@/entities/cards/table"
+import { Shell } from "@/shared/components/shells/shell"
 import {
   PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/shared/components/ui/page-header"
-import { Shell } from "@/shared/components/ui/shell"
 
 const TablesPage = async () => {
   return (

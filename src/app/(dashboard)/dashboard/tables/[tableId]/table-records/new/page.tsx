@@ -3,6 +3,7 @@ import { currentUser } from "@clerk/nextjs"
 import { and, eq } from "drizzle-orm"
 
 import { AddNewTableRecordForm } from "@/features/forms/table-record"
+import { Shell } from "@/shared/components/shells/shell"
 import {
   Card,
   CardContent,
@@ -15,7 +16,6 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/shared/components/ui/page-header"
-import { Shell } from "@/shared/components/ui/shell"
 import { db } from "@/shared/db"
 import { tables } from "@/shared/db/schema"
 

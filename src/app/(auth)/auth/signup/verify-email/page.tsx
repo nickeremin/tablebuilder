@@ -2,7 +2,7 @@ import { Metadata } from "next"
 
 import { VerifyEmailForm } from "@/features/forms/auth"
 import { env } from "@/shared/components/env.mjs"
-import { Shell } from "@/shared/components/shells"
+import { Shell } from "@/shared/components/shells/shell"
 import {
   Card,
   CardContent,
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     "Подтвердите свой адрес электронной почты, чтобы продолжить регистрацию",
 }
 
-const VerifyEmailPage = () => {
+function VerifyEmailPage() {
   return (
     <Shell className="max-w-lg">
       <Card>

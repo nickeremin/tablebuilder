@@ -1,10 +1,10 @@
 import { TableCardsLoading } from "@/entities/skeletons"
+import { Shell } from "@/shared/components/shells/shell"
 import {
   PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/shared/components/ui/page-header"
-import { Shell } from "@/shared/components/ui/shell"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 
 const TablesLoading = () => {

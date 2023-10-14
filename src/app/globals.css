@@ -80,3 +80,8 @@
     @apply px-4;
   }
 }
+
+/* Utility styles */
+.max-width {
+  @apply max-w-7xl
+}

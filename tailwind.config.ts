@@ -78,6 +78,10 @@ module.exports = {
         // Complex table column configuration
         table: "36px minmax(144px, 1fr) 144px 36px",
       },
+      boxShadow: {
+        "nav-border": "inset 0 -1px hsl(var(--border))",
+        "card-border": "0 0 0 1px hsl(var(--border))",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

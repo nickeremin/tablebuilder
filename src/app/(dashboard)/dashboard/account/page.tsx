@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation"
 
+import { Shell } from "@/shared/components/shells/shell"
 import {
   Card,
   CardContent,
@@ -12,7 +13,6 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/shared/components/ui/page-header"
-import { Shell } from "@/shared/components/ui/shell"
 
 const AccountPage = async () => {
   return (

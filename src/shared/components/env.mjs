@@ -10,7 +10,7 @@ export const env = createEnv({
     NODE_ENV: z.enum(["development", "test", "production"]),
     DATABASE_CONNECTION_STRING: z.string(),
     CLERK_SECRET_KEY: z.string(),
-    CLERK_WEBHOOK_SECRET: z.string(),
+    CLERK_WEBHOOK_SECRET_SET_DEFAULT_NOTIFICATION_PREFERENCES: z.string(),
     UPLOADTHING_APP_ID: z.string(),
     UPLOADTHING_SECRET: z.string(),
   },
@@ -23,6 +23,7 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url(),
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
+    NEXT_PUBLIC_CLERK_FRONTEND_API: z.string(),
     NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
     NEXT_PUBLIC_SUPABASE_KEY: z.string(),
   },
@@ -38,9 +39,11 @@ export const env = createEnv({
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
+    NEXT_PUBLIC_CLERK_FRONTEND_API: process.env.NEXT_PUBLIC_CLERK_FRONTEND_API,
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_KEY: process.env.NEXT_PUBLIC_SUPABASE_KEY,
-    CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
+    CLERK_WEBHOOK_SECRET_SET_DEFAULT_NOTIFICATION_PREFERENCES:
+      process.env.CLERK_WEBHOOK_SECRET_SET_DEFAULT_NOTIFICATION_PREFERENCES,
     UPLOADTHING_APP_ID: process.env.UPLOADTHING_APP_ID,
     UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,
   },

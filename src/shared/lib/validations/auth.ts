@@ -3,15 +3,15 @@ import * as z from "zod"
 // Schema validations for authentication with zod
 export const authSchema = z.object({
   email: z.string().email({
-    message: "Please enter a valid email address",
+    message: "Пожалуйста, введите действительный адрес электронной почты.",
   }),
   password: z
     .string()
-    .min(8, { message: "Password must be at least 8 characters long" })
-    .max(32, { message: "Password must be no longer than 32 characters" })
+    .min(8, { message: "Пароль должен быть длиной не менее 8 символов." })
+    .max(32, { message: "Пароль должен быть не длиннее 32 символов." })
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/, {
       message:
-        "Password must contain at least 8 characters, one uppercase, one lowercase, one number and one special character",
+        "Пароль должен содержать не менее 8 символов: одну заглавную, одну строчную, одну цифру и один специальный символ.",
     }),
 })
 
@@ -19,7 +19,7 @@ export const verifyEmailSchema = z.object({
   code: z
     .string()
     .min(6, {
-      message: "Verification code must be 6 characters long",
+      message: "Код подтверждения должен состоять из 6 символов.",
     })
     .max(6),
 })
@@ -35,6 +35,6 @@ export const resetPasswordSchema = z
     code: verifyEmailSchema.shape.code,
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
+    message: "Пароли не совпадают.",
     path: ["confirmPassword"],
   })

@@ -1,9 +1,12 @@
+import { type FileWithPath } from "react-dropzone"
+
 import { Icons } from "../components/icons"
 import { SelectTable, SelectTableRecord } from "../db/schema"
 
+// Nav types
 export interface NavItem {
   title: string
-  href?: string
+  href: string
   disabled?: boolean
   external?: boolean
   icon?: keyof typeof Icons
@@ -17,15 +20,19 @@ export interface NavItemWithChildren extends NavItem {
 
 export type SidebarNavItem = NavItemWithChildren
 
-// Table data types
-export interface TableColumnDef {
-  name: string
-  type: "text" | "date" | "integer" | "decimal"
-  number: number
+export interface Option {
+  label: string
+  value: string
+  icon?: React.ComponentType<{ className?: string }>
 }
 
-export interface TableColumnData {
-  number: number
+// Table data types
+export interface TableColumn {
+  name: string
+  type: "text" | "date" | "integer" | "decimal"
+}
+
+export interface TableColumnData extends TableColumn {
   data: string | number | Date | undefined
 }
 
@@ -33,17 +40,15 @@ export type Table = SelectTable
 
 export type TableRecord = SelectTableRecord
 
-// export type TRecord = SelectRecord
-
-export interface Option {
-  label: string
-  value: string
-  icon?: React.ComponentType<{ className?: string }>
-}
-
+// Data-Table types
 export interface DataTableSearchableColumn<TData> {
   id: string
   title: string
+}
+
+// File types
+export type FileWithPreview = FileWithPath & {
+  preview: string
 }
 
 export type Prettify<T> = {

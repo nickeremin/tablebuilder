@@ -4,7 +4,6 @@ import { and, desc, eq, ilike } from "drizzle-orm"
 import { v4 as uuidv4 } from "uuid"
 import * as z from "zod"
 
-import { Prettify } from "@/shared/types/helpers"
 import { db } from "@/shared/db"
 import { tables } from "@/shared/db/schema"
 import { tableSchema } from "@/shared/lib/validations/table"

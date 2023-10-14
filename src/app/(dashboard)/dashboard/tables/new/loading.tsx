@@ -1,7 +1,7 @@
 import { FormLoading } from "@/entities/skeletons"
+import { Shell } from "@/shared/components/shells/shell"
 import { Card, CardContent, CardHeader } from "@/shared/components/ui/card"
 import { PageHeader } from "@/shared/components/ui/page-header"
-import { Shell } from "@/shared/components/ui/shell"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 
 const AddNewTableLoading = () => {
