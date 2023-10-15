@@ -72,12 +72,12 @@ function UpdateUsernameForm({
   return (
     <Card
       as="section"
-      className={cn("shadow-card-border rounded-md border-none", className)}
+      className={cn("rounded-md border-none shadow-card-border", className)}
       {...props}
     >
       <Form {...form}>
         <form onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}>
-          <div className="relative border-b border-border p-6">
+          <div className="relative border-b p-6">
             <CardTitle className="text-xl">Имя Пользователя</CardTitle>
             <p className="my-3 text-sm/6">
               Пожалуйста, введите свое полное имя или отображаемое имя, которое
@@ -96,7 +96,7 @@ function UpdateUsernameForm({
               )}
             />
           </div>
-          <CardFooter className="min-h-[56px] flex-col justify-center gap-2 bg-muted/30 py-3 md:flex-row md:justify-between">
+          <CardFooter className="min-h-[56px] flex-col justify-center gap-3 bg-muted/30 py-6 md:flex-row md:justify-between md:py-3">
             <p className="text-sm text-muted-foreground">
               Пожалуйста, используйте максимум 32 символа.
             </p>

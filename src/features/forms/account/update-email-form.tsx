@@ -66,7 +66,7 @@ function UpdateEmailForm({ email, className, ...props }: UpdateEmailFormProps) {
     >
       <Form {...form}>
         <form onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}>
-          <div className="relative border-b border-border p-6">
+          <div className="relative border-b p-6">
             <CardTitle className="text-xl">Почта</CardTitle>
             <p className="my-3 text-sm/6">
               Пожалуйста, введите адрес электронной почты, который вы хотите
@@ -85,7 +85,7 @@ function UpdateEmailForm({ email, className, ...props }: UpdateEmailFormProps) {
               )}
             />
           </div>
-          <CardFooter className="min-h-[56px] flex-col justify-center gap-2 bg-muted/30 py-3 md:flex-row md:justify-between">
+          <CardFooter className="min-h-[56px] flex-col justify-center gap-3 bg-muted/30 py-6 md:flex-row md:justify-between md:py-3">
             <p className="text-sm text-muted-foreground">
               Мы отправим вам электронное письмо для подтверждения изменения.
             </p>

@@ -2,7 +2,7 @@ import { cva, VariantProps } from "class-variance-authority"
 
 import { cn } from "@/shared/lib/utils"
 
-const spacerVariants = cva("h-[1px] w-[1px] select-none ml-[23px]", {
+const spacerVariants = cva("h-[1px] w-[1px] select-none ml-[23px] block", {
   variants: {
     variant: {},
     size: {

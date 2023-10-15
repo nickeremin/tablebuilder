@@ -100,107 +100,116 @@ function DeleteAccountrForm({
             с осторожностью.
           </p>
         </div>
-        <CardFooter className="min-h-[56px] justify-center bg-destructive/30 py-3 md:justify-end">
+        <CardFooter className="min-h-[56px] justify-center bg-destructive/30 py-6 md:justify-end md:py-3">
           <DialogTrigger asChild>
             <Button variant="destructive">Удалить Аккаунт</Button>
           </DialogTrigger>
         </CardFooter>
       </Card>
-      <DialogContent className="max-h-[600px] overflow-y-auto p-0">
-        <div className="flex flex-col px-6 pb-4 pt-8 sm:px-8">
-          <h1 className="text-2xl font-semibold">Удалить Аккаунт</h1>
-          <Spacer />
-          <p className="text-primary/80">
-            Tablebuilder{" "}
-            <strong className="text-primary">удалит все ваши таблицы</strong>, а
-            также все ваши файлы и все другие ресурсы, принадлежащие вашей
-            Личной учетной записи.
-          </p>
-          <Spacer />
-          <p className="text-primary/80">
-            Tablebuilder рекомендует сохранить все ваши таблицы, файлы и все
-            другие ресурсы локально на данный компьютер.
-          </p>
-          <Spacer />
-          <p className="flex items-center rounded-md bg-destructive/50 px-3 py-2 text-sm text-red-800 dark:text-red-200">
-            Это действие необратимо. Пожалуйста, будьте уверены.
-          </p>
-        </div>
-        <div>
-          <Form {...form}>
-            <form
-              className="grid items-center"
-              onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
-            >
-              <div className="sm:px flex flex-col gap-4 border-t border-border bg-muted/30 px-6 py-8 sm:px-8">
-                <FormField
-                  control={form.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-muted-foreground">
-                        Введите свое имя пользователя{" "}
-                        <strong className="text-primary/80">{username}</strong>,
-                        чтобы продолжить:
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          className="bg-background shadow-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="deleteString"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-muted-foreground">
-                        Для проверки введите{" "}
-                        <strong className="text-primary/80">
-                          {deleteString}
-                        </strong>{" "}
-                        ниже:
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          className="bg-background shadow-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+      <DialogContent className="flex max-h-[min(800px,80vh)] flex-col p-0">
+        <Form {...form}>
+          <form
+            className="overflow-y-auto overflow-x-hidden"
+            onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
+          >
+            {/* Use overflow-y-auto to show buttons in bottom */}
+            <div className="relative overflow-y-auto overflow-x-hidden p-8">
+              <div>
+                <h1 className="text-2xl font-semibold">Удалить Аккаунт</h1>
+                <Spacer />
+                <p className="text-primary/80">
+                  Tablebuilder{" "}
+                  <strong className="text-primary">
+                    удалит все ваши таблицы
+                  </strong>
+                  , а также все ваши файлы и все другие ресурсы, принадлежащие
+                  вашей Личной учетной записи.
+                </p>
+                <Spacer />
+                <p className="text-primary/80">
+                  Tablebuilder рекомендует сохранить все ваши таблицы, файлы и
+                  все другие ресурсы локально на данный компьютер.
+                </p>
+                <Spacer />
+                <p className="flex items-center rounded-md bg-destructive/50 px-3 py-2 text-sm text-red-800 dark:text-red-200">
+                  Это действие необратимо. Пожалуйста, будьте уверены.
+                </p>
+                <Spacer />
+                <div className="-mx-8 -mb-8 border-t bg-muted/30 px-8 py-6">
+                  <FormField
+                    control={form.control}
+                    name="username"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-muted-foreground">
+                          Введите свое имя пользователя{" "}
+                          <strong className="text-primary/80">
+                            {username}
+                          </strong>
+                          , чтобы продолжить:
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            className="bg-background shadow-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Spacer />
+                  <FormField
+                    control={form.control}
+                    name="deleteString"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-muted-foreground">
+                          Для проверки введите{" "}
+                          <strong className="text-primary/80">
+                            {deleteString}
+                          </strong>{" "}
+                          ниже:
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            className="bg-background shadow-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
-              <div className="sticky bottom-0 left-0 z-50 flex w-full items-center justify-between border-t border-border bg-background p-4 sm:px-6">
-                <Button
-                  type="button"
-                  disabled={isPending}
-                  variant="outline"
-                  className="bg-background"
-                  onClick={() => setShowDeleteAccountDialog(false)}
-                >
-                  Отмена
-                  <span className="sr-only">Отмена удаления аккаунта</span>
-                </Button>
-                <Button disabled={isPending} variant="destructive">
-                  {isPending && (
-                    <Icons.spinner
-                      className="mr-2 h-4 w-4 animate-spin"
-                      aria-hidden="true"
-                    />
-                  )}
-                  Удалить
-                  <span className="sr-only">Подтвердить удаление аккаунта</span>
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </div>
+            </div>
+
+            {/* Back and delte buttons */}
+            <div className="sticky bottom-0 flex justify-between rounded-b-lg border-t bg-background p-4">
+              <Button
+                type="button"
+                disabled={isPending}
+                variant="outline"
+                className="bg-background"
+                onClick={() => setShowDeleteAccountDialog(false)}
+              >
+                Отмена
+                <span className="sr-only">Отмена удаления аккаунта</span>
+              </Button>
+              <Button disabled={isPending} variant="destructive">
+                {isPending && (
+                  <Icons.spinner
+                    className="mr-2 h-4 w-4 animate-spin"
+                    aria-hidden="true"
+                  />
+                )}
+                Удалить
+                <span className="sr-only">Подтвердить удаление аккаунта</span>
+              </Button>
+            </div>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   )

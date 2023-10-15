@@ -116,9 +116,7 @@ function DashboardNav() {
                     href={link.href}
                     className={cn(
                       "group relative py-3",
-                      link.href === String(pathname) ||
-                        (link.href === "/account" &&
-                          String(pathname) === "/account/general")
+                      String(pathname).includes(link.href)
                         ? "text-primary before:absolute before:bottom-0 before:left-2.5 before:right-2.5 before:border-b-2 before:border-primary before:content-['']"
                         : "text-muted-foreground"
                     )}

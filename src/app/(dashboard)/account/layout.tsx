@@ -18,7 +18,7 @@ function AccountLayout({ children }: AccountLayoutProps) {
           {children}
         </div>
       </Shell>
-      <Spacer aria-hidden="true" size="lg" className="hidden lg:block" />
+      <Spacer aria-hidden="true" size="lg" />
     </>
   )
 }

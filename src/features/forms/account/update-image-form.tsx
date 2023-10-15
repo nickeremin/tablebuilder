@@ -6,6 +6,7 @@ import { type UserResource } from "@clerk/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { generateReactHelpers } from "@uploadthing/react/hooks"
+import { useDropzone } from "react-dropzone"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import * as z from "zod"
@@ -34,6 +35,7 @@ import { Skeleton } from "@/shared/components/ui/skeleton"
 import { catchError, cn, isArrayOfFile, logAction } from "@/shared/lib/utils"
 import { updateAccountSchema } from "@/shared/lib/validations/account"
 import { type FileWithPreview } from "@/shared/types"
+import { trpc } from "@/app/_trpc/client"
 import { type OurFileRouter } from "@/app/api/uploadthing/core"
 
 const imageSchema = updateAccountSchema.pick({ image: true })
@@ -64,6 +66,8 @@ function UpdateImageForm({ className, ...props }: UpdateImageFormProps) {
   const form = useForm<Inputs>({
     resolver: zodResolver(imageSchema),
   })
+
+  const { getRootProps, getInputProps } = useDropzone()
 
   function onSubmit(input: Inputs) {
     // Check if user is loaded
@@ -116,7 +120,38 @@ function UpdateImageForm({ className, ...props }: UpdateImageFormProps) {
         className={cn("rounded-md border-none shadow-card-border", className)}
         {...props}
       >
-        <div className="relative border-b border-border p-6">
+        <div className="relative border-b p-6">
+          {/* Avatar button which open file dialog when it pressed */}
+          <div
+            {...getRootProps({
+              className:
+                "relative flex float-right rounded-full hover:cursor-pointer ",
+            })}
+          >
+            <input {...getInputProps()} />
+            <Avatar className="h-20 w-20">
+              <AvatarImage
+                aria-label={user?.username ?? ""}
+                src={user?.imageUrl}
+                alt={user?.imageUrl}
+                className="relative bg-transparent before:absolute before:bottom-0 before:left-0 before:z-50 before:h-28 before:w-28 before:bg-red-200 before:content-['']"
+              />
+              <AvatarFallback>
+                <Skeleton className="h-full w-full rounded-full" />
+              </AvatarFallback>
+            </Avatar>
+          </div>
+          {/* <Button
+            variant="ghost"
+            className="float-right h-20 w-20 rounded-full p-0"
+          >
+            <Avatar className="h-20 w-20">
+              <AvatarImage src={user?.imageUrl} alt={user?.imageUrl} />
+              <AvatarFallback>
+                <Skeleton className="h-full w-full rounded-full" />
+              </AvatarFallback>
+            </Avatar>
+          </Button> */}
           <CardTitle className="text-xl">Аватар</CardTitle>
           <p className="my-3 text-sm/6">
             Это ваш аватар.
@@ -124,28 +159,16 @@ function UpdateImageForm({ className, ...props }: UpdateImageFormProps) {
             Нажмите на изображение, чтобы загрузить собственный аватар из ваших
             файлов.
           </p>
-          <DialogTrigger asChild>
-            <Button
-              variant="ghost"
-              className="absolute right-6 top-6 h-20 w-20 rounded-full p-0"
-            >
-              <Avatar className="h-20 w-20">
-                <AvatarImage src={user?.imageUrl} alt={user?.imageUrl} />
-                <AvatarFallback>
-                  <Skeleton className="h-full w-full rounded-full" />
-                </AvatarFallback>
-              </Avatar>
-            </Button>
-          </DialogTrigger>
         </div>
-        <CardFooter className="min-h-[56px] justify-center bg-muted/30 py-3 md:justify-start">
+        <CardFooter className="min-h-[56px] justify-center bg-muted/30 py-6 md:justify-start md:py-3">
           <p className="text-sm text-muted-foreground">
             Аватар не обязателен, но настоятельно рекомендуется.
           </p>
         </CardFooter>
       </Card>
       <DialogContent>
-        <Form {...form}>
+        <div>Hello</div>
+        {/* <Form {...form}>
           <form
             className="grid items-center"
             onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
@@ -179,7 +202,7 @@ function UpdateImageForm({ className, ...props }: UpdateImageFormProps) {
               <span className="sr-only">Сохранить аватар</span>
             </Button>
           </form>
-        </Form>
+        </Form> */}
       </DialogContent>
     </Dialog>
   )

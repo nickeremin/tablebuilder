@@ -82,7 +82,9 @@ function UpdateNotificationPreferencesForm({
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
-                        <FormLabel>{item.label}</FormLabel>
+                        <FormLabel className="hover:cursor-pointer">
+                          {item.label}
+                        </FormLabel>
                         <FormDescription>{item.description}</FormDescription>
                       </div>
                     </FormItem>
@@ -91,151 +93,6 @@ function UpdateNotificationPreferencesForm({
               ))}
             </div>
           ))}
-          {/* <div className="flex flex-col gap-3">
-            <p className="font-semibold">Личные</p>
-            <div className="flex flex-col gap-2">
-              <FormField
-                control={form.control}
-                name="tableFailures"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start gap-3 space-y-0 rounded-md border p-4">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>Сбои таблиц</FormLabel>
-                      <FormDescription>
-                        Мы можем оповещать вас при возникновении ошибок в ваших
-                        таблицах.
-                      </FormDescription>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="subscriptionExpiration"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start gap-3 space-y-0 rounded-md border border-primary p-4">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>Истечение подписки</FormLabel>
-                      <FormDescription>
-                        Вы можете включить оповещение за неделю до конца
-                        подписки.
-                      </FormDescription>
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
-
-         
-          <div className="flex flex-col gap-3">
-            <p className="font-semibold">Команды</p>
-            <div className="flex flex-col gap-2">
-              <FormField
-                control={form.control}
-                name="teamTableChanges"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start gap-3 space-y-0 rounded-md border p-4">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>Изменение таблиц в командах</FormLabel>
-                      <FormDescription>
-                        Оповещение будет приходить каждый раз, когда один из
-                        участников вашей команды будет вносить изменения в
-                        таблицу.
-                      </FormDescription>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="teamJoinRequests"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start gap-3 space-y-0 rounded-md border p-4">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>Запросы на вступление в команду</FormLabel>
-                      <FormDescription>
-                        Оповещение придет, когда вас пригласят вступить в
-                        команду.
-                      </FormDescription>
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
-
-       
-          <div className="flex flex-col gap-3">
-            <p className="font-semibold">Общие</p>
-            <div className="flex flex-col gap-2">
-              <FormField
-                control={form.control}
-                name="newUpdates"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start gap-3 space-y-0 rounded-md border p-4">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>Новые обновления</FormLabel>
-                      <FormDescription>
-                        Получайте новости о выходе новых обновлений.
-                      </FormDescription>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="warnings"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start gap-3 space-y-0 rounded-md border p-4">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>Предупреждения</FormLabel>
-                      <FormDescription>
-                        Мы будем высылать вам оповещения о технических
-                        проблемах.
-                      </FormDescription>
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div> */}
         </div>
         <div className="flex items-center gap-4">
           <Button
