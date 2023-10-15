@@ -195,7 +195,7 @@ function DeleteAccountrForm({
                 onClick={() => setShowDeleteAccountDialog(false)}
               >
                 Отмена
-                <span className="sr-only">Отмена удаления аккаунта</span>
+                <span className="sr-only">Отменить удаление аккаунта</span>
               </Button>
               <Button disabled={isPending} variant="destructive">
                 {isPending && (

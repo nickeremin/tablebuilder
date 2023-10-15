@@ -6,12 +6,14 @@ import { type UserResource } from "@clerk/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { generateReactHelpers } from "@uploadthing/react/hooks"
-import { useDropzone } from "react-dropzone"
+import { Cropper, type ReactCropperElement } from "react-cropper"
+import { FileRejection, FileWithPath, useDropzone } from "react-dropzone"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import * as z from "zod"
 
-import { FileDropzone } from "@/features/upload"
+import "cropperjs/dist/cropper.css"
+
 import { Icons } from "@/shared/components/icons"
 import {
   Avatar,
@@ -20,11 +22,7 @@ import {
 } from "@/shared/components/ui/avatar"
 import { Button } from "@/shared/components/ui/button"
 import { Card, CardFooter, CardTitle } from "@/shared/components/ui/card"
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@/shared/components/ui/dialog"
+import { Dialog, DialogContent } from "@/shared/components/ui/dialog"
 import {
   Form,
   FormControl,
@@ -32,11 +30,20 @@ import {
   UncontrolledFormMessage,
 } from "@/shared/components/ui/form"
 import { Skeleton } from "@/shared/components/ui/skeleton"
-import { catchError, cn, isArrayOfFile, logAction } from "@/shared/lib/utils"
+import {
+  catchError,
+  cn,
+  formatBytes,
+  isArrayOfFile,
+  logAction,
+} from "@/shared/lib/utils"
 import { updateAccountSchema } from "@/shared/lib/validations/account"
 import { type FileWithPreview } from "@/shared/types"
 import { trpc } from "@/app/_trpc/client"
 import { type OurFileRouter } from "@/app/api/uploadthing/core"
+
+const MAX_SIZE = 1024 * 1024 * 4
+const MAX_FILES = 1
 
 const imageSchema = updateAccountSchema.pick({ image: true })
 type Inputs = z.infer<typeof imageSchema>
@@ -58,16 +65,62 @@ function UpdateImageForm({ className, ...props }: UpdateImageFormProps) {
   const [showUpdateImageDialog, setShowUpdateImageDialog] =
     React.useState(false)
 
-  // Control files wich store in dropzone
-  const [files, setFiles] = React.useState<FileWithPreview[] | null>(null)
-  const { isUploading, startUpload } = useUploadThing("profileImage")
-
   // Initialize react-hook-form with zod and set current user values
   const form = useForm<Inputs>({
     resolver: zodResolver(imageSchema),
   })
 
-  const { getRootProps, getInputProps } = useDropzone()
+  // Control files wich store in dropzone
+  const [files, setFiles] = React.useState<FileWithPreview[] | null>(null)
+  const { isUploading, startUpload } = useUploadThing("profileImage")
+
+  function onDrop(
+    acceptedFiles: FileWithPath[],
+    rejectedFiles: FileRejection[]
+  ) {
+    acceptedFiles.slice(acceptedFiles.length - MAX_FILES).forEach((file) => {
+      const fileWithPreview = Object.assign(file, {
+        preview: URL.createObjectURL(file),
+      })
+      setFiles((prev) => [
+        ...(prev?.slice(prev.length - MAX_FILES + 1) ?? []),
+        fileWithPreview,
+      ])
+    })
+
+    if (rejectedFiles.length > 0) {
+      rejectedFiles.forEach(({ errors }) => {
+        if (errors[0]?.code === "file-too-large") {
+          toast.error(
+            `Файл слишком большой. Максимальный размер ${formatBytes(
+              MAX_SIZE
+            )}.`
+          )
+          return
+        }
+        errors[0]?.message && toast.error(errors[0].message)
+      })
+    }
+
+    setShowUpdateImageDialog(true)
+  }
+
+  const { getRootProps, getInputProps } = useDropzone({
+    maxFiles: MAX_FILES,
+    multiple: false,
+    maxSize: MAX_SIZE,
+    disabled: isPending,
+    accept: {
+      "image/*": [],
+    },
+    onDrop,
+  })
+
+  const cropperRef = React.useRef<ReactCropperElement>(null)
+  function onCrop() {
+    const cropper = cropperRef.current?.cropper
+    console.log(cropper?.getCroppedCanvas().toDataURL())
+  }
 
   function onSubmit(input: Inputs) {
     // Check if user is loaded
@@ -141,17 +194,6 @@ function UpdateImageForm({ className, ...props }: UpdateImageFormProps) {
               </AvatarFallback>
             </Avatar>
           </div>
-          {/* <Button
-            variant="ghost"
-            className="float-right h-20 w-20 rounded-full p-0"
-          >
-            <Avatar className="h-20 w-20">
-              <AvatarImage src={user?.imageUrl} alt={user?.imageUrl} />
-              <AvatarFallback>
-                <Skeleton className="h-full w-full rounded-full" />
-              </AvatarFallback>
-            </Avatar>
-          </Button> */}
           <CardTitle className="text-xl">Аватар</CardTitle>
           <p className="my-3 text-sm/6">
             Это ваш аватар.
@@ -166,32 +208,37 @@ function UpdateImageForm({ className, ...props }: UpdateImageFormProps) {
           </p>
         </CardFooter>
       </Card>
-      <DialogContent>
-        <div>Hello</div>
-        {/* <Form {...form}>
-          <form
-            className="grid items-center"
-            onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
-          >
-            <h1 className="text-2xl font-semibold">Загрузите Аватар</h1>
-            <FormItem className="flex flex-col items-center">
-              <FormControl>
-                <FileDropzone
-                  setValue={form.setValue}
-                  name="image"
-                  maxFiles={1}
-                  maxSize={1024 * 1024 * 4}
-                  files={files}
-                  setFiles={setFiles}
-                  isUploading={isUploading}
-                  disabled={isPending}
-                />
-              </FormControl>
-              <UncontrolledFormMessage
-                message={form.formState.errors.image?.message}
-              />
-            </FormItem>
-            <Button disabled={isPending} className="mt-6">
+      <DialogContent className="flex max-h-[min(800px,80vh)] flex-col p-0">
+        <div className="overflow-y-auto overflow-x-hidden">
+          <div className="relative overflow-y-auto overflow-x-hidden p-8">
+            <Cropper
+              ref={cropperRef}
+              className="h-full object-cover"
+              zoomTo={0.5}
+              initialAspectRatio={1 / 1}
+              src={user?.imageUrl}
+              viewMode={1}
+              minCropBoxHeight={10}
+              minCropBoxWidth={10}
+              background={false}
+              responsive={true}
+              autoCropArea={1}
+              checkOrientation={false} // https://github.com/fengyuanchen/cropperjs/issues/671
+              guides={true}
+            />
+          </div>
+          <div className="sticky bottom-0 flex justify-between rounded-b-lg border-t bg-background p-4">
+            <Button
+              type="button"
+              disabled={isPending}
+              variant="outline"
+              className="bg-background"
+              onClick={() => setShowUpdateImageDialog(false)}
+            >
+              Отмена
+              <span className="sr-only">Отменить изменение аватара</span>
+            </Button>
+            <Button disabled={isPending}>
               {isPending && (
                 <Icons.spinner
                   className="mr-2 h-4 w-4 animate-spin"
@@ -201,8 +248,8 @@ function UpdateImageForm({ className, ...props }: UpdateImageFormProps) {
               Сохранить
               <span className="sr-only">Сохранить аватар</span>
             </Button>
-          </form>
-        </Form> */}
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   )
