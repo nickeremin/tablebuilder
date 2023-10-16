@@ -2,10 +2,7 @@ import * as z from "zod"
 
 export const updateAccountSchema = z.object({
   image: z.unknown().refine((val) => {
-    if (!Array.isArray(val)) return false
-    if (!val.length) return false
-    if (val.some((file) => !(file instanceof File))) return false
-    return true
+    return val instanceof File
   }, "Должен быть массив файлов."),
   username: z
     .string()

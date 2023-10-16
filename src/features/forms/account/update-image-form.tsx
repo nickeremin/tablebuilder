@@ -1,18 +1,20 @@
 "use client"
 
+import "react-image-crop/dist/ReactCrop.css"
+
 import * as React from "react"
+import Image from "next/image"
 import { useUser } from "@clerk/nextjs"
 import { type UserResource } from "@clerk/types"
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
-import { generateReactHelpers } from "@uploadthing/react/hooks"
-import { Cropper, type ReactCropperElement } from "react-cropper"
 import { FileRejection, FileWithPath, useDropzone } from "react-dropzone"
-import { useForm } from "react-hook-form"
+import ReactCrop, {
+  centerCrop,
+  makeAspectCrop,
+  type Crop,
+  type PixelCrop,
+} from "react-image-crop"
 import { toast } from "sonner"
-import * as z from "zod"
-
-import "cropperjs/dist/cropper.css"
 
 import { Icons } from "@/shared/components/icons"
 import {
@@ -23,70 +25,110 @@ import {
 import { Button } from "@/shared/components/ui/button"
 import { Card, CardFooter, CardTitle } from "@/shared/components/ui/card"
 import { Dialog, DialogContent } from "@/shared/components/ui/dialog"
-import {
-  Form,
-  FormControl,
-  FormItem,
-  UncontrolledFormMessage,
-} from "@/shared/components/ui/form"
 import { Skeleton } from "@/shared/components/ui/skeleton"
-import {
-  catchError,
-  cn,
-  formatBytes,
-  isArrayOfFile,
-  logAction,
-} from "@/shared/lib/utils"
-import { updateAccountSchema } from "@/shared/lib/validations/account"
+import { canvasPreview } from "@/shared/lib/canvas-preview"
+import { catchError, cn, formatBytes, logAction } from "@/shared/lib/utils"
 import { type FileWithPreview } from "@/shared/types"
-import { trpc } from "@/app/_trpc/client"
-import { type OurFileRouter } from "@/app/api/uploadthing/core"
 
+// Constants for react-dropzone
 const MAX_SIZE = 1024 * 1024 * 4
 const MAX_FILES = 1
 
-const imageSchema = updateAccountSchema.pick({ image: true })
-type Inputs = z.infer<typeof imageSchema>
-
-const { useUploadThing } = generateReactHelpers<OurFileRouter>()
+// Set the cropping frame to the center
+function centerAspectCrop(
+  mediaWidth: number,
+  mediaHeight: number,
+  aspect: number
+) {
+  return centerCrop(
+    makeAspectCrop(
+      {
+        unit: "%",
+        width: 50,
+      },
+      aspect,
+      mediaWidth,
+      mediaHeight
+    ),
+    mediaWidth,
+    mediaHeight
+  )
+}
 
 interface UpdateImageFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 function UpdateImageForm({ className, ...props }: UpdateImageFormProps) {
   const { user } = useUser()
 
+  // // This function updates current user profile image
   const { mutateAsync: updateImage } = useMutation({
     mutationFn: async ({ user, file }: { user: UserResource; file: File }) => {
       await user.setProfileImage({ file })
     },
   })
 
-  const [isPending, startTransition] = React.useTransition()
   const [showUpdateImageDialog, setShowUpdateImageDialog] =
     React.useState(false)
+  const [isPending, startTransition] = React.useTransition()
 
-  // Initialize react-hook-form with zod and set current user values
-  const form = useForm<Inputs>({
-    resolver: zodResolver(imageSchema),
-  })
+  // Control crop data of react-image-crop
+  const imgRef = React.useRef<HTMLImageElement>(null)
+  const [crop, setCrop] = React.useState<Crop>()
+  const [completedCrop, setCompletedCrop] = React.useState<PixelCrop>()
+
+  function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
+    const { width, height } = e.currentTarget
+    setCrop(centerAspectCrop(width, height, 1 / 1))
+  }
+
+  async function onDownloadCropClick() {
+    startTransition(async () => {
+      try {
+        if (!user || !imgRef.current || !completedCrop) return
+
+        const imageBlob = (await canvasPreview(
+          imgRef.current,
+          completedCrop,
+          1,
+          0
+        )) as Blob
+
+        const imageFile = new File([imageBlob], imageBlob.name)
+
+        await updateImage({
+          user,
+          file: imageFile,
+        })
+
+        setShowUpdateImageDialog(false)
+
+        logAction({
+          toastMessasge: "Аватар обновлен.",
+          status: "success",
+        })
+      } catch (error) {
+        catchError(Error)
+      }
+    })
+  }
 
   // Control files wich store in dropzone
-  const [files, setFiles] = React.useState<FileWithPreview[] | null>(null)
-  const { isUploading, startUpload } = useUploadThing("profileImage")
+  const [file, setFile] = React.useState<FileWithPreview | null>(null)
 
+  // This function is called when an avatar image is selected
   function onDrop(
     acceptedFiles: FileWithPath[],
     rejectedFiles: FileRejection[]
   ) {
-    acceptedFiles.slice(acceptedFiles.length - MAX_FILES).forEach((file) => {
+    if (acceptedFiles.length > 0) {
+      setCrop(undefined) // Makes crop preview update between images.
+      const file = acceptedFiles[0]!
       const fileWithPreview = Object.assign(file, {
         preview: URL.createObjectURL(file),
       })
-      setFiles((prev) => [
-        ...(prev?.slice(prev.length - MAX_FILES + 1) ?? []),
-        fileWithPreview,
-      ])
-    })
+      setFile(fileWithPreview)
+      setShowUpdateImageDialog(true)
+    }
 
     if (rejectedFiles.length > 0) {
       rejectedFiles.forEach(({ errors }) => {
@@ -101,67 +143,17 @@ function UpdateImageForm({ className, ...props }: UpdateImageFormProps) {
         errors[0]?.message && toast.error(errors[0].message)
       })
     }
-
-    setShowUpdateImageDialog(true)
   }
 
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: MAX_FILES,
-    multiple: false,
     maxSize: MAX_SIZE,
-    disabled: isPending,
+    multiple: false,
     accept: {
       "image/*": [],
     },
     onDrop,
   })
-
-  const cropperRef = React.useRef<ReactCropperElement>(null)
-  function onCrop() {
-    const cropper = cropperRef.current?.cropper
-    console.log(cropper?.getCroppedCanvas().toDataURL())
-  }
-
-  function onSubmit(input: Inputs) {
-    // Check if user is loaded
-    if (!user) return
-
-    startTransition(async () => {
-      try {
-        // Check files to upload to Uploadthing storage
-        isArrayOfFile(input.image)
-          ? await startUpload(input.image).then((res) => {
-              const formattedImages = res?.map((image) => ({
-                id: image.key,
-                name: image.key.split("_")[1] ?? image.key,
-                url: image.url,
-              }))
-              return formattedImages ?? null
-            })
-          : null
-
-        // Check files to update profile image
-        if (isArrayOfFile(input.image)) {
-          await updateImage({
-            user,
-            file: input.image[0]!,
-          })
-
-          // After update profile image, reset form values, close dialog and set dropzone files to null
-          form.reset()
-          setShowUpdateImageDialog(false)
-          setFiles(null)
-
-          logAction({
-            toastMessasge: "Аватар обновлен.",
-            status: "success",
-          })
-        }
-      } catch (error) {
-        catchError(error)
-      }
-    })
-  }
 
   return (
     <Dialog
@@ -208,37 +200,40 @@ function UpdateImageForm({ className, ...props }: UpdateImageFormProps) {
           </p>
         </CardFooter>
       </Card>
-      <DialogContent className="flex max-h-[min(800px,80vh)] flex-col p-0">
+      <DialogContent
+        className={cn("flex max-h-[min(800px,80vh)] flex-col p-0")}
+      >
         <div className="overflow-y-auto overflow-x-hidden">
           <div className="relative overflow-y-auto overflow-x-hidden p-8">
-            <Cropper
-              ref={cropperRef}
-              className="h-full object-cover"
-              zoomTo={0.5}
-              initialAspectRatio={1 / 1}
-              src={user?.imageUrl}
-              viewMode={1}
-              minCropBoxHeight={10}
-              minCropBoxWidth={10}
-              background={false}
-              responsive={true}
-              autoCropArea={1}
-              checkOrientation={false} // https://github.com/fengyuanchen/cropperjs/issues/671
-              guides={true}
-            />
+            <div className="mx-auto max-w-[350px]">
+              <ReactCrop
+                crop={crop}
+                onChange={(_, percentCrop) => setCrop(percentCrop)}
+                onComplete={(c) => setCompletedCrop(c)}
+                aspect={1 / 1}
+              >
+                <img
+                  ref={imgRef}
+                  alt="Crop me"
+                  src={file?.preview}
+                  onLoad={onImageLoad}
+                />
+              </ReactCrop>
+            </div>
           </div>
           <div className="sticky bottom-0 flex justify-between rounded-b-lg border-t bg-background p-4">
             <Button
-              type="button"
               disabled={isPending}
               variant="outline"
               className="bg-background"
-              onClick={() => setShowUpdateImageDialog(false)}
+              onClick={() => {
+                setShowUpdateImageDialog(false)
+              }}
             >
               Отмена
               <span className="sr-only">Отменить изменение аватара</span>
             </Button>
-            <Button disabled={isPending}>
+            <Button disabled={isPending} onClick={onDownloadCropClick}>
               {isPending && (
                 <Icons.spinner
                   className="mr-2 h-4 w-4 animate-spin"
