@@ -17,6 +17,7 @@ import {
   FormLabel,
 } from "@/shared/components/ui/form"
 import { notificationPreferences } from "@/shared/config/site/account"
+import { catchError, logAction } from "@/shared/lib/utils"
 import {
   notificationPreferencesSchema,
   updateNotificationPreferencesSchema,
@@ -32,9 +33,20 @@ interface UpdateNotificationPreferencesFormProps {
 function UpdateNotificationPreferencesForm({
   type,
 }: UpdateNotificationPreferencesFormProps) {
+  const utils = trpc.useContext()
+
   const { data: user } = trpc.account.getUser.useQuery(void undefined, {
     suspense: true,
   })
+
+  const { mutateAsync: updateNotificationPreferences } =
+    trpc.account.updateNotificationPreferences.useMutation({
+      onSuccess: () => {
+        utils.account.getUser.invalidate()
+      },
+    })
+
+  if (!user) return null
 
   // Memoize public metadata during rendering
   const metadata = React.useMemo(() => {
@@ -55,7 +67,22 @@ function UpdateNotificationPreferencesForm({
   })
 
   function onSubmit(input: Inputs) {
-    console.log(input)
+    startTransition(async () => {
+      try {
+        // Update user notification preferences
+        await updateNotificationPreferences({
+          type,
+          data: input,
+        })
+
+        logAction({
+          toastMessasge: "Настройки уведомлений обновлены.",
+          status: "success",
+        })
+      } catch (error) {
+        catchError(error)
+      }
+    })
   }
 
   return (
@@ -95,11 +122,7 @@ function UpdateNotificationPreferencesForm({
           ))}
         </div>
         <div className="flex items-center gap-4">
-          <Button
-            type="submit"
-            disabled={isPending}
-            className="w-full sm:w-fit"
-          >
+          <Button disabled={isPending} className="w-full sm:w-fit">
             {isPending && (
               <Icons.spinner
                 className="mr-2 h-4 w-4 animate-spin"

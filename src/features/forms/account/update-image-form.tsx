@@ -3,7 +3,6 @@
 import "react-image-crop/dist/ReactCrop.css"
 
 import * as React from "react"
-import Image from "next/image"
 import { useUser } from "@clerk/nextjs"
 import { type UserResource } from "@clerk/types"
 import { useMutation } from "@tanstack/react-query"
@@ -28,10 +27,9 @@ import { Dialog, DialogContent } from "@/shared/components/ui/dialog"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { canvasPreview } from "@/shared/lib/canvas-preview"
 import { catchError, cn, formatBytes, logAction } from "@/shared/lib/utils"
-import { type FileWithPreview } from "@/shared/types"
 
 // Constants for react-dropzone
-const MAX_SIZE = 1024 * 1024 * 4
+const MAX_SIZE = 1024 * 1024 * 12
 const MAX_FILES = 1
 
 // Set the cropping frame to the center
@@ -71,7 +69,49 @@ function UpdateImageForm({ className, ...props }: UpdateImageFormProps) {
     React.useState(false)
   const [isPending, startTransition] = React.useTransition()
 
+  // This function is called when an avatar image is selected
+  function onDrop(
+    acceptedFiles: FileWithPath[],
+    rejectedFiles: FileRejection[]
+  ) {
+    if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0]!
+      setCrop(undefined) // Makes crop preview update between images.
+      const reader = new FileReader()
+      reader.addEventListener("load", () => {
+        setImgSrc(reader.result?.toString() || "")
+        setShowUpdateImageDialog(true)
+      })
+      reader.readAsDataURL(file)
+    }
+
+    if (rejectedFiles.length > 0) {
+      rejectedFiles.forEach(({ errors }) => {
+        if (errors[0]?.code === "file-too-large") {
+          toast.error(
+            `Файл слишком большой. Максимальный размер ${formatBytes(
+              MAX_SIZE
+            )}.`
+          )
+          return
+        }
+        errors[0]?.message && toast.error(errors[0].message)
+      })
+    }
+  }
+
+  const { getRootProps, getInputProps } = useDropzone({
+    maxFiles: MAX_FILES,
+    maxSize: MAX_SIZE,
+    multiple: false,
+    accept: {
+      "image/*": [],
+    },
+    onDrop,
+  })
+
   // Control crop data of react-image-crop
+  const [imgSrc, setImgSrc] = React.useState("")
   const imgRef = React.useRef<HTMLImageElement>(null)
   const [crop, setCrop] = React.useState<Crop>()
   const [completedCrop, setCompletedCrop] = React.useState<PixelCrop>()
@@ -111,49 +151,6 @@ function UpdateImageForm({ className, ...props }: UpdateImageFormProps) {
       }
     })
   }
-
-  // Control files wich store in dropzone
-  const [file, setFile] = React.useState<FileWithPreview | null>(null)
-
-  // This function is called when an avatar image is selected
-  function onDrop(
-    acceptedFiles: FileWithPath[],
-    rejectedFiles: FileRejection[]
-  ) {
-    if (acceptedFiles.length > 0) {
-      setCrop(undefined) // Makes crop preview update between images.
-      const file = acceptedFiles[0]!
-      const fileWithPreview = Object.assign(file, {
-        preview: URL.createObjectURL(file),
-      })
-      setFile(fileWithPreview)
-      setShowUpdateImageDialog(true)
-    }
-
-    if (rejectedFiles.length > 0) {
-      rejectedFiles.forEach(({ errors }) => {
-        if (errors[0]?.code === "file-too-large") {
-          toast.error(
-            `Файл слишком большой. Максимальный размер ${formatBytes(
-              MAX_SIZE
-            )}.`
-          )
-          return
-        }
-        errors[0]?.message && toast.error(errors[0].message)
-      })
-    }
-  }
-
-  const { getRootProps, getInputProps } = useDropzone({
-    maxFiles: MAX_FILES,
-    maxSize: MAX_SIZE,
-    multiple: false,
-    accept: {
-      "image/*": [],
-    },
-    onDrop,
-  })
 
   return (
     <Dialog
@@ -201,25 +198,25 @@ function UpdateImageForm({ className, ...props }: UpdateImageFormProps) {
         </CardFooter>
       </Card>
       <DialogContent
-        className={cn("flex max-h-[min(800px,80vh)] flex-col p-0")}
+        className={cn("flex max-h-[min(800px,80vh)]  flex-col p-0")}
       >
         <div className="overflow-y-auto overflow-x-hidden">
           <div className="relative overflow-y-auto overflow-x-hidden p-8">
-            <div className="mx-auto max-w-[350px]">
-              <ReactCrop
-                crop={crop}
-                onChange={(_, percentCrop) => setCrop(percentCrop)}
-                onComplete={(c) => setCompletedCrop(c)}
-                aspect={1 / 1}
-              >
-                <img
-                  ref={imgRef}
-                  alt="Crop me"
-                  src={file?.preview}
-                  onLoad={onImageLoad}
-                />
-              </ReactCrop>
-            </div>
+            <ReactCrop
+              className="m-auto !block !max-w-[350px]"
+              crop={crop}
+              onChange={(_, percentCrop) => setCrop(percentCrop)}
+              onComplete={(c) => setCompletedCrop(c)}
+              aspect={1 / 1}
+            >
+              <img
+                ref={imgRef}
+                alt="Crop me"
+                src={imgSrc}
+                onLoad={onImageLoad}
+                className="w-full"
+              />
+            </ReactCrop>
           </div>
           <div className="sticky bottom-0 flex justify-between rounded-b-lg border-t bg-background p-4">
             <Button
