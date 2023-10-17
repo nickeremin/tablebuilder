@@ -1,14 +1,15 @@
+import { Suspense } from "react"
 import { redirect } from "next/navigation"
 import { currentUser } from "@clerk/nextjs"
+import { ErrorBoundary } from "react-error-boundary"
 
-import { AccountNav } from "@/widgets/layout/nav"
 import {
   DeleteAccountrForm,
   UpdateEmailForm,
   UpdateImageForm,
   UpdateUsernameForm,
 } from "@/features/forms/account"
-import { getUserEmail } from "@/shared/lib/utils"
+import { FallbackComponentErrorCard } from "@/entities/cards/error"
 
 async function AccountPage() {
   const user = await currentUser()
@@ -17,14 +18,14 @@ async function AccountPage() {
 
   return (
     <>
-      <UpdateImageForm className="mb-8" />
-      <UpdateUsernameForm className="mb-8" username={user.username ?? ""} />
-      <UpdateEmailForm className="mb-8" email={getUserEmail(user)} />
-      <DeleteAccountrForm
-        className="mb-8"
-        username={user.username ?? ""}
-        deleteString="удалить мой личный аккаунт"
-      />
+      <ErrorBoundary FallbackComponent={FallbackComponentErrorCard}>
+        <Suspense fallback={<p>Loading...</p>}>
+          <UpdateImageForm className="mb-8" />
+          <UpdateUsernameForm className="mb-8" />
+          <UpdateEmailForm className="mb-8" />
+          <DeleteAccountrForm className="mb-8" />
+        </Suspense>
+      </ErrorBoundary>
     </>
   )
 }

@@ -1,12 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { useUser } from "@clerk/nextjs"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
-//import { Icons } from "@/shared/components/icons"
+import { Icons } from "@/shared/components/icons"
 import { Button } from "@/shared/components/ui/button"
 import { Card, CardFooter, CardTitle } from "@/shared/components/ui/card"
 import {
@@ -17,20 +16,27 @@ import {
   FormMessage,
 } from "@/shared/components/ui/form"
 import { Input } from "@/shared/components/ui/input"
-import { catchError, cn, logAction } from "@/shared/lib/utils"
+import { catchError, cn, getUserEmail, logAction } from "@/shared/lib/utils"
 import { updateAccountSchema } from "@/shared/lib/validations/account"
+import { trpc } from "@/app/_trpc/client"
 
+// Extract email schema from general update account schema
 const emailSchema = updateAccountSchema.pick({ email: true })
 type Inputs = z.infer<typeof emailSchema>
 
-interface UpdateEmailFormProps extends React.HTMLAttributes<HTMLDivElement> {
-  email: string
-}
+interface UpdateEmailFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-function UpdateEmailForm({ email, className, ...props }: UpdateEmailFormProps) {
-  const { user } = useUser()
+function UpdateEmailForm({ className, ...props }: UpdateEmailFormProps) {
+  // Get signed in user
+  const { data: user } = trpc.account.getUser.useQuery(void undefined, {
+    suspense: true,
+  })
+
+  if (!user) return null
 
   const [isPending, startTransition] = React.useTransition()
+
+  const email = getUserEmail(user)
 
   // Initialize react-hook-form with zod and set current user values
   const form = useForm<Inputs>({
@@ -41,15 +47,11 @@ function UpdateEmailForm({ email, className, ...props }: UpdateEmailFormProps) {
   })
 
   function onSubmit(input: Inputs) {
-    // Check if user is loaded
-    if (!user) return
-
     startTransition(async () => {
       try {
         // This feature has not yet been implemented
         logAction({
-          toastMessasge:
-            "Почта не изменена. Данная функция еще разрабатывается.",
+          toastMessasge: "Почта не изменена. Данная функция еще в разработке.",
           status: "error",
         })
       } catch (error) {
@@ -89,15 +91,15 @@ function UpdateEmailForm({ email, className, ...props }: UpdateEmailFormProps) {
             <p className="text-sm text-muted-foreground">
               Мы отправим вам электронное письмо для подтверждения изменения.
             </p>
-            <Button>
-              {/* {isPending && (
+            <Button disabled={isPending}>
+              {isPending && (
                 <Icons.spinner
                   className="mr-2 h-4 w-4 animate-spin"
                   aria-hidden="true"
                 />
-              )} */}
+              )}
               Сохранить
-              <span className="sr-only">Сохранить почту6</span>
+              <span className="sr-only">Отправить подтверждения на почту</span>
             </Button>
           </CardFooter>
         </form>

@@ -29,27 +29,41 @@ import { getDeleteAccountSchema } from "@/shared/lib/validations/account"
 import { trpc } from "@/app/_trpc/client"
 
 interface DeleteAccountrFormProps extends React.HTMLAttributes<HTMLDivElement> {
-  username: string
-  deleteString: string
+  deleteString?: string
 }
 
 function DeleteAccountrForm({
-  username,
-  deleteString,
+  deleteString = "удалить мой аккаунт",
   className,
   ...props
 }: DeleteAccountrFormProps) {
+  // Get signed in user
+  const { data: user } = trpc.account.getUser.useQuery(void undefined, {
+    suspense: true,
+  })
+
+  if (!user) return null
+
+  const utils = trpc.useContext()
+  const { mutateAsync: deleteAccount } = trpc.account.deleteAccount.useMutation(
+    {
+      // Invalidate user in all components wich use it to get fresh state after deleting account
+      onSuccess: async () => {
+        await utils.account.getUser.invalidate()
+      },
+    }
+  )
+
   const router = useRouter()
-
-  const { mutateAsync: deleteAccount } =
-    trpc.account.deleteAccount.useMutation()
-
   const [isPending, startTransition] = React.useTransition()
   const [showDeleteAccountDialog, setShowDeleteAccountDialog] =
     React.useState(false)
 
   // Getting dynamic schema based on username and delete sentence
-  const deleteAccountSchema = getDeleteAccountSchema({ username, deleteString })
+  const deleteAccountSchema = getDeleteAccountSchema({
+    username: user.username ?? "",
+    deleteString,
+  })
   type Inputs = z.infer<typeof deleteAccountSchema>
 
   // Initialize react-hook-form with zod
@@ -136,29 +150,34 @@ function DeleteAccountrForm({
                 </p>
                 <Spacer />
                 <div className="-mx-8 -mb-8 border-t bg-muted/30 px-8 py-6">
-                  <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-muted-foreground">
-                          Введите свое имя пользователя{" "}
-                          <strong className="text-primary/80">
-                            {username}
-                          </strong>
-                          , чтобы продолжить:
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            className="bg-background shadow-none"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Spacer />
+                  {/* If username is empty this field is redundant */}
+                  {user.username?.length ? (
+                    <>
+                      <FormField
+                        control={form.control}
+                        name="username"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-muted-foreground">
+                              Введите свое имя пользователя{" "}
+                              <strong className="text-primary/80">
+                                {user.username}
+                              </strong>
+                              , чтобы продолжить:
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                className="bg-background shadow-none"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Spacer />
+                    </>
+                  ) : null}
                   <FormField
                     control={form.control}
                     name="deleteString"
@@ -185,14 +204,17 @@ function DeleteAccountrForm({
               </div>
             </div>
 
-            {/* Back and delte buttons */}
+            {/* Back and delete buttons */}
             <div className="sticky bottom-0 flex justify-between rounded-b-lg border-t bg-background p-4">
               <Button
                 type="button"
                 disabled={isPending}
                 variant="outline"
                 className="bg-background"
-                onClick={() => setShowDeleteAccountDialog(false)}
+                onClick={() => {
+                  setShowDeleteAccountDialog(false)
+                  form.reset()
+                }}
               >
                 Отмена
                 <span className="sr-only">Отменить удаление аккаунта</span>

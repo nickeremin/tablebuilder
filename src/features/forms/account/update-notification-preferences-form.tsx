@@ -18,10 +18,7 @@ import {
 } from "@/shared/components/ui/form"
 import { notificationPreferences } from "@/shared/config/site/account"
 import { catchError, logAction } from "@/shared/lib/utils"
-import {
-  notificationPreferencesSchema,
-  updateNotificationPreferencesSchema,
-} from "@/shared/lib/validations/account"
+import { updateNotificationPreferencesSchema } from "@/shared/lib/validations/account"
 import { trpc } from "@/app/_trpc/client"
 
 type Inputs = z.infer<typeof updateNotificationPreferencesSchema>
@@ -33,29 +30,28 @@ interface UpdateNotificationPreferencesFormProps {
 function UpdateNotificationPreferencesForm({
   type,
 }: UpdateNotificationPreferencesFormProps) {
-  const utils = trpc.useContext()
-
+  // Get signed in user
   const { data: user } = trpc.account.getUser.useQuery(void undefined, {
     suspense: true,
   })
 
+  if (!user) return null
+
+  const utils = trpc.useContext()
   const { mutateAsync: updateNotificationPreferences } =
     trpc.account.updateNotificationPreferences.useMutation({
-      onSuccess: () => {
-        utils.account.getUser.invalidate()
+      // Invalidate user in all components wich use it to get fresh state after updating notification preferences
+      onSuccess: async () => {
+        await utils.account.getUser.invalidate()
       },
     })
 
-  if (!user) return null
+  const [isPending, startTransition] = React.useTransition()
 
   // Memoize public metadata during rendering
   const metadata = React.useMemo(() => {
-    return notificationPreferencesSchema.parse(
-      user?.publicMetadata.notificationPreferences
-    )[type]
+    return user.publicMetadata.notificationPreferences[type]
   }, [user])
-
-  const [isPending, startTransition] = React.useTransition()
 
   // Initialize react-hook-form with zod and set current user values
   const form = useForm<Inputs>({
@@ -69,7 +65,6 @@ function UpdateNotificationPreferencesForm({
   function onSubmit(input: Inputs) {
     startTransition(async () => {
       try {
-        // Update user notification preferences
         await updateNotificationPreferences({
           type,
           data: input,

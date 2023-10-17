@@ -1,5 +1,6 @@
 "use client"
 
+// This necessary for react-image-crop styles
 import "react-image-crop/dist/ReactCrop.css"
 
 import * as React from "react"
@@ -203,6 +204,7 @@ function UpdateImageForm({ className, ...props }: UpdateImageFormProps) {
         <div className="overflow-y-auto overflow-x-hidden">
           <div className="relative overflow-y-auto overflow-x-hidden p-8">
             <ReactCrop
+              keepSelection={true}
               className="m-auto !block !max-w-[350px]"
               crop={crop}
               onChange={(_, percentCrop) => setCrop(percentCrop)}

@@ -5,13 +5,9 @@ export const submenuLinks: NavItem[] = [
     title: "Панель управления",
     href: "/dashboard",
   },
-  // {
-  //   title: "Usage",
-  //   href: "/usage",
-  // },
   {
     title: "Хранилище",
-    href: "/dashboard/storage",
+    href: "/storages",
   },
   {
     title: "Настройки",

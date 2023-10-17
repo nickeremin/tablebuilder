@@ -1,5 +1,7 @@
 "use client"
 
+import { toast } from "sonner"
+
 import { Button } from "@/shared/components/ui/button"
 import {
   Dialog,
@@ -11,9 +13,18 @@ import {
 function CreateTeamForm() {
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button className="font-medium">Создать команду</Button>
-      </DialogTrigger>
+      {/* <DialogTrigger asChild> */}
+      <Button
+        onClick={() =>
+          toast.error(
+            "Нельзя создать команду. Данная функция еще в разработке."
+          )
+        }
+        className="font-medium"
+      >
+        Создать команду
+      </Button>
+      {/* </DialogTrigger> */}
       <DialogContent>
         <DialogHeader>Создать команду</DialogHeader>
       </DialogContent>

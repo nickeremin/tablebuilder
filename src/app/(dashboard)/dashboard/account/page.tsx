@@ -16,7 +16,7 @@ import {
 
 const AccountPage = async () => {
   return (
-    <Shell variant="sidebar">
+    <Shell>
       <PageHeader
         id="dashboard-account-page-header"
         aria-labelledby="dashboard-account-page-header-heading"

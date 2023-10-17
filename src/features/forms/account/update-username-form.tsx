@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { useUser } from "@clerk/nextjs"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -21,22 +20,29 @@ import { catchError, cn, logAction } from "@/shared/lib/utils"
 import { updateAccountSchema } from "@/shared/lib/validations/account"
 import { trpc } from "@/app/_trpc/client"
 
+// Extract username schema from general update account schema
 const usernameSchema = updateAccountSchema.pick({ username: true })
 type Inputs = z.infer<typeof usernameSchema>
 
-interface UpdateUsernameFormProps extends React.HTMLAttributes<HTMLDivElement> {
-  username: string
-}
+interface UpdateUsernameFormProps
+  extends React.HTMLAttributes<HTMLDivElement> {}
 
-function UpdateUsernameForm({
-  username,
-  className,
-  ...props
-}: UpdateUsernameFormProps) {
-  const { user } = useUser()
+function UpdateUsernameForm({ className, ...props }: UpdateUsernameFormProps) {
+  // Get signed in user
+  const { data: user } = trpc.account.getUser.useQuery(void undefined, {
+    suspense: true,
+  })
 
+  if (!user) return null
+
+  const utils = trpc.useContext()
   const { mutateAsync: updateUsername } =
-    trpc.account.updateUsername.useMutation()
+    trpc.account.updateUsername.useMutation({
+      // Invalidate user in all components wich use it to get fresh state after updating username
+      onSuccess: async () => {
+        await utils.account.getUser.invalidate()
+      },
+    })
 
   const [isPending, startTransition] = React.useTransition()
 
@@ -44,20 +50,14 @@ function UpdateUsernameForm({
   const form = useForm<Inputs>({
     resolver: zodResolver(usernameSchema),
     defaultValues: {
-      username,
+      username: user.username ?? "",
     },
   })
 
   function onSubmit(input: Inputs) {
-    // Check if user is loaded
-    if (!user) return
-
     startTransition(async () => {
       try {
-        // Update username and then reload current user data
         await updateUsername(input)
-
-        await user.reload()
 
         logAction({
           toastMessasge: "Имя пользователя обновлено.",
