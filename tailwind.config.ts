@@ -16,6 +16,7 @@ module.exports = {
         xxs: "380px",
       },
       colors: {
+        link: "rgb(0,112,243)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
