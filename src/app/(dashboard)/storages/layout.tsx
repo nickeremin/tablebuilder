@@ -12,13 +12,9 @@ function StoragesLayout({ children }: StoragesLayoutProps) {
   return (
     <>
       <StoragesPageHeader />
-      <Spacer aria-hidden="true" size="lg" className="hidden lg:block" />
-      <Shell as="div">
-        <div className="grid grid-cols-1 lg:grid-cols-[220px_minmax(0,1fr)]">
-          {children}
-        </div>
+      <Shell as="div" className="my-6 min-h-[calc(100vh-300px)]">
+        {children}
       </Shell>
-      <Spacer aria-hidden="true" size="lg" />
     </>
   )
 }

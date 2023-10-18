@@ -9,10 +9,8 @@ function LogoIcon({ className, ...props }: LogoIconProps) {
   return (
     <div
       className={cn(
-        "relative h-8 w-8 rounded border-2",
-        themeVariants({
-          variant: "logo",
-        }),
+        "border-primary-blue dark:bg-primary-blue/20 bg-primary-blue/10 relative h-8 w-8 rounded border-2",
+
         className
       )}
       {...props}

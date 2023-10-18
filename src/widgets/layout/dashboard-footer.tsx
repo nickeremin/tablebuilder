@@ -1,6 +1,7 @@
 import React from "react"
 import Link from "next/link"
-import { LogoIcon } from "@/entities"
+
+import LogoIcon from "@/shared/components/logo"
 
 const DashboardFooter = () => {
   return (

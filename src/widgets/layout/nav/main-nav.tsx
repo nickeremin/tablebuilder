@@ -2,7 +2,7 @@ import Link from "next/link"
 import { BellIcon } from "@radix-ui/react-icons"
 
 import { MultiSwitcher, UserNav } from "@/features/nav"
-import LogoIcon from "@/entities/logo"
+import LogoIcon from "@/shared/components/logo"
 import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
 import { Separator } from "@/shared/components/ui/separator"

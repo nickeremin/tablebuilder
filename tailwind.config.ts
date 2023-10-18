@@ -16,7 +16,7 @@ module.exports = {
         xxs: "380px",
       },
       colors: {
-        link: "rgb(0,112,243)",
+        link: "rgb(var(--primary-blue))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -25,6 +25,7 @@ module.exports = {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          blue: "rgb(var(--primary-blue))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",

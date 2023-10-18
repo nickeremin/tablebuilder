@@ -3,16 +3,15 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LogoIcon } from "@/entities"
-import { BellIcon, ChatBubbleIcon } from "@radix-ui/react-icons"
+import { BellIcon } from "@radix-ui/react-icons"
 import { useInView } from "react-intersection-observer"
 
 import { MultiSwitcher, UserNav } from "@/features/nav"
+import LogoIcon from "@/shared/components/logo"
 import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
 import { Separator } from "@/shared/components/ui/separator"
 import { submenuLinks } from "@/shared/config/site/nav"
-import { themeVariants } from "@/shared/config/site/themes"
 import { cn } from "@/shared/lib/utils"
 
 function DashboardNav() {
@@ -46,14 +45,8 @@ function DashboardNav() {
           <Button
             aria-label="Поделиться отзывом"
             variant="outline"
-            className={cn(
-              "hidden md:flex",
-              themeVariants({
-                variant: "hover:bg-border-sky",
-              })
-            )}
+            className="hidden md:flex"
           >
-            <ChatBubbleIcon className="mr-2 h-4 w-4" />
             Поделиться
             <span className="sr-only">Поделиться отзывом</span>
           </Button>
@@ -64,12 +57,7 @@ function DashboardNav() {
               className="space-x-1 rounded-full px-2"
             >
               <BellIcon className="h-5 w-5" />
-              <Badge
-                className={cn(
-                  "hidden rounded-full px-1.5 py-0.5 md:block",
-                  themeVariants({ variant: "bg-sky" })
-                )}
-              >
+              <Badge className="bg-primary-blue hover:bg-primary-blue hidden rounded-full px-1.5 py-0.5 text-white shadow-none md:block">
                 4
               </Badge>
               <span className="sr-only">Открыть уведомления</span>
