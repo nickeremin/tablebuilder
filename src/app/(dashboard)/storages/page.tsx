@@ -11,7 +11,7 @@ function StoragesPage() {
         <div className="flex flex-col items-center gap-1">
           <p className="text-sm font-medium">Создайте хранилище</p>
           <p className="max-w-[280px] text-center text-sm text-muted-foreground">
-            Создавайте хранилища и загружайте в них ваши документы.
+            Создавайте хранилища и сохраняйте в них ваши документы.
           </p>
         </div>
       </div>
