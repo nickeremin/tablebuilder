@@ -2,6 +2,13 @@ import * as z from "zod"
 
 // Schema validations for authentication with zod
 export const authSchema = z.object({
+  username: z
+    .string()
+    .min(2, { message: "Пожалуйста, используйте минимум 2 символа." })
+    .max(32, {
+      message: "Пожалуйста, используйте максимум 32 символа.",
+    }),
+  subscriptionPlan: z.enum(["hobby", "pro"]),
   email: z.string().email({
     message: "Пожалуйста, введите действительный адрес электронной почты.",
   }),

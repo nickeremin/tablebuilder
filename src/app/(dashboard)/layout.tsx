@@ -10,7 +10,7 @@ interface DashboardLayoutProps {
 async function DashboardLayout({ children }: DashboardLayoutProps) {
   const user = await currentUser()
 
-  //if (!user) redirect("/auth/signin")
+  if (!user) redirect("/signin")
 
   return (
     <div className="relative flex min-h-screen flex-col">

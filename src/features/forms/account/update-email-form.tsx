@@ -63,7 +63,7 @@ function UpdateEmailForm({ className, ...props }: UpdateEmailFormProps) {
   return (
     <Card
       as="section"
-      className={cn("rounded-md border-none shadow-card-border", className)}
+      className={cn("shadow-themed-border rounded-md border-none", className)}
       {...props}
     >
       <Form {...form}>

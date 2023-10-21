@@ -1,4 +1,4 @@
-import { TableCardsLoading } from "@/entities/skeletons"
+import { TableCardsLoading } from "@/entities/loading"
 import { Shell } from "@/shared/components/shells/shell"
 import {
   PageHeader,

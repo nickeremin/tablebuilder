@@ -28,12 +28,14 @@
  
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-
+    
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 240 10% 3.9%;
  
     --radius: 0.5rem;
+
+    --full: 1448px;
   }
  
   .dark {
@@ -48,6 +50,7 @@
  
     --primary: 0 0% 98%;
     --primary-foreground: 240 5.9% 10%;
+
  
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
@@ -85,4 +88,12 @@
 /* Utility styles */
 .max-width {
   @apply max-w-7xl
+}
+
+.underline-link {
+  @apply relative hover:after:border-b-link hover:after:absolute hover:after:bottom-0 hover:after:left-0 hover:after:right-0 hover:after:border-b hover:after:content-['']
+} 
+
+.auth-size-style {
+  @apply h-12 rounded-lg text-base
 }

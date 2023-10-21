@@ -1,4 +1,4 @@
-import { FormLoading } from "@/entities/skeletons"
+import { FormLoading } from "@/entities/loading"
 import { Shell } from "@/shared/components/shells/shell"
 import { Card, CardContent, CardHeader } from "@/shared/components/ui/card"
 import { PageHeader } from "@/shared/components/ui/page-header"

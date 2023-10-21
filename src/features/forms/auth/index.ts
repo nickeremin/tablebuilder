@@ -1,3 +1,4 @@
+import EmailSignInForm from "./email-signin-form"
 import ResetPasswordForm from "./reset-password-form"
 import ResetPasswordStep2Form from "./reset-password-step2-form"
 import SignInForm from "./signin-form"
@@ -10,4 +11,5 @@ export {
   VerifyEmailForm,
   ResetPasswordForm,
   ResetPasswordStep2Form,
+  EmailSignInForm,
 }

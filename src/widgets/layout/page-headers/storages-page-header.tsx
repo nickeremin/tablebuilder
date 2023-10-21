@@ -17,7 +17,7 @@ function StoragesPageHeader() {
                 Создавайте личные хранилища для хранения ваших документов.{" "}
                 <Link
                   href="/storages"
-                  className="text-link hover:after:border-b-link relative inline-flex items-center hover:after:absolute hover:after:bottom-0 hover:after:left-0 hover:after:right-0 hover:after:border-b hover:after:content-['']"
+                  className="underline-link relative inline-flex items-center text-link"
                 >
                   Узнать больше
                   <ExternalLinkIcon

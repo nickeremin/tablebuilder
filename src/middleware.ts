@@ -4,9 +4,9 @@ import { authMiddleware } from "@clerk/nextjs"
 export default authMiddleware({
   publicRoutes: [
     "/",
-    "/auth/signin(.*)",
-    "/auth/signup(.*)",
-    "/auth/sso-callback(.*)",
+    "/signin(.*)",
+    "/signup(.*)",
+    "/sso-callback(.*)",
     "/api/webhook(.*)",
   ],
   async afterAuth(auth, req) {

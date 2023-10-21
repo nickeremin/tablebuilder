@@ -81,8 +81,8 @@ module.exports = {
         table: "36px minmax(144px, 1fr) 144px 36px",
       },
       boxShadow: {
-        "nav-border": "inset 0 -1px hsl(var(--border))",
-        "card-border": "0 0 0 1px hsl(var(--border))",
+        "nav-border": "inset 0 -1px 0 0 hsl(var(--border))",
+        "themed-border": "0 0 0 1px hsl(var(--border))",
       },
     },
   },

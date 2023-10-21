@@ -5,8 +5,8 @@ import { useTheme } from "next-themes"
 
 import { Button } from "@/shared/components/ui/button"
 
-const ThemeToggler = () => {
-  const { theme, setTheme } = useTheme()
+function ThemeToggle() {
+  const { setTheme, theme } = useTheme()
 
   return (
     <Button
@@ -22,9 +22,9 @@ const ThemeToggler = () => {
         className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
         aria-hidden="true"
       />
-      <span className="sr-only">Переключить тему</span>
+      <span className="sr-only">Toggle theme</span>
     </Button>
   )
 }
 
-export { ThemeToggler }
+export default ThemeToggle
