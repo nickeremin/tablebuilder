@@ -94,6 +94,6 @@
   @apply relative hover:after:border-b-link hover:after:absolute hover:after:bottom-0 hover:after:left-0 hover:after:right-0 hover:after:border-b hover:after:content-['']
 } 
 
-.auth-size-style {
+.auth-btn {
   @apply h-12 rounded-lg text-base
 }

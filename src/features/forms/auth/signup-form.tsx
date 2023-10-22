@@ -4,8 +4,9 @@ import * as React from "react"
 import { useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { useSignUp } from "@clerk/nextjs"
+import { type OAuthStrategy } from "@clerk/nextjs/server"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { CheckIcon, ValueIcon } from "@radix-ui/react-icons"
+import { CheckIcon, EnvelopeClosedIcon, ValueIcon } from "@radix-ui/react-icons"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import * as z from "zod"
@@ -23,14 +24,18 @@ import {
 import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/shared/components/ui/radio-group"
+import { Spacer } from "@/shared/components/ui/spacer"
 import { catchClerkError, cn } from "@/shared/lib/utils"
 import { authSchema } from "@/shared/lib/validations/auth"
+
+import { oauthProviders } from "./signin-form"
 
 type Inputs = z.infer<typeof authSchema>
 
 const SignUpForm = () => {
   const router = useRouter()
   const [nextStep, setNextStep] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState<OAuthStrategy | null>(null)
   const { isLoaded, signUp } = useSignUp()
   const [isPending, startTransition] = useTransition()
 
@@ -45,11 +50,28 @@ const SignUpForm = () => {
     },
   })
 
+  async function oauthSignUp(provider: OAuthStrategy) {
+    if (!isLoaded) return null
+
+    try {
+      setIsLoading(provider)
+
+      // Try to sign in with oauth provider
+      await signUp.authenticateWithRedirect({
+        strategy: provider,
+        redirectUrl: "/sso-callback",
+        redirectUrlComplete: "/",
+        unsafeMetadata: {
+          subscriptionPlan: form.getValues("subscriptionPlan"),
+        },
+      })
+    } catch (error) {
+      catchClerkError(error)
+    }
+  }
+
   const onSubmit = (input: Inputs) => {
     if (!isLoaded) return
-
-    console.log(input)
-    //return
 
     startTransition(async () => {
       try {
@@ -68,7 +90,6 @@ const SignUpForm = () => {
           redirectUrl: "/sso-callback",
         })
 
-        //router.push("/auth/signup/verify-email")
         toast.message("Проверьте вашу почту", {
           description: "Мы отправили вам ссылку для подтверждения.",
         })
@@ -81,7 +102,7 @@ const SignUpForm = () => {
   return (
     <Form {...form}>
       <form
-        className="flex w-full max-w-[456px] flex-col gap-4 pt-20"
+        className="flex w-full max-w-[456px] flex-col pt-16"
         onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
       >
         {!nextStep ? (
@@ -182,7 +203,7 @@ const SignUpForm = () => {
                         <FormLabel className="text-sm text-muted-foreground">
                           Имя пользователя
                         </FormLabel>
-                        <Input className="auth-size-style" {...field} />
+                        <Input className="auth-btn" {...field} />
                       </FormItem>
                     )}
                   />
@@ -194,7 +215,7 @@ const SignUpForm = () => {
                     !form.getValues("subscriptionPlan") ||
                     !form.getValues("username")
                   }
-                  className="auth-size-style disabled:bg-muted disabled:text-muted-foreground"
+                  className="auth-btn disabled:bg-muted disabled:text-muted-foreground"
                 >
                   {isPending && (
                     <Icons.spinner
@@ -209,11 +230,68 @@ const SignUpForm = () => {
             </div>
           </div>
         ) : (
-          <>
-            <Button onClick={() => console.log(form.getValues())}>
-              Check input
-            </Button>
-          </>
+          <div className="flex flex-col gap-7">
+            <h1 className="text-center text-[32px] font-bold sm:text-[40px]">
+              Выберите способ создать аккаунт
+            </h1>
+
+            <div className="flex flex-col items-center">
+              <div className="w-full max-w-[320px]">
+                {/* OAuth buttons to sign up */}
+                <div className="flex flex-col gap-3">
+                  {oauthProviders.map((provider) => {
+                    const Icon = Icons[provider.icon]
+
+                    return (
+                      <Button
+                        type="button"
+                        key={provider.strategy}
+                        aria-label={`Создайте аккаунт с помощью ${provider.name}`}
+                        className={cn(
+                          "auth-btn text-white",
+                          provider.background
+                        )}
+                        onClick={() => oauthSignUp(provider.strategy)}
+                        disabled={isLoading !== null}
+                      >
+                        {isLoading === provider.strategy ? (
+                          <Icons.spinner
+                            className="mr-2 h-4 w-4 animate-spin"
+                            aria-hidden="true"
+                          />
+                        ) : (
+                          <Icon className="mr-2 h-4 w-4" aria-hidden="true" />
+                        )}
+                        {provider.label}
+                      </Button>
+                    )
+                  })}
+                </div>
+
+                <div className="relative my-5">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                      или продолжите
+                    </span>
+                  </div>
+                </div>
+
+                <Button variant="outline" className="auth-btn w-full">
+                  <EnvelopeClosedIcon
+                    className="mr-2 h-4 w-4"
+                    aria-hidden="true"
+                  />
+                  Продолжить по почте
+                  <span className="sr-only">
+                    Продолжить по электронной почте
+                  </span>
+                </Button>
+              </div>
+            </div>
+          </div>
         )}
       </form>
     </Form>

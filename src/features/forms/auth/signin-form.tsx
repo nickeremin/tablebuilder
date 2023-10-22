@@ -6,12 +6,13 @@ import { useRouter } from "next/navigation"
 import { useSignIn } from "@clerk/nextjs"
 import { type OAuthStrategy } from "@clerk/nextjs/server"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { EnvelopeClosedIcon } from "@radix-ui/react-icons"
 import { MoveRightIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 import { Icons } from "@/shared/components/icons"
-import { Button } from "@/shared/components/ui/button"
+import { Button, buttonVariants } from "@/shared/components/ui/button"
 import {
   Form,
   FormControl,
@@ -26,7 +27,7 @@ import { authSchema } from "@/shared/lib/validations/auth"
 
 type Inputs = z.infer<typeof authSchema>
 
-const oauthProviders = [
+export const oauthProviders = [
   {
     label: "Продолжить с Google",
     name: "Google",
@@ -129,10 +130,7 @@ function SignInForm() {
                 type="button"
                 key={provider.strategy}
                 aria-label={`Войдите с помощью ${provider.name}`}
-                className={cn(
-                  "auth-size-style text-white",
-                  provider.background
-                )}
+                className={cn("auth-btn text-white", provider.background)}
                 onClick={() => oauthSignIn(provider.strategy)}
                 disabled={isLoading !== null}
               >
@@ -161,66 +159,19 @@ function SignInForm() {
           </div>
         </div>
 
-        {/* Email and password sign in */}
-        <div className="flex flex-col">
-          <div className="flex flex-col gap-3">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="Введите электронную почту"
-                      className="auth-size-style"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="Введите пароль"
-                      className="auth-size-style"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button disabled={isPending} className="auth-size-style">
-              {isPending && (
-                <Icons.spinner
-                  className="mr-2 h-4 w-4 animate-spin"
-                  aria-hidden="true"
-                />
-              )}
-              Войти
-              <span className="sr-only">Войти</span>
-            </Button>
-          </div>
-          <Spacer />
-          <div className="flex items-center justify-center">
-            <Link
-              href="/signin/email"
-              className="underline-link flex items-center text-sm text-link"
-            >
-              Продолжить по электронной почте
-              <MoveRightIcon className="ml-1 h-4 w-4" aria-hidden="true" />
-              <span className="sr-only">Продолжить по электронной почте</span>
-            </Link>
-          </div>
-        </div>
+        <Link
+          href="/signin/email"
+          className={cn(
+            buttonVariants({
+              variant: "outline",
+              className: "auth-btn",
+            })
+          )}
+        >
+          <EnvelopeClosedIcon className="mr-2 h-4 w-4" aria-hidden="true" />
+          Продолжить по почте
+          <span className="sr-only">Продолжить по электронной почте</span>
+        </Link>
       </form>
     </Form>
   )
