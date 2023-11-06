@@ -7,7 +7,9 @@ const spacerVariants = cva("h-[1px] w-[1px] select-none ml-[23px] block", {
     variant: {},
     size: {
       sm: "mt-[23px]",
-      lg: "mt-[47px]",
+      md: "mt-[47px]",
+      lg: "mt-[71px]",
+      xl: "mt-[95px]",
     },
   },
   defaultVariants: {
