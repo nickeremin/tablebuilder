@@ -1,17 +1,20 @@
-import { AuthNav, HomeFooter } from "@/widgets/layout"
+import * as React from "react"
+
+import { AuthNav } from "@/widgets/layout/auth"
+import { SiteFooter } from "@/widgets/layout/home"
 
 interface AuthLayoutProps {
   children: React.ReactNode
 }
 
-const AuthLayout = ({ children }: AuthLayoutProps) => {
+function AuthLayout({ children }: AuthLayoutProps) {
   return (
     <div className="relative overflow-hidden">
       <div className="relative min-h-screen">
         <AuthNav />
         {children}
       </div>
-      <HomeFooter />
+      <SiteFooter />
     </div>
   )
 }

@@ -1,22 +1,23 @@
 import { redirect } from "next/navigation"
 import { currentUser } from "@clerk/nextjs"
 
-import { DashboardFooter, DashboardNav } from "@/widgets/layout"
+import { DashboardNav } from "@/widgets/layout/dashboard"
+import { SiteFooter } from "@/widgets/layout/home"
 
 interface DashboardLayoutProps {
   children: React.ReactNode
 }
 
 async function DashboardLayout({ children }: DashboardLayoutProps) {
-  const user = await currentUser()
+  // const user = await currentUser()
 
-  if (!user) redirect("/signin")
+  // if (!user) redirect("/signin")
 
   return (
     <div className="relative flex min-h-screen flex-col">
       <DashboardNav />
       <div className="min-h-[calc(100vh-85px)]">{children}</div>
-      <DashboardFooter />
+      <SiteFooter />
     </div>
   )
 }

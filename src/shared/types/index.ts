@@ -6,7 +6,7 @@ import { SelectTable, SelectTableRecord } from "../db/schema"
 // Nav types
 export interface NavItem {
   title: string
-  href: string
+  href?: string
   disabled?: boolean
   external?: boolean
   icon?: keyof typeof Icons
@@ -18,7 +18,13 @@ export interface NavItemWithChildren extends NavItem {
   items: NavItemWithChildren[]
 }
 
+export interface NavItemWithOptionalChildren extends NavItem {
+  items?: NavItemWithChildren[]
+}
+
 export type SidebarNavItem = NavItemWithChildren
+
+export type MainNavItem = NavItemWithOptionalChildren
 
 export interface Option {
   label: string

@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { Balancer } from "react-wrap-balancer"
 
 import { CreateTeamForm } from "@/features/forms/account"
 import { Input } from "@/shared/components/ui/input"

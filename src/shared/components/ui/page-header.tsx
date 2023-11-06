@@ -20,21 +20,31 @@ function PageHeader({
   )
 }
 
-const headingVariants = cva(
-  "font-bold leading-tight tracking-tighter lg:leading-[1.1]",
-  {
-    variants: {
-      size: {
-        default: "text-3xl md:text-4xl",
-        sm: "text-2xl md:text-3xl",
-        lg: "text-4xl md:text-5xl",
-      },
+const headingVariants = cva("tracking-tighter", {
+  variants: {
+    size: {
+      default: "text-[32px]",
+      logo: "text-xl",
+      xs: "text-[24px] sm:text-[36px] leading-[1.1]",
+      sm: "text-[32px] sm:text-[40px] leading-[1.1]",
+      md: "text-[32px] sm:text-[44px] leading-[1.1]",
+      lg: "text-[32px] sm:text-[48px] leading-[1.1]",
+      xl: "text-[32px] sm:text-[52px] leading-[1.1]",
+      "2xl": "text-[32px] sm:text-[56px] leading-[1.1]",
+      "3xl": "text-[32px] sm:text-[52px] lg:text-[60px] leading-none",
+      "4xl": "text-[32px] sm:text-[64px] leading-none",
+      // logo: "text-xl font-bold",
+      // sm: "text-2xl",
+      // md: "text-[32px] sm:text-[40px]",
+      // lg: "text-[32px] sm:text-[56px]",
+      // xl: "text-[32px] sm:text-[64px] !leading-none",
+      // xxl: "text-[32px] sm:text-[64px] !leading-none",
     },
-    defaultVariants: {
-      size: "default",
-    },
-  }
-)
+  },
+  defaultVariants: {
+    size: "default",
+  },
+})
 
 interface PageHeaderHeadingProps
   extends React.HTMLAttributes<HTMLHeadingElement>,
@@ -42,14 +52,18 @@ interface PageHeaderHeadingProps
   as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
 }
 
-function PageHeaderHeading({
+function PageHeading({
   className,
   size,
   as: Comp = "h1",
   ...props
 }: PageHeaderHeadingProps) {
   return (
-    <Comp className={cn(headingVariants({ size, className }))} {...props} />
+    <Balancer
+      as={Comp}
+      className={cn(headingVariants({ size, className }))}
+      {...props}
+    />
   )
 }
 
@@ -84,4 +98,4 @@ function PageHeaderDescription({
   )
 }
 
-export { PageHeader, PageHeaderDescription, PageHeaderHeading }
+export { PageHeader, PageHeaderDescription, PageHeading }

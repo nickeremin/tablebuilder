@@ -1,7 +1,6 @@
 import { type HandleOAuthCallbackParams } from "@clerk/types"
 
 import { SSOCallback } from "@/entities/loading"
-import { Shell } from "@/shared/components/shells/shell"
 
 export interface SSOCallbackPageProps {
   searchParams: HandleOAuthCallbackParams
@@ -9,9 +8,9 @@ export interface SSOCallbackPageProps {
 
 function SSOCallbackPage({ searchParams }: SSOCallbackPageProps) {
   return (
-    <Shell className="min-h-[calc(100vh-64px)] py-6">
+    <div className="flex h-[calc(100vh-160px)] flex-col items-center justify-center px-6">
       <SSOCallback searchParams={searchParams} />
-    </Shell>
+    </div>
   )
 }
 

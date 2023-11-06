@@ -3,13 +3,13 @@ import * as React from "react"
 import { themeVariants } from "@/shared/config/site/themes"
 import { cn } from "@/shared/lib/utils"
 
-interface LogoIconProps extends React.HTMLAttributes<HTMLDivElement> {}
+export interface LogoIconProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 function LogoIcon({ className, ...props }: LogoIconProps) {
   return (
     <div
       className={cn(
-        "border-primary-blue dark:bg-primary-blue/20 bg-primary-blue/10 relative h-8 w-8 rounded border-2",
+        "relative h-8 w-8 rounded border-2 border-primary/75 bg-primary/10 dark:bg-primary/20",
 
         className
       )}

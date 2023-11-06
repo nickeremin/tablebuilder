@@ -7,8 +7,8 @@ import { useSignUp } from "@clerk/nextjs"
 import { type OAuthStrategy } from "@clerk/nextjs/server"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CheckIcon, EnvelopeClosedIcon, ValueIcon } from "@radix-ui/react-icons"
+import { MoveLeftIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
-import { toast } from "sonner"
 import * as z from "zod"
 
 import { Icons } from "@/shared/components/icons"
@@ -23,21 +23,26 @@ import {
 } from "@/shared/components/ui/form"
 import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
+import { PageHeading } from "@/shared/components/ui/page-header"
 import { RadioGroup, RadioGroupItem } from "@/shared/components/ui/radio-group"
 import { Spacer } from "@/shared/components/ui/spacer"
+import { oauthProviders } from "@/shared/config/site/oauth"
 import { catchClerkError, cn } from "@/shared/lib/utils"
 import { authSchema } from "@/shared/lib/validations/auth"
-
-import { oauthProviders } from "./signin-form"
 
 type Inputs = z.infer<typeof authSchema>
 
 const SignUpForm = () => {
   const router = useRouter()
   const [nextStep, setNextStep] = React.useState(false)
+  const [emailStep, setEmailStep] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState<OAuthStrategy | null>(null)
-  const { isLoaded, signUp } = useSignUp()
   const [isPending, startTransition] = useTransition()
+
+  const [isVerifying, setIsVerifying] = React.useState(false)
+  const [expired, setExpired] = React.useState(false)
+  const [verified, setVerified] = React.useState(false)
+  const { isLoaded, setActive, signUp } = useSignUp()
 
   // Initializing react-hook-form with zod
   const form = useForm<Inputs>({
@@ -46,9 +51,13 @@ const SignUpForm = () => {
       username: "",
       subscriptionPlan: undefined,
       email: "",
-      password: "",
     },
   })
+
+  if (!isLoaded) return null
+
+  const { startMagicLinkFlow, cancelMagicLinkFlow } =
+    signUp.createMagicLinkFlow()
 
   async function oauthSignUp(provider: OAuthStrategy) {
     if (!isLoaded) return null
@@ -56,60 +65,243 @@ const SignUpForm = () => {
     try {
       setIsLoading(provider)
 
+      // Сreate a user with the entered data
+      await signUp.create({
+        username: form.getValues("username"),
+        unsafeMetadata: {
+          subscriptionPlan: form.getValues("subscriptionPlan"),
+        },
+      })
+
       // Try to sign in with oauth provider
       await signUp.authenticateWithRedirect({
         strategy: provider,
         redirectUrl: "/sso-callback",
         redirectUrlComplete: "/",
-        unsafeMetadata: {
-          subscriptionPlan: form.getValues("subscriptionPlan"),
-        },
+        // Use this to avoid overriding the entered username or subscription plan
+        continueSignUp: true,
       })
     } catch (error) {
       catchClerkError(error)
     }
   }
 
-  const onSubmit = (input: Inputs) => {
-    if (!isLoaded) return
+  function onSubmit(input: Inputs) {
+    if (!isLoaded) return null
+
+    setExpired(false)
+    setVerified(false)
 
     startTransition(async () => {
       try {
+        // Start the sign up flow, by collecting the user's data
         await signUp.create({
           emailAddress: input.email,
-          password: input.password,
           username: input.username,
           unsafeMetadata: {
             subscriptionPlan: input.subscriptionPlan,
           },
         })
 
-        // Send email verification code
-        await signUp.prepareEmailAddressVerification({
-          strategy: "email_link",
-          redirectUrl: "/sso-callback",
+        setIsVerifying(true)
+
+        const su = await startMagicLinkFlow({
+          redirectUrl: `http://localhost:3000/verification?email=${input.email}&mode=signup`,
         })
 
-        toast.message("Проверьте вашу почту", {
-          description: "Мы отправили вам ссылку для подтверждения.",
-        })
+        // Check the verification result.
+        const verification = su.verifications.emailAddress
+
+        if (verification.verifiedFromTheSameClient()) {
+          setVerified(true)
+          // If you're handling the verification result from
+          // another route/component, you should return here.
+          // See the <MagicLinkVerification/> component as an
+          // example below.
+          // If you want to complete the flow on this tab,
+          // don't return. Check the sign up status instead.
+          return
+        } else if (verification.status === "expired") {
+          setExpired(true)
+        }
+
+        if (su.status === "complete") {
+          // Sign up is complete, we have a session.
+          // Navigate to the after sign up URL.
+          setActive({
+            session: su.createdSessionId,
+            beforeEmit: () => router.push("/dashboard"),
+          })
+          return
+        }
       } catch (error) {
+        setIsVerifying(false)
         catchClerkError(error)
       }
     })
   }
 
+  if (isVerifying) {
+    return (
+      <div className="flex flex-col gap-6 pb-24">
+        <PageHeading className="text-center" size="sm">
+          Подтверждение Почты
+        </PageHeading>
+        <p className="text-center text-muted-foreground">
+          Держите это окно открытым и в новой вкладке откройте ссылку, которую
+          мы только что отправили на{" "}
+          <span className="font-medium text-primary">
+            {form.getValues("email")}
+          </span>
+        </p>
+      </div>
+    )
+  }
+
   return (
     <Form {...form}>
       <form
-        className="flex w-full max-w-[456px] flex-col pt-16"
+        className="flex w-full max-w-[456px] flex-col gap-7"
         onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
       >
-        {!nextStep ? (
-          <div className="flex flex-col gap-7">
-            <h1 className="text-center text-[32px] font-bold sm:text-[40px]">
+        {nextStep ? (
+          emailStep ? (
+            // Step for signin up with emal
+            <>
+              <PageHeading className="text-center" size="lg">
+                Зарегистрируйтесь в Tablebuilder
+              </PageHeading>
+              <div className="flex flex-col items-center">
+                <div className="w-full max-w-[320px]">
+                  <div className="flex flex-col gap-3">
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              type="text"
+                              placeholder="Введите почту"
+                              className="lg-button-size"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button
+                      aria-label="Отправить ссылку для подтверждения электронной почты"
+                      type="submit"
+                      disabled={isPending}
+                      size="lg"
+                    >
+                      {isPending && (
+                        <Icons.spinner
+                          className="mr-2 h-4 w-4 animate-spin"
+                          aria-hidden="true"
+                        />
+                      )}
+                      <EnvelopeClosedIcon
+                        className="mr-2 h-4 w-4"
+                        aria-hidden="true"
+                      />
+                      Продолжить по почте
+                    </Button>
+                  </div>
+                  <Spacer />
+                  <div className="flex items-center justify-center">
+                    <span
+                      onClick={() => setEmailStep(false)}
+                      className="underline-link flex items-center text-sm text-link hover:cursor-pointer"
+                    >
+                      <MoveLeftIcon
+                        className="mr-1 h-4 w-4"
+                        aria-hidden="true"
+                      />
+                      Другие варианты регистрации
+                      <span className="sr-only">
+                        Другие варианты регистрации
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            // Second step where the user sets the registration method
+            <>
+              <PageHeading className="text-center" size="lg">
+                Выберите Способ Создать Аккаунт
+              </PageHeading>
+
+              <div className="flex flex-col items-center">
+                <div className="w-full max-w-[320px]">
+                  {/* OAuth buttons to sign up */}
+                  <div className="flex flex-col gap-3">
+                    {oauthProviders.map((provider) => {
+                      const Icon = Icons[provider.icon]
+
+                      return (
+                        <Button
+                          type="button"
+                          key={provider.strategy}
+                          aria-label={`Создайте аккаунт с помощью ${provider.name}`}
+                          className={cn("text-white", provider.background)}
+                          size="lg"
+                          onClick={() => oauthSignUp(provider.strategy)}
+                          disabled={!!isLoading}
+                        >
+                          {isLoading === provider.strategy ? (
+                            <Icons.spinner
+                              className="mr-2 h-6 w-6 animate-spin"
+                              aria-hidden="true"
+                            />
+                          ) : (
+                            <Icon className="mr-2 h-6 w-6" aria-hidden="true" />
+                          )}
+                          {provider.label}
+                        </Button>
+                      )
+                    })}
+                  </div>
+
+                  <div className="relative my-5">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-background px-2 text-muted-foreground">
+                        или продолжите
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Button for sign up with email */}
+                  <Button
+                    aria-label="Продолжить регистрацию по электронной почте"
+                    variant="outline"
+                    className="w-full"
+                    size="lg"
+                    onClick={() => setEmailStep(true)}
+                  >
+                    <EnvelopeClosedIcon
+                      className="mr-2 h-4 w-4"
+                      aria-hidden="true"
+                    />
+                    Продолжить по почте
+                  </Button>
+                </div>
+              </div>
+            </>
+          )
+        ) : (
+          // First step where user sets subscription plan and username
+          <>
+            <PageHeading className="text-center" size="lg">
               Создайте Аккаунт Tablebuilder
-            </h1>
+            </PageHeading>
             <div>
               <FormItem className="space-y-1">
                 <FormLabel className="text-sm text-muted-foreground">
@@ -203,19 +395,21 @@ const SignUpForm = () => {
                         <FormLabel className="text-sm text-muted-foreground">
                           Имя пользователя
                         </FormLabel>
-                        <Input className="auth-btn" {...field} />
+                        <Input className="lg-button-size" {...field} />
                       </FormItem>
                     )}
                   />
                 ) : null}
                 <Button
+                  aria-aria-label="Перейти к следующему шагу"
                   type="button"
                   onClick={() => setNextStep(true)}
                   disabled={
                     !form.getValues("subscriptionPlan") ||
                     !form.getValues("username")
                   }
-                  className="auth-btn disabled:bg-muted disabled:text-muted-foreground"
+                  size="lg"
+                  className="disabled:bg-muted disabled:text-muted-foreground"
                 >
                   {isPending && (
                     <Icons.spinner
@@ -224,74 +418,10 @@ const SignUpForm = () => {
                     />
                   )}
                   Продолжить
-                  <span className="sr-only">Перейти к следующему шагу</span>
                 </Button>
               </div>
             </div>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-7">
-            <h1 className="text-center text-[32px] font-bold sm:text-[40px]">
-              Выберите способ создать аккаунт
-            </h1>
-
-            <div className="flex flex-col items-center">
-              <div className="w-full max-w-[320px]">
-                {/* OAuth buttons to sign up */}
-                <div className="flex flex-col gap-3">
-                  {oauthProviders.map((provider) => {
-                    const Icon = Icons[provider.icon]
-
-                    return (
-                      <Button
-                        type="button"
-                        key={provider.strategy}
-                        aria-label={`Создайте аккаунт с помощью ${provider.name}`}
-                        className={cn(
-                          "auth-btn text-white",
-                          provider.background
-                        )}
-                        onClick={() => oauthSignUp(provider.strategy)}
-                        disabled={isLoading !== null}
-                      >
-                        {isLoading === provider.strategy ? (
-                          <Icons.spinner
-                            className="mr-2 h-4 w-4 animate-spin"
-                            aria-hidden="true"
-                          />
-                        ) : (
-                          <Icon className="mr-2 h-4 w-4" aria-hidden="true" />
-                        )}
-                        {provider.label}
-                      </Button>
-                    )
-                  })}
-                </div>
-
-                <div className="relative my-5">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-background px-2 text-muted-foreground">
-                      или продолжите
-                    </span>
-                  </div>
-                </div>
-
-                <Button variant="outline" className="auth-btn w-full">
-                  <EnvelopeClosedIcon
-                    className="mr-2 h-4 w-4"
-                    aria-hidden="true"
-                  />
-                  Продолжить по почте
-                  <span className="sr-only">
-                    Продолжить по электронной почте
-                  </span>
-                </Button>
-              </div>
-            </div>
-          </div>
+          </>
         )}
       </form>
     </Form>

@@ -10,6 +10,7 @@ function ThemeToggle() {
 
   return (
     <Button
+      aria-label="Переключить тему"
       variant="ghost"
       size="icon"
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
@@ -22,7 +23,6 @@ function ThemeToggle() {
         className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
         aria-hidden="true"
       />
-      <span className="sr-only">Toggle theme</span>
     </Button>
   )
 }

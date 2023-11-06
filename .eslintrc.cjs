@@ -1,12 +1,14 @@
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
-  plugins: ["@typescript-eslint"],
+  $schema: "https://json.schemastore.org/eslintrc",
+  root: true,
   extends: [
     "next",
     "plugin:@typescript-eslint/recommended",
     "prettier",
     "plugin:tailwindcss/recommended",
   ],
+  plugins: ["@typescript-eslint"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: {
@@ -25,5 +27,4 @@ module.exports = {
       rootDir: ["./"],
     },
   },
-  root: true,
 }

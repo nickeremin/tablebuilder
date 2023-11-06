@@ -26,6 +26,7 @@ module.exports = {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
           blue: "rgb(var(--primary-blue))",
+          gray: "rgb(var(--primary-gray))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -75,6 +76,8 @@ module.exports = {
         grid: "linear-gradient(to top, rgba(0, 0, 0, 0.1), hsl(var(--background))), url('/assets/bg-grid.png')",
         "add-table":
           "radial-gradient(hsl(var(--background)), rgba(0, 0, 0, 0.1)), url('/assets/bg-grid.png')",
+        "dark-overlay":
+          "linear-gradient(to bottom, transparent, rgba(0,0,0,.7) 50%, #000 75%, #000)",
       },
       gridTemplateColumns: {
         // Complex table column configuration
@@ -83,6 +86,24 @@ module.exports = {
       boxShadow: {
         "nav-border": "inset 0 -1px 0 0 hsl(var(--border))",
         "themed-border": "0 0 0 1px hsl(var(--border))",
+      },
+      width: {
+        "content-page": "var(--content-page-width)",
+        "content-page-with-margin": "var(--content-page-width-with-margin)",
+        page: "var(--page-width)",
+        "page-with-margin": "var(--page-width-with-margin)",
+      },
+      maxWidth: {
+        "content-page": "var(--content-page-width)",
+        "content-page-with-margin": "var(--content-page-width-with-margin)",
+        page: "var(--page-width)",
+        "page-with-margin": "var(--page-width-with-margin)",
+      },
+      padding: {
+        "page-margin": "var(--page-margin)",
+      },
+      margin: {
+        "page-margin": "var(--page-margin)",
       },
     },
   },

@@ -5,7 +5,7 @@ import { env } from "@/shared/components/env.mjs"
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
-  title: "Войти",
+  title: "Вход",
   description: "Ввойдите в Ваш аккаунт по электронной почте",
 }
 

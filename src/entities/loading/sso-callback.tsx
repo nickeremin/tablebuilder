@@ -14,13 +14,13 @@ function SSOCallback({ searchParams }: SSOCallbackPageProps) {
   }, [searchParams, handleRedirectCallback])
 
   return (
-    <div
-      role="status"
-      aria-label="Loading"
-      aria-describedby="loading-description"
-      className="flex items-center justify-center"
-    >
-      <Icons.spinner className="h-16 w-16 animate-spin" aria-hidden="true" />
+    <div className="flex items-center gap-4">
+      <h1 className="my-8 text-[44px]/normal font-bold tracking-tighter">
+        Проверка
+      </h1>
+      <span className="mt-[6px]">
+        <Icons.spinner className="h-10 w-10 animate-spin" />
+      </span>
     </div>
   )
 }

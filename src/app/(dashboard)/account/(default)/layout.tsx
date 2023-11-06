@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { AccountNav } from "@/widgets/layout/nav"
+import { AccountNav } from "@/widgets/layout/dashboard"
 
 interface AccountLayoutProps {
   children: React.ReactNode

@@ -7,7 +7,7 @@ import { AddNewTableCard } from "../cards/table"
 const TableCardsLoading = () => {
   return (
     <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-      <AddNewTableCard />
+      {/* <AddNewTableCard />
       {Array.from({ length: 5 }).map((_, i) => (
         <Card key={i} className="h-full transition-all hover:-translate-y-4">
           <AspectRatio ratio={21 / 9}>
@@ -19,7 +19,7 @@ const TableCardsLoading = () => {
             <Skeleton className="h-5 w-4/5" />
           </CardHeader>
         </Card>
-      ))}
+      ))} */}
     </div>
   )
 }

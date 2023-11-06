@@ -12,14 +12,14 @@ export const authSchema = z.object({
   email: z.string().email({
     message: "Пожалуйста, введите действительный адрес электронной почты.",
   }),
-  password: z
-    .string()
-    .min(8, { message: "Пароль должен быть длиной не менее 8 символов." })
-    .max(32, { message: "Пароль должен быть не длиннее 32 символов." })
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/, {
-      message:
-        "Пароль должен содержать не менее 8 символов: одну заглавную, одну строчную, одну цифру и один специальный символ.",
-    }),
+  // password: z
+  //   .string()
+  //   .min(8, { message: "Пароль должен быть длиной не менее 8 символов." })
+  //   .max(32, { message: "Пароль должен быть не длиннее 32 символов." })
+  //   .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/, {
+  //     message:
+  //       "Пароль должен содержать не менее 8 символов: одну заглавную, одну строчную, одну цифру и один специальный символ.",
+  //   }),
 })
 
 export const verifyEmailSchema = z.object({
@@ -34,14 +34,3 @@ export const verifyEmailSchema = z.object({
 export const checkEmailSchema = z.object({
   email: authSchema.shape.email,
 })
-
-export const resetPasswordSchema = z
-  .object({
-    password: authSchema.shape.password,
-    confirmPassword: authSchema.shape.password,
-    code: verifyEmailSchema.shape.code,
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Пароли не совпадают.",
-    path: ["confirmPassword"],
-  })
