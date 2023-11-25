@@ -6,7 +6,7 @@ import { cn } from "@/shared/lib/utils"
 const shellVariants = cva("", {
   variants: {
     variant: {
-      default: "max-w-full w-content-page-with-margin mx-auto px-6",
+      default: "max-w-full w-content-page-with-margin mx-auto px-4 lg:px-6",
       header: "w-page-with-margin m-auto flex items-center px-6",
     },
   },
@@ -21,10 +21,17 @@ interface ShellProps
   as?: React.ElementType
 }
 
-function Shell({ className, as: Comp = "div", variant, ...props }: ShellProps) {
-  return (
-    <Comp className={cn(shellVariants({ variant }), className)} {...props} />
-  )
-}
+const Shell = React.forwardRef<HTMLDivElement, ShellProps>(
+  ({ className, variant, as: Comp = "div", ...props }, ref) => {
+    return (
+      <Comp
+        ref={ref}
+        className={cn(shellVariants({ variant }), className)}
+        {...props}
+      />
+    )
+  }
+)
+Shell.displayName = "Shell"
 
 export { Shell, shellVariants }

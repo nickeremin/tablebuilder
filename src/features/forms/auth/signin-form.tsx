@@ -36,11 +36,11 @@ function SignInForm() {
   }
 
   return (
-    <div className="flex w-full max-w-[456px] flex-col gap-7">
-      <PageHeading className="text-center" size="lg">
+    <div className="flex w-full max-w-[456px] flex-col items-center gap-7">
+      <PageHeading className="text-center font-bold" size="xs">
         Войдите в Tablebuilder
       </PageHeading>
-      <div className="flex flex-col items-center">
+      <div className="flex w-full flex-col items-center">
         <div className="w-full max-w-[320px]">
           <div className="flex flex-col gap-3">
             {/* OAuth buttons that enable social connections */}
@@ -53,7 +53,7 @@ function SignInForm() {
                   key={provider.strategy}
                   aria-label={`Войдите с помощью ${provider.name}`}
                   className={cn("text-white", provider.background)}
-                  size="lg"
+                  size="xl"
                   onClick={() => oauthSignIn(provider.strategy)}
                   disabled={!!isLoading}
                 >
@@ -89,13 +89,13 @@ function SignInForm() {
             className={cn(
               buttonVariants({
                 variant: "outline",
-                size: "lg",
+                size: "xl",
                 className: "w-full",
               })
             )}
           >
             <EnvelopeClosedIcon className="mr-2 h-4 w-4" aria-hidden="true" />
-            Продолжить по почте
+            Продолжить по Почте
           </Link>
         </div>
       </div>

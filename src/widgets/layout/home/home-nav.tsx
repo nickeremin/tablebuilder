@@ -1,9 +1,11 @@
 "use client"
 
+import React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { FeedbackButton, NotificationButton } from "@/features"
 import { useUser } from "@clerk/nextjs"
+import { useScroll } from "@react-spring/web"
 
 import { UserNav } from "@/features/nav"
 import { Icons } from "@/shared/components/icons"
@@ -22,16 +24,38 @@ import {
 import { PageHeading } from "@/shared/components/ui/page-header"
 import { homeNav } from "@/shared/config/site/nav"
 import { cn } from "@/shared/lib/utils"
-import { trpc } from "@/app/_trpc/client"
 
 import MobileNavMenu from "./mobile-nav-menu"
 
-function HomeNav() {
+function HomeNav({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   const pathname = usePathname()
   const { isSignedIn, isLoaded } = useUser()
 
+  const [scrollPosition, setScrollPosition] = React.useState(0)
+
+  const handleScroll = () => {
+    const position = window.scrollY
+    setScrollPosition(position)
+  }
+
+  React.useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
   return (
-    <div className="sticky top-0 z-50 flex h-16 items-center justify-center bg-background shadow-nav-border">
+    <div
+      className={cn(
+        "sticky top-0 z-50 flex h-16 items-center justify-center transition-shadow",
+        "bg-background shadow-nav-border lg:bg-transparent lg:shadow-none",
+        scrollPosition && "lg:!bg-background lg:!shadow-nav-border",
+        className
+      )}
+      {...props}
+    >
       <Shell as="header" variant="header">
         <div className="flex flex-1 items-center gap-8">
           <div className="flex w-full items-center justify-between">
@@ -41,11 +65,13 @@ function HomeNav() {
               className="flex h-9 items-center gap-2"
             >
               <LogoIcon className="h-6 w-6" aria-hidden="true" />
-              <PageHeading size="logo">Tablebuilder</PageHeading>
+              <PageHeading size="logo" className="font-bold">
+                Tablebuilder
+              </PageHeading>
             </Link>
             <MobileNavMenu />
           </div>
-          <div className="hidden flex-1 items-center lg:flex">
+          <div className="hidden flex-1 items-center xl:flex">
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
@@ -72,7 +98,7 @@ function HomeNav() {
                         </NavigationMenuLink>
                       </li>
                       {homeNav[0]?.items?.map((item) => {
-                        const Icon = Icons[item.icon!]
+                        const Icon = Icons[item.icon ?? "spinner"]
 
                         return (
                           <li key={item.title}>
@@ -123,7 +149,7 @@ function HomeNav() {
             </NavigationMenu>
           </div>
         </div>
-        <div className="hidden flex-1 items-center justify-end gap-3 lg:flex">
+        <div className="hidden flex-1 items-center justify-end gap-3 xl:flex">
           <Link
             aria-label="Перейти на страницу Связаться с нами"
             href="/contact"

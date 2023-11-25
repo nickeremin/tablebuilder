@@ -5,6 +5,7 @@ import "@/mdx/mdx.css"
 
 import { Mdx } from "@/mdx/mdx-components"
 
+import { HomeNav, SiteFooter } from "@/widgets/layout/home"
 import { Shell } from "@/shared/components/shells/shell"
 import { PageHeading } from "@/shared/components/ui/page-header"
 import { Spacer } from "@/shared/components/ui/spacer"
@@ -49,24 +50,34 @@ async function Page({ params }: PageProps) {
   // }))
 
   return (
-    <>
-      <div className="flex flex-col items-center">
-        <Spacer size="lg" className="sm:mt-[143px]" />
-        <PageHeading size="xl" className="my-6 px-2 text-center">
-          {doc.title}
-        </PageHeading>
-        <Spacer size="lg" className="sm:mt-[143px]" />
+    <div>
+      <div className="relative min-h-screen">
+        <HomeNav />
+        <div className="flex flex-col items-center">
+          <Spacer size="lg" className="sm:mt-[143px]" />
+          {/* <h1 className="my-6 px-2 text-center text-[32px] font-bold leading-[1.05] tracking-tighter sm:text-[60px] md:text-[72px] lg:text-[80px]">
+            {doc.title}
+          </h1> */}
+          <PageHeading
+            size="xxl"
+            className="my-6 px-2 text-center text-[32px] font-bold leading-[1.05] sm:text-[60px]"
+          >
+            {doc.title}
+          </PageHeading>
+          <Spacer size="lg" className="sm:mt-[143px]" />
+        </div>
+        <div className="flex flex-col bg-accent/40">
+          <Spacer className="mt-[95px]" />
+          <Shell as="div" className="flex flex-col items-center">
+            <div className="w-full max-w-[900px]">
+              <Mdx code={doc.body.code} />
+            </div>
+          </Shell>
+          <Spacer className="mt-[95px]" />
+        </div>
       </div>
-      <div className="flex flex-col bg-accent/40">
-        <Spacer className="mt-[95px]" />
-        <Shell as="div" className="flex flex-col items-center">
-          <div className="w-full max-w-[900px]">
-            <Mdx code={doc.body.code} />
-          </div>
-        </Shell>
-        <Spacer className="mt-[95px]" />
-      </div>
-    </>
+      <SiteFooter />
+    </div>
   )
 }
 

@@ -1,5 +1,6 @@
 import * as React from "react"
 
+import { StarsBackground } from "@/widgets/layout"
 import { HomeNav, SiteFooter } from "@/widgets/layout/home"
 
 interface HomeLayoutProps {
@@ -12,6 +13,7 @@ function HomeLayout({ children }: HomeLayoutProps) {
       <div className="relative min-h-screen">
         <HomeNav />
         {children}
+        <StarsBackground />
       </div>
       <SiteFooter />
     </div>

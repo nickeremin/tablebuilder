@@ -18,7 +18,7 @@ import {
   PopoverTrigger,
 } from "@/shared/components/ui/popover"
 import { Textarea } from "@/shared/components/ui/textarea"
-import { feedbackSchema } from "@/shared/lib/validations/site"
+import { feedbackSchema } from "@/shared/lib/validations/contact"
 
 type Inputs = z.infer<typeof feedbackSchema>
 

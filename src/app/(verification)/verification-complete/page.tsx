@@ -22,10 +22,12 @@ function VerificationCompletePage({
   if (mode === "signup") {
     return (
       <div className="max-w-[50rem] p-6 text-center">
-        <div className="flex flex-col gap-6 ">
-          <PageHeading size="lg">Регистрация Завершена</PageHeading>
-          <p className="text-muted-foreground">
-            <span className="font-semibold text-primary">{email}</span> был
+        <div className="flex flex-col gap-6">
+          <PageHeading size="sm" className="text-center font-bold">
+            Регистрация Завершена
+          </PageHeading>
+          <p className="text-secondary-foreground">
+            <span className="font-semibold text-foreground">{email}</span> был
             подтвержден. Вы можете закрыть это окно.
           </p>
         </div>
@@ -36,12 +38,16 @@ function VerificationCompletePage({
   if (mode === "signin") {
     return (
       <div className="max-w-[50rem] p-6 text-center">
-        <div className="flex flex-col gap-6 ">
-          <PageHeading size="lg">Успешный Вход</PageHeading>
+        <div className="flex flex-col gap-6">
+          <PageHeading size="sm" className="text-center font-bold">
+            Успешный Вход
+          </PageHeading>
           <p className="text-muted-foreground">
             Ваш адрес электронной почты был успешно аутентифицирован.
           </p>
-          <p className="text-muted-foreground">Вы можете закрыть это окно.</p>
+          <p className="text-secondary-foreground">
+            Вы можете закрыть это окно.
+          </p>
         </div>
       </div>
     )
@@ -49,9 +55,11 @@ function VerificationCompletePage({
 
   return (
     <div className="max-w-[50rem] p-6 text-center">
-      <div className="flex flex-col gap-6 ">
-        <PageHeading size="lg">Подтверждение Успешно</PageHeading>
-        <p className="text-muted-foreground">Вы можете закрыть это окно.</p>
+      <div className="flex flex-col gap-6">
+        <PageHeading size="sm" className="text-center font-bold">
+          Подтверждение Успешно
+        </PageHeading>
+        <p className="text-secondary-foreground">Вы можете закрыть это окно.</p>
       </div>
     </div>
   )

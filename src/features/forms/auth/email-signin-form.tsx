@@ -111,19 +111,23 @@ function EmailSignInForm() {
 
   if (isVerifying) {
     return (
-      <div className="flex flex-col">
-        <div className="flex flex-col items-center gap-6 pb-24">
-          <PageHeading className="text-center" size="sm">
-            Подтверждение Почты
-          </PageHeading>
-          <p className="text-center text-muted-foreground">
-            Держите это окно открытым и в новой вкладке откройте ссылку, которую
-            мы только что отправили на{" "}
-            <span className="font-medium text-primary">
-              {form.getValues("email")}
-            </span>
-          </p>
-          {/* <Button
+      <div className="flex flex-1 flex-col items-center justify-center p-6">
+        <div className="flex flex-col">
+          <div className="flex flex-col items-center gap-6 pb-24">
+            <PageHeading
+              className="text-center text-[28px] font-bold leading-[1.1]"
+              size="xs"
+            >
+              Подтверждение Почты
+            </PageHeading>
+            <p className="text-center text-muted-foreground">
+              Держите это окно открытым и в новой вкладке откройте ссылку,
+              которую мы только что отправили на{" "}
+              <span className="font-medium text-primary">
+                {form.getValues("email")}
+              </span>
+            </p>
+            {/* <Button
             onClick={() => {
               setIsVerifying(false)
               cancelMagicLinkFlow()
@@ -132,73 +136,89 @@ function EmailSignInForm() {
           >
             Отменить
           </Button> */}
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <Form {...form}>
-      <form
-        className="flex w-full max-w-[456px] flex-col gap-7"
-        onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
-      >
-        <PageHeading className="text-center" size="lg">
-          Войдите в Tablebuilder
-        </PageHeading>
-        <div className="flex flex-col items-center">
-          <div className="w-full max-w-[320px]">
-            <div className="flex flex-col gap-3">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Введите почту"
-                        className="lg-button-size"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button
-                aria-label="Отправить ссылку для подтверждения электронной почты"
-                disabled={isPending}
-                size="lg"
-              >
-                {isPending && (
-                  <Icons.spinner
-                    className="mr-2 h-4 w-4 animate-spin"
-                    aria-hidden="true"
+    <>
+      <div className="flex flex-1 flex-col items-center justify-center p-6">
+        <Form {...form}>
+          <form
+            className="flex w-full max-w-[456px] flex-col items-center gap-7"
+            onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
+          >
+            <PageHeading className="text-center font-bold" size="xs">
+              Войдите в Tablebuilder
+            </PageHeading>
+            <div className="flex w-full flex-col items-center">
+              <div className="w-full max-w-[320px]">
+                <div className="flex flex-col gap-3">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            variant="xl"
+                            placeholder="Введите почту"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                )}
-                <EnvelopeClosedIcon
-                  className="mr-2 h-4 w-4"
-                  aria-hidden="true"
-                />
-                Продолжить по почте
-              </Button>
+                  <Button
+                    aria-label="Отправить ссылку для подтверждения электронной почты"
+                    disabled={isPending}
+                    size="xl"
+                  >
+                    {isPending && (
+                      <Icons.spinner
+                        className="mr-2 h-4 w-4 animate-spin"
+                        aria-hidden="true"
+                      />
+                    )}
+                    <EnvelopeClosedIcon
+                      className="mr-2 h-4 w-4"
+                      aria-hidden="true"
+                    />
+                    Продолжить по Почте
+                  </Button>
+                </div>
+                <Spacer />
+                <div className="flex items-center justify-center">
+                  <Link
+                    aria-label="Вернуться назад для выбора другого варианта входа"
+                    href="/signin"
+                    className="underline-link flex items-center text-sm text-link"
+                  >
+                    <MoveLeftIcon className="mr-1 h-4 w-4" aria-hidden="true" />
+                    Другие варианты входа
+                  </Link>
+                </div>
+              </div>
             </div>
-            <Spacer />
-            <div className="flex items-center justify-center">
-              <Link
-                aria-label="Вернуться назад для выбора другого варианта входа"
-                href="/signin"
-                className="underline-link flex items-center text-sm text-link"
-              >
-                <MoveLeftIcon className="mr-1 h-4 w-4" aria-hidden="true" />
-                Другие варианты входа
-              </Link>
-            </div>
-          </div>
-        </div>
-      </form>
-    </Form>
+          </form>
+        </Form>
+      </div>
+
+      {/* Create new account link for mobile */}
+      <div className="flex h-[100px] items-center justify-center border-t bg-background p-8 lg:border-none">
+        <Link
+          aria-label="Перейти на страницу регистрации"
+          href="/signup"
+          className="underline-link whitespace-nowrap text-sm text-link lg:hidden"
+        >
+          У вас нет учетной записи? Создать аккаунт
+        </Link>
+      </div>
+    </>
   )
 }
 

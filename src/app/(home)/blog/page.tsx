@@ -1,4 +1,3 @@
-import React from "react"
 import Image, { type StaticImageData } from "next/image"
 import Link from "next/link"
 import Balancer from "react-wrap-balancer"
@@ -17,6 +16,7 @@ import { cn } from "@/shared/lib/utils"
 
 import productSupport from "/public/assets/product-support.png"
 
+// TODO: Posts
 const previewPosts = [
   {
     image: productSupport,
@@ -109,65 +109,69 @@ const allPosts = [
 
 function BlogPage() {
   return (
-    <Shell className="px-4 lg:px-6">
-      <div className="flex flex-col gap-8">
-        <div className="mt-8 flex items-center justify-between lg:my-10">
-          <PageHeading size="3xl" className="font-bold">
-            Все посты
-          </PageHeading>
-          <SearchPosts />
-        </div>
-        <div className="grid grid-cols-1 gap-6 lg:h-[600px] lg:grid-cols-3 lg:grid-rows-[repeat(7,minmax(0,1fr))]">
-          {previewPosts.map((post) => (
-            <Link
-              key={post.title}
-              href={post.href}
-              className={cn(
-                "after:bg-dark-overlay group relative flex min-h-[210px] flex-col justify-end overflow-hidden rounded-lg border p-6 after:absolute after:inset-0 after:transition-opacity after:content-[''] hover:after:opacity-75",
-                post.rowSpan
-              )}
-            >
-              <Image
-                className="absolute inset-0 object-cover"
-                src={post.image}
-                alt={post.title}
-                fill
-              />
-              <div className="z-10 flex flex-col gap-3 text-white">
-                <p className="text-xl font-bold">{post.title}</p>
-                <div className="flex items-center justify-between gap-2">
-                  <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm text-gray-400">
-                    {post.authors.join(", ")}
-                  </p>
-                  <p className="shrink-0 text-sm text-gray-400">{post.date}</p>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-      <div className="py-12 lg:py-16">
-        <div className="flex flex-col gap-4 lg:gap-10">
-          <PageHeading as="h2" size="xs" className="mb-2 font-bold">
-            Последние
-          </PageHeading>
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
-            {allPosts.map((post) => (
+    <>
+      <Shell className="px-4 lg:px-6">
+        <div className="flex flex-col gap-8">
+          <div className="mt-8 flex items-center justify-between lg:my-10">
+            <PageHeading size="md" className="font-bold">
+              Все посты
+            </PageHeading>
+            <SearchPosts />
+          </div>
+          <div className="grid grid-cols-1 gap-6 lg:h-[600px] lg:grid-cols-3 lg:grid-rows-[repeat(7,minmax(0,1fr))]">
+            {previewPosts.map((post) => (
               <Link
                 key={post.title}
-                href="/blog"
-                className="flex flex-col gap-3"
+                href={post.href}
+                className={cn(
+                  "group relative flex min-h-[210px] flex-col justify-end overflow-hidden rounded-lg border p-6 after:absolute after:inset-0 after:bg-dark-overlay after:transition-opacity after:content-[''] hover:after:opacity-75",
+                  post.rowSpan
+                )}
               >
-                <h3 className="text-xl font-semibold lg:text-2xl">
-                  <Balancer>{post.title}</Balancer>
-                </h3>
-                <p className="text-sm text-muted-foreground">{post.date}</p>
+                <Image
+                  className="absolute inset-0 object-cover"
+                  src={post.image}
+                  alt={post.title}
+                  fill
+                />
+                <div className="z-10 flex flex-col gap-3 text-white">
+                  <p className="text-xl font-bold">{post.title}</p>
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm text-gray-400">
+                      {post.authors.join(", ")}
+                    </p>
+                    <p className="shrink-0 text-sm text-gray-400">
+                      {post.date}
+                    </p>
+                  </div>
+                </div>
               </Link>
             ))}
           </div>
         </div>
-      </div>
-    </Shell>
+        <div className="py-12 lg:py-16">
+          <div className="flex flex-col gap-4 lg:gap-10">
+            <PageHeading as="h2" size="xs" className="mb-2 font-bold">
+              Последние
+            </PageHeading>
+            <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+              {allPosts.map((post) => (
+                <Link
+                  key={post.title}
+                  href="/blog"
+                  className="flex flex-col gap-3"
+                >
+                  <h3 className="text-xl font-semibold lg:text-2xl">
+                    <Balancer>{post.title}</Balancer>
+                  </h3>
+                  <p className="text-sm text-muted-foreground">{post.date}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Shell>
+    </>
   )
 }
 

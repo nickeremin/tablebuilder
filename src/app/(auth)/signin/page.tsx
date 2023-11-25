@@ -1,4 +1,5 @@
 import { type Metadata } from "next"
+import Link from "next/link"
 
 import { SignInForm } from "@/features/forms/auth"
 import { env } from "@/shared/components/env.mjs"
@@ -10,7 +11,24 @@ export const metadata: Metadata = {
 }
 
 function SignInPage() {
-  return <SignInForm />
+  return (
+    <>
+      <div className="flex flex-1 flex-col items-center justify-center p-6">
+        <SignInForm />
+      </div>
+
+      {/* Create new account link for mobile */}
+      <div className="flex h-[100px] items-center justify-center border-t bg-background p-8 lg:border-none">
+        <Link
+          aria-label="Перейти на страницу регистрации"
+          href="/signup"
+          className="underline-link whitespace-nowrap text-sm text-link lg:hidden"
+        >
+          У вас нет учетной записи? Создать аккаунт
+        </Link>
+      </div>
+    </>
+  )
 }
 
 export default SignInPage

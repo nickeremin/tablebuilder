@@ -39,7 +39,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
         suppressHydrationWarning
         className={cn(inter.className, "antialiased")}
       >
-        <body suppressHydrationWarning>
+        <body
+          suppressHydrationWarning
+          className="relative min-h-full max-w-[100vw]"
+        >
           <TRPCQueryProvider>
             <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
               {children}

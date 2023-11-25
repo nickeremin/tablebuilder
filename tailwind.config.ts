@@ -16,12 +16,13 @@ module.exports = {
         xxs: "380px",
       },
       colors: {
-        link: "rgb(var(--primary-blue))",
+        link: "var(--link-color)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        disabled: "hsl(var(--disabled))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -43,6 +44,12 @@ module.exports = {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
+          1: "var(--accent-1)",
+          2: "var(--accent-2)",
+          3: "var(--accent-3)",
+          4: "var(--accent-4)",
+          5: "var(--accent-5)",
+          6: "var(--accent-6)",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -52,6 +59,13 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Gradients
+        "blue-start": "var(--blue-start-color)",
+        "blue-end": "var(--blue-end-color)",
+        "purple-start": "var(--purple-start-color)",
+        "purple-end": "var(--purple-end-color)",
+        "orange-start": "var(--orange-start-color)",
+        "orange-end": "var(--orange-end-color)",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -73,11 +87,14 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       backgroundImage: {
-        grid: "linear-gradient(to top, rgba(0, 0, 0, 0.1), hsl(var(--background))), url('/assets/bg-grid.png')",
-        "add-table":
-          "radial-gradient(hsl(var(--background)), rgba(0, 0, 0, 0.1)), url('/assets/bg-grid.png')",
         "dark-overlay":
           "linear-gradient(to bottom, transparent, rgba(0,0,0,.7) 50%, #000 75%, #000)",
+        "border-gradient":
+          "linear-gradient(to right, hsl(var(--background)) 0%, var(--accent-2) 10%, var(--accent-2) 90%, hsl(var(--background)) 100%)",
+        "preview-flash":
+          "radial-gradient(50% 50% at 50% 0, hsl(var(--foreground)/.5) 0%, hsl(var(--foreground)/.0) 100%)",
+        "pricing-flash":
+          "radial-gradient(circle at center, hsl(var(--foreground)/.5) 0%, hsl(var(--foreground)/.0) 100%)",
       },
       gridTemplateColumns: {
         // Complex table column configuration
@@ -86,6 +103,9 @@ module.exports = {
       boxShadow: {
         "nav-border": "inset 0 -1px 0 0 hsl(var(--border))",
         "themed-border": "0 0 0 1px hsl(var(--border))",
+        "menu-border":
+          "var(--border),0px 1px 1px rgba(0,0,0,.02),0px 4px 8px -4px rgba(0,0,0,.04),0px 16px 24px -8px rgba(0,0,0,.06)",
+        "bottom-border": "0 3px 0 hsl(var(--foreground))",
       },
       width: {
         "content-page": "var(--content-page-width)",

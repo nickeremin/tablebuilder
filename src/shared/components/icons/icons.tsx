@@ -51,6 +51,9 @@ export const Icons = {
     globe: GlobeIcon,
     accessible: AccessibilityIcon,
   },
+  pricing: {
+    check: Check,
+  },
   logo: ({ ...props }: LogoIconProps) => <LogoIcon {...props} />,
   discord: ({ ...props }: IconProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" {...props}>

@@ -3,42 +3,21 @@ import { Balancer } from "react-wrap-balancer"
 
 import { cn } from "@/shared/lib/utils"
 
-interface PageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
-  as?: React.ElementType
-}
-
-function PageHeader({
-  className,
-  children,
-  as: Comp = "section",
-  ...props
-}: PageHeaderProps) {
-  return (
-    <Comp className={cn("grid gap-1", className)} {...props}>
-      {children}
-    </Comp>
-  )
-}
-
 const headingVariants = cva("tracking-tighter", {
   variants: {
+    variant: {
+      gradient:
+        "text-transparent bg-clip-text bg-gradient-to-b from-foreground/80 to-foreground",
+    },
     size: {
       default: "text-[32px]",
       logo: "text-xl",
-      xs: "text-[24px] sm:text-[36px] leading-[1.1]",
+      xs: "text-[32px] sm:text-[36px] leading-[1.1]",
       sm: "text-[32px] sm:text-[40px] leading-[1.1]",
-      md: "text-[32px] sm:text-[44px] leading-[1.1]",
-      lg: "text-[32px] sm:text-[48px] leading-[1.1]",
-      xl: "text-[32px] sm:text-[52px] leading-[1.1]",
-      "2xl": "text-[32px] sm:text-[56px] leading-[1.1]",
-      "3xl": "text-[32px] sm:text-[52px] lg:text-[60px] leading-none",
-      "4xl": "text-[32px] sm:text-[64px] leading-none",
-      // logo: "text-xl font-bold",
-      // sm: "text-2xl",
-      // md: "text-[32px] sm:text-[40px]",
-      // lg: "text-[32px] sm:text-[56px]",
-      // xl: "text-[32px] sm:text-[64px] !leading-none",
-      // xxl: "text-[32px] sm:text-[64px] !leading-none",
+      md: "text-[32px] sm:text-[52px] leading-[1.1]",
+      lg: "text-[32px] sm:text-[60px] leading-[1.1]",
+      xl: "text-[32px] sm:text-[56px] lg:text-[72px] leading-[1.05]",
+      xxl: "text-[40px] sm:text-[64px] lg:text-[80px] leading-[1.05]",
     },
   },
   defaultVariants: {
@@ -46,7 +25,7 @@ const headingVariants = cva("tracking-tighter", {
   },
 })
 
-interface PageHeaderHeadingProps
+interface PageHeadingProps
   extends React.HTMLAttributes<HTMLHeadingElement>,
     VariantProps<typeof headingVariants> {
   as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
@@ -54,14 +33,15 @@ interface PageHeaderHeadingProps
 
 function PageHeading({
   className,
+  variant,
   size,
   as: Comp = "h1",
   ...props
-}: PageHeaderHeadingProps) {
+}: PageHeadingProps) {
   return (
     <Balancer
       as={Comp}
-      className={cn(headingVariants({ size, className }))}
+      className={cn(headingVariants({ variant, size, className }))}
       {...props}
     />
   )
@@ -98,4 +78,4 @@ function PageHeaderDescription({
   )
 }
 
-export { PageHeader, PageHeaderDescription, PageHeading }
+export { PageHeaderDescription, PageHeading }

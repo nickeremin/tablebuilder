@@ -1,9 +1,11 @@
 import * as React from "react"
 import Link from "next/link"
 
+import { StarsBackground } from "@/widgets/layout"
 import { SiteFooter } from "@/widgets/layout/home"
 import LogoIcon from "@/shared/components/logo"
 import { Shell } from "@/shared/components/shells/shell"
+import { cn } from "@/shared/lib/utils"
 
 interface VerificationLayoutProps {
   children: React.ReactNode
@@ -11,9 +13,15 @@ interface VerificationLayoutProps {
 
 function VerificationLayout({ children }: VerificationLayoutProps) {
   return (
-    <div className="relative overflow-hidden">
+    <div>
       <div className="relative min-h-screen">
-        <div className="sticky top-0 z-50 flex h-16 shadow-nav-border before:absolute before:top-[-1px] before:-z-10 before:h-full before:w-full before:backdrop-blur-[6px] before:backdrop-saturate-200 before:content-['']">
+        <div
+          className={cn(
+            "sticky top-0 z-50 flex h-16 bg-background shadow-nav-border",
+            // Before
+            "before:absolute before:top-[-1px] before:-z-10 before:h-full before:w-full before:backdrop-blur-[6px] before:backdrop-saturate-200 before:content-['']"
+          )}
+        >
           <Shell as="header" variant="header">
             <div className="flex flex-1 justify-between">
               <Link
@@ -30,6 +38,7 @@ function VerificationLayout({ children }: VerificationLayoutProps) {
         <main className="flex h-[calc(100vh-160px)] flex-col items-center justify-center">
           {children}
         </main>
+        <StarsBackground />
       </div>
       <SiteFooter />
     </div>

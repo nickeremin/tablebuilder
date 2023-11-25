@@ -1,146 +1,31 @@
 "use client"
 
-import React from "react"
+import * as React from "react"
 import Link from "next/link"
-import { ArrowRightIcon, CheckIcon, LayersIcon } from "@radix-ui/react-icons"
-import { ColumnDef } from "@tanstack/react-table"
+import { ArrowRightIcon, CaretSortIcon } from "@radix-ui/react-icons"
+import { BoxIcon, CheckIcon, HeadphonesIcon } from "lucide-react"
 import { useInView } from "react-intersection-observer"
+import { Drawer } from "vaul"
 
-import { HomeNav, SiteFooter } from "@/widgets/layout/home"
-import { Icons } from "@/shared/components/icons"
+import { StarsBackground } from "@/widgets/layout"
+import { HomeNav, SiteFooter, TablesPreview } from "@/widgets/layout/home"
+import { PricingAddOnCard, PricingPlanCard } from "@/entities/cards"
 import { Shell } from "@/shared/components/shells/shell"
-import { Button, buttonVariants } from "@/shared/components/ui/button"
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/shared/components/ui/card"
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/shared/components/ui/accordion"
+import { Button, buttonVariants } from "@/shared/components/ui/button"
 import { PageHeading } from "@/shared/components/ui/page-header"
 import { Spacer } from "@/shared/components/ui/spacer"
 import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableRow,
-} from "@/shared/components/ui/table"
+  pricingAddOns,
+  pricingPlans,
+  pricingQuestions,
+} from "@/shared/config/site/constants"
 import { cn } from "@/shared/lib/utils"
-
-const pricingPlans = [
-  {
-    title: "Хобби",
-    price: 0,
-    description: "Опробуйте бесплатный тариф.",
-    btnText: "Продолжить с Хобби",
-    features: [
-      {
-        label: "Создайте до 3 таблиц.",
-      },
-      {
-        label: "Получите 3 бесплатных хранилища.",
-      },
-      {
-        label: "Имеете возможность создать 1 команду.",
-      },
-      {
-        label: "Создайте до 3 таблиц.",
-      },
-      {
-        label: "Получите 3 бесплатных хранилища.",
-      },
-      {
-        label: "Имеете возможность создать 1 команду.",
-      },
-      {
-        label: "Создайте до 3 таблиц.",
-      },
-      {
-        label: "Получите 3 бесплатных хранилища.",
-      },
-      {
-        label: "Имеете возможность создать 1 команду.",
-      },
-    ],
-  },
-  {
-    title: "Про",
-    price: 0,
-    description: "Опробуйте бесплатный тариф.",
-    btnText: "Опробовать бесплатно",
-    features: [
-      {
-        label: "Создайте до 3 таблиц.",
-      },
-      {
-        label: "Получите 3 бесплатных хранилища.",
-      },
-      {
-        label: "Имеете возможность создать 1 команду.",
-      },
-    ],
-  },
-  {
-    title: "Сотрудничество",
-    price: 0,
-    description: "Опробуйте бесплатный тариф.",
-    btnText: "Связаться с отделом",
-    features: [
-      {
-        label: "Создайте до 3 таблиц.",
-      },
-      {
-        label: "Получите 3 бесплатных хранилища.",
-      },
-      {
-        label: "Имеете возможность создать 1 команду.",
-      },
-    ],
-  },
-] satisfies {
-  title: string
-  price: number | "custom"
-  description: string
-  btnText: string
-  features: {
-    label: string
-  }[]
-}[]
-
-const pricingAddOns = [
-  {
-    image: "check",
-    price: 150,
-    title: "Первый итем",
-    description: "Описание первого итема. Можно что то сделать.",
-  },
-  {
-    image: "check",
-    price: 10,
-    title: "Второй итем",
-    description: "Описание второго итема. Можно что то еще.",
-  },
-  {
-    image: "check",
-    price: 50,
-    title: "Третий итем",
-    description: "Описание третьего итема. Можно что то ага.",
-  },
-  {
-    image: "check",
-    price: 100,
-    title: "Четвертый итем",
-    description: "Описание четвертого итема. Можно что то да.",
-  },
-] satisfies {
-  image: keyof typeof Icons
-  price: number
-  title: string
-  description: string
-}[]
 
 const generals = [
   {
@@ -161,9 +46,32 @@ const generals = [
     pro: "5 команд",
     custom: "Неограниченное количество команд",
   },
+  {
+    title: "Количество таблиц2",
+    hobby: "3 таблицы",
+    pro: "10 таблиц",
+    custom: "Неограниченное количество таблиц",
+  },
+  {
+    title: "Количество хранилищ2",
+    hobby: "3 дополнительных хранилища",
+    pro: "10 дополнительных хранилища",
+    custom: "Неограниченное количество хранилищ",
+  },
+  {
+    title: "Количество команд2",
+    hobby: "1 команда",
+    pro: "5 команд",
+    custom: "Неограниченное количество команд",
+  },
 ]
 
 function PricingPage() {
+  const [plan, setPlan] = React.useState<"hobby" | "pro" | "custom">("hobby")
+  const [open, setOpen] = React.useState(false)
+
+  const currentPlan = pricingPlans.find((item) => item.id === plan)
+
   const { ref, inView, entry } = useInView({
     threshold: 0,
   })
@@ -175,48 +83,21 @@ function PricingPage() {
         <div className="relative mb-20">
           <Shell className="flex flex-col">
             <PageHeading
-              size="3xl"
-              className="mx-auto my-20 max-w-[880px] text-center font-bold lg:mb-28"
+              size="lg"
+              className="mx-auto my-20 max-w-[880px] text-center text-[40px] font-bold leading-tight lg:mb-28 lg:leading-[80px]"
             >
-              Выберите тариф для реализации ваших проектов
+              Найдите тариф для реализации ваших проектов
             </PageHeading>
             <div className="flex flex-wrap gap-4 lg:flex-nowrap">
               {pricingPlans.map((plan, i) => (
-                <Card
-                  key={i}
-                  className="flex flex-[1_1_300px] flex-col shadow-md"
-                >
-                  <CardHeader>
-                    <CardTitle className="text-lg">{plan.title}</CardTitle>
-                    <p className="text-[32px] font-bold">${plan.price}</p>
-                    <CardDescription>{plan.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex flex-1 flex-col gap-2">
-                    <ul className="flex grow flex-col gap-4">
-                      {plan.features.map((item, i) => (
-                        <li key={i} className="flex gap-2">
-                          <div className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-primary">
-                            <CheckIcon className="h-[14px] w-[14px] text-background" />
-                          </div>
-                          <p className="grow text-sm text-muted-foreground">
-                            {item.label}
-                          </p>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                  <CardFooter className="flex-col">
-                    <Button variant="outline" className="h-10 w-full">
-                      Перейти к таблицам
-                    </Button>
-                  </CardFooter>
-                </Card>
+                <PricingPlanCard key={i} plan={plan} />
               ))}
             </div>
           </Shell>
+          <div className="absolute left-[calc(50%-calc(min(75vw,500px))/2)] top-[calc(68%-calc(min(75vw,500px))/2)] -z-10 h-[min(75vw,500px)] w-[min(75vw,500px)] rounded-[calc(.5*min(75vw,500px))] bg-pricing-flash opacity-75 blur-[calc(.5*min(75vw,500px))]" />
         </div>
         <Shell className="mb-20 lg:mb-[120px]">
-          <div className="flex flex-col items-center justify-between gap-6 rounded-lg border p-6 lg:flex-row lg:gap-4">
+          <div className="flex flex-col items-center justify-between gap-6 rounded-lg border bg-background p-6 lg:flex-row lg:gap-4">
             <div>
               <p className="mb-1 text-center text-sm font-semibold lg:text-start">
                 Нужен корпоративный масштаб и безопасность?
@@ -235,64 +116,33 @@ function PricingPage() {
                 })
               )}
             >
-              Связаться с отделом
+              Связаться с Отделом
             </Link>
           </div>
         </Shell>
-        <Shell className="mb-20 lg:mb-[120px]">
+        <Shell className="pb-20 lg:pb-[120px]">
           <div className="flex flex-col gap-12">
-            <PageHeading as="h2" size="lg" className="text-center font-bold">
+            <PageHeading as="h2" size="md" className="text-center font-bold">
               Настройте свой тариф с помощью дополнений
             </PageHeading>
             <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-              {pricingAddOns.map((addon) => {
-                const Icon = Icons[addon.image]
-
-                return (
-                  <Card key={addon.title}>
-                    {/* Card on mobile screens */}
-                    <CardHeader className="flex items-center lg:hidden lg:flex-row">
-                      <CardDescription>${addon.price} / месяц</CardDescription>
-                      <div className="flex h-14 w-14 items-center justify-center rounded-lg border">
-                        <Icon className="h-5 w-5" />
-                      </div>
-                      <CardTitle>{addon.title}</CardTitle>
-                      <CardDescription className="text-center">
-                        {addon.description}
-                      </CardDescription>
-                    </CardHeader>
-
-                    {/* Card on Desktop screens */}
-                    <CardHeader className="hidden items-center gap-6 lg:flex lg:flex-row">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-lg border">
-                        <Icon className="h-5 w-5" />
-                      </div>
-                      <div className="flex flex-col gap-4">
-                        <CardDescription>
-                          ${addon.price} / месяц
-                        </CardDescription>
-                        <div className="flex flex-col gap-1">
-                          <CardTitle>{addon.title}</CardTitle>
-                          <CardDescription className="text-center">
-                            {addon.description}
-                          </CardDescription>
-                        </div>
-                      </div>
-                    </CardHeader>
-                  </Card>
-                )
-              })}
+              {pricingAddOns.map((addOn, i) => (
+                <PricingAddOnCard key={i} addOn={addOn} />
+              ))}
             </div>
           </div>
         </Shell>
+        <StarsBackground />
       </div>
-      <section>
-        <header className="sticky top-[-10px] z-10 flex h-28 items-center bg-background/75 shadow-nav-border">
+
+      {/* Desktop plan tables */}
+      <section className="hidden lg:block">
+        <header className="sticky -top-[10px] flex h-28 items-center bg-background shadow-nav-border first-line:z-10">
           <Shell>
             <div className="relative flex flex-col">
               <div className="flex items-center justify-end">
-                {pricingPlans.map((plan) => (
-                  <div key={plan.title} className="mx-3 w-[250px]">
+                {pricingPlans.map((plan, i) => (
+                  <div key={i} className="mx-3 w-[224px] xl:w-[250px]">
                     <div className="flex flex-col gap-2">
                       <div className="flex">
                         <p
@@ -305,7 +155,7 @@ function PricingPage() {
                         </p>
                       </div>
                       <Button className="justify-between">
-                        {plan.btnText}
+                        {plan.label}
                         <ArrowRightIcon className="h-4 w-4" />
                       </Button>
                     </div>
@@ -318,60 +168,237 @@ function PricingPage() {
         <Spacer size="lg" />
         <Shell className="">
           <div className="flex flex-col">
-            <div className="">
-              <div className="sticky top-[40px] z-20 pb-4">
-                <div className="flex items-center gap-2">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full border border-muted">
-                    <LayersIcon className="h-5 w-5" />
-                  </div>
-                  <p className="text-2xl font-semibold">Общие</p>
-                </div>
-              </div>
-              <div className="h-[500px] bg-red-200"></div>
-            </div>
-
-            <Spacer size="lg" />
-
-            <div className="">
-              <div className="sticky top-[40px] z-20 pb-4">
-                <div className="flex items-center gap-2">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full border border-muted">
-                    <LayersIcon className="h-5 w-5" />
-                  </div>
-                  <p className="text-2xl font-semibold">Поддержка</p>
-                </div>
-              </div>
-              <div className="h-[500px] bg-green-200"></div>
-            </div>
-            {/* <Table className="">
-              <thead>
+            <table className="w-full">
+              <thead className="border-b">
                 <tr>
-                  <th className="sticky top-[40px] z-20 p-[1px] px-0 pb-4 text-primary">
+                  <th className="sticky top-[40px] z-20 pb-5">
                     <div className="flex items-center gap-2">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full border border-muted">
-                        <LayersIcon className="h-5 w-5" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full border">
+                        <BoxIcon className="h-5 w-5" />
                       </div>
                       <p className="text-2xl font-semibold">Общие</p>
                     </div>
                   </th>
                 </tr>
               </thead>
-              <div className="h-[1000px]"></div>
-              <TableBody>
+              <tbody className="">
                 {generals.map((item) => (
-                  <TableRow key={item.title}>
-                    <TableCell className="font-medium">{item.title}</TableCell>
-                    <TableCell className="w-[274px]">{item.hobby}</TableCell>
-                    <TableCell className="w-[274px]">{item.pro}</TableCell>
-                    <TableCell className="w-[274px]">{item.custom}</TableCell>
-                  </TableRow>
+                  <tr
+                    key={item.title}
+                    className="border-b [&_td:last-child]:!border-r-0 [&_td:nth-child(n)]:border-r"
+                  >
+                    <td className="py-4 text-left">{item.title}</td>
+                    <td className="w-[248px] py-4 text-center xl:w-[274px]">
+                      {item.hobby}
+                    </td>
+                    <td className="w-[248px] py-4 text-center xl:w-[274px]">
+                      {item.pro}
+                    </td>
+                    <td className="w-[248px] py-4 text-center xl:w-[274px]">
+                      {item.custom}
+                    </td>
+                  </tr>
                 ))}
-              </TableBody>
-            </Table> */}
-            <div className="h-[700px]"></div>
+              </tbody>
+            </table>
+
+            <Spacer size="lg" />
+
+            <table className="w-full">
+              <thead className="border-b">
+                <tr>
+                  <th className="sticky top-[40px] z-20 pb-5">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full border">
+                        <HeadphonesIcon className="h-5 w-5" />
+                      </div>
+                      <p className="text-2xl font-semibold">Поддержка</p>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="">
+                {generals.map((item) => (
+                  <tr
+                    key={item.title}
+                    className="border-b [&_td:last-child]:!border-r-0 [&_td:nth-child(n)]:border-r"
+                  >
+                    <td className="py-4 text-left">{item.title}</td>
+                    <td className="w-[248px] py-4 text-center xl:w-[274px]">
+                      {item.hobby}
+                    </td>
+                    <td className="w-[248px] py-4 text-center xl:w-[274px]">
+                      {item.pro}
+                    </td>
+                    <td className="w-[248px] py-4 text-center xl:w-[274px]">
+                      {item.custom}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </Shell>
       </section>
+
+      {/* Mobile plan tables */}
+      <Drawer.Root open={open} onOpenChange={setOpen}>
+        <section className="xl:hidden">
+          <header className="sticky -top-[10px] flex h-28 items-center bg-background shadow-nav-border first-line:z-10">
+            <Shell>
+              <div className="relative flex flex-col">
+                <div className="mx-auto w-full max-w-[570px]">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <p
+                        className={cn(
+                          "origin-bottom-left text-2xl font-semibold transition-transform",
+                          entry?.target && !inView && "scale-75"
+                        )}
+                      >
+                        {currentPlan?.title}
+                      </p>
+
+                      <div>
+                        <Drawer.Trigger asChild>
+                          <Button variant="ghost" className="-mr-2 px-2">
+                            Сменить План
+                            <CaretSortIcon className="ml-2 h-5 w-5" />
+                          </Button>
+                        </Drawer.Trigger>
+                      </div>
+                    </div>
+                    <div>
+                      <Button className="w-full justify-between">
+                        {currentPlan?.label}
+                        <ArrowRightIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Shell>
+          </header>
+          <Spacer size="lg" />
+          <Shell>
+            <div className="flex flex-col">
+              <div className="mx-auto w-full max-w-[570px]">
+                <table className="w-full">
+                  <thead className="border-b">
+                    <tr>
+                      <th className="pb-5">
+                        <div className="flex items-center gap-2">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full border">
+                            <BoxIcon className="h-5 w-5" />
+                          </div>
+                          <p className="text-2xl font-semibold">Общие</p>
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="">
+                    {generals.map((item) => (
+                      <tr
+                        key={item.title}
+                        className="border-b [&_td:last-child]:!border-r-0 [&_td:nth-child(n)]:border-r"
+                      >
+                        <td className="py-4 text-left">{item.title}</td>
+                        <td className="w-[164px] py-4 text-center xl:w-[274px]">
+                          {item[currentPlan!.id]}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                <Spacer size="lg" />
+
+                <table className="w-full">
+                  <thead className="border-b">
+                    <tr>
+                      <th className="pb-5">
+                        <div className="flex items-center gap-2">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full border">
+                            <HeadphonesIcon className="h-5 w-5" />
+                          </div>
+                          <p className="text-2xl font-semibold">Поддержка</p>
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="">
+                    {generals.map((item) => (
+                      <tr
+                        key={item.title}
+                        className="border-b [&_td:last-child]:!border-r-0 [&_td:nth-child(n)]:border-r"
+                      >
+                        <td className="py-4 text-left">{item.title}</td>
+                        <td className="w-[164px] py-4 text-center xl:w-[274px]">
+                          {item[currentPlan!.id]}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </Shell>
+        </section>
+        <Drawer.Portal>
+          <Drawer.Overlay className="fixed inset-0 z-50 bg-black/40" />
+          <Drawer.Content className="fixed bottom-0 left-0 right-0 z-50 mt-24 flex flex-col rounded-t-lg border-t bg-accent-1 shadow-menu-border">
+            <div className="px-8 py-4 [&_button:nth-child(-n+2)]:border-b">
+              {pricingPlans.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setPlan(item.id)
+                    setOpen(false)
+                  }}
+                  className="relative flex w-full select-none items-center justify-between py-4"
+                >
+                  <p className={cn(item.id === plan && "font-semibold")}>
+                    {item.title}
+                  </p>
+                  {item.id === plan && (
+                    <CheckIcon strokeWidth={1.5} className="h-5 w-5" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </Drawer.Content>
+        </Drawer.Portal>
+      </Drawer.Root>
+
+      <Spacer size="lg" />
+
+      <div className="border-t bg-accent-1">
+        <Spacer size="md" />
+        <Shell>
+          <div className="flex flex-col items-center justify-center">
+            <PageHeading size="lg" className="font-semibold">
+              Частые Вопросы
+            </PageHeading>
+            <Spacer />
+            <Accordion type="single" collapsible className="max-w-[600px]">
+              {pricingQuestions.map((question, i) => (
+                <AccordionItem key={i} value={question.question}>
+                  <AccordionTrigger className="py-5 text-start text-base">
+                    {question.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-base">
+                    {question.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </Shell>
+        <Spacer size="xl" />
+      </div>
+      <div className="relative z-10 flex w-full flex-col overflow-hidden bg-background">
+        <TablesPreview />
+      </div>
       <SiteFooter />
     </div>
   )
