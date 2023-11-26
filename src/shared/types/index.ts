@@ -47,6 +47,7 @@ export type Table = SelectTable
 export type TableRecord = SelectTableRecord
 
 // Data-Table types
+/* eslint-disable */
 export interface DataTableSearchableColumn<TData> {
   id: string
   title: string
@@ -57,6 +58,7 @@ export type FileWithPreview = FileWithPath & {
   preview: string
 }
 
+/* eslint-disable */
 export type Prettify<T> = {
   [K in keyof T]: T[K]
 } & {}

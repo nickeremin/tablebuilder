@@ -49,7 +49,6 @@ import {
 } from "@/shared/components/ui/select"
 import { Skeleton } from "@/shared/components/ui/skeleton"
 import { cn } from "@/shared/lib/utils"
-import { trpc } from "@/app/_trpc/client"
 
 const groups = [
   {
@@ -83,7 +82,7 @@ interface MultiSwitcherProps
   plan: "free" | "pro"
 }
 
-function MultiSwitcher({ plan, className }: MultiSwitcherProps) {
+function MultiSwitcher({ className }: MultiSwitcherProps) {
   const { user } = useUser()
   const [open, setOpen] = React.useState(false)
   const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false)

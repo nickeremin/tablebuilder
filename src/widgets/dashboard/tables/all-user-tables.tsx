@@ -1,7 +1,6 @@
 "use client"
 
-import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation"
-
+// import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation"
 import { TableCard } from "@/entities/cards/table"
 import { trpc } from "@/app/_trpc/client"
 
@@ -13,10 +12,10 @@ const AllUserTables = () => {
     }
   )
 
-  if (!tables) return null
+  // const searchParams = useSearchParams() as ReadonlyURLSearchParams
+  // const tableTypes = searchParams.get("tableTypes")
 
-  const searchParams = useSearchParams() as ReadonlyURLSearchParams
-  const tableTypes = searchParams.get("tableTypes")
+  if (!tables) return null
 
   return (
     <>

@@ -32,11 +32,9 @@ function UpdateEmailForm({ className, ...props }: UpdateEmailFormProps) {
     suspense: true,
   })
 
-  if (!user) return null
-
   const [isPending, startTransition] = React.useTransition()
 
-  const email = getUserEmail(user)
+  const email = getUserEmail(user!)
 
   // Initialize react-hook-form with zod and set current user values
   const form = useForm<Inputs>({
@@ -49,6 +47,8 @@ function UpdateEmailForm({ className, ...props }: UpdateEmailFormProps) {
   function onSubmit(input: Inputs) {
     startTransition(async () => {
       try {
+        console.log(input)
+
         // This feature has not yet been implemented
         logAction({
           toastMessasge: "Почта не изменена. Данная функция еще в разработке.",
@@ -60,10 +60,12 @@ function UpdateEmailForm({ className, ...props }: UpdateEmailFormProps) {
     })
   }
 
+  if (!user) return null
+
   return (
     <Card
       as="section"
-      className={cn("shadow-themed-border rounded-md border-none", className)}
+      className={cn("rounded-md border-none shadow-themed-border", className)}
       {...props}
     >
       <Form {...form}>

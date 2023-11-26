@@ -1,6 +1,6 @@
 "use client"
 
-import Image, { type StaticImageData } from "next/image"
+import Image from "next/image"
 import { ArrowRightIcon } from "@radix-ui/react-icons"
 import {
   VerticalTimeline,
@@ -25,7 +25,7 @@ interface TimelineCardProps
   action: TimelineAction
 }
 
-function TimelineCard({ action, children, ...props }: TimelineCardProps) {
+function TimelineCard({ action, ...props }: TimelineCardProps) {
   return (
     <VerticalTimelineElement
       dateClassName="!hidden"

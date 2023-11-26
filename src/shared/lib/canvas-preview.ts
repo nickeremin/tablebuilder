@@ -63,7 +63,7 @@ export async function canvasPreview(
 
   ctx.restore()
 
-  return new Promise((resolve, _) => {
+  return new Promise((resolve) => {
     canvas.toBlob((blob) => {
       if (!blob) return
       resolve(blob)

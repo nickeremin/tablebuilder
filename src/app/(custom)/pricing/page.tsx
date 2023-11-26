@@ -137,7 +137,7 @@ function PricingPage() {
 
       {/* Desktop plan tables */}
       <section className="hidden lg:block">
-        <header className="sticky -top-[10px] flex h-28 items-center bg-background shadow-nav-border first-line:z-10">
+        <header className="sticky top-[-10px] flex h-28 items-center bg-background shadow-nav-border first-line:z-10">
           <Shell>
             <div className="relative flex flex-col">
               <div className="flex items-center justify-end">
@@ -244,7 +244,7 @@ function PricingPage() {
       {/* Mobile plan tables */}
       <Drawer.Root open={open} onOpenChange={setOpen}>
         <section className="xl:hidden">
-          <header className="sticky -top-[10px] flex h-28 items-center bg-background shadow-nav-border first-line:z-10">
+          <header className="sticky top-[-10px] flex h-28 items-center bg-background shadow-nav-border first-line:z-10">
             <Shell>
               <div className="relative flex flex-col">
                 <div className="mx-auto w-full max-w-[570px]">
@@ -346,7 +346,7 @@ function PricingPage() {
         </section>
         <Drawer.Portal>
           <Drawer.Overlay className="fixed inset-0 z-50 bg-black/40" />
-          <Drawer.Content className="fixed bottom-0 left-0 right-0 z-50 mt-24 flex flex-col rounded-t-lg border-t bg-accent-1 shadow-menu-border">
+          <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 mt-24 flex flex-col rounded-t-lg border-t bg-accent-1 shadow-menu-border">
             <div className="px-8 py-4 [&_button:nth-child(-n+2)]:border-b">
               {pricingPlans.map((item) => (
                 <button

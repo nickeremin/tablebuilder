@@ -160,7 +160,7 @@ function UpdateImageForm({ className, ...props }: UpdateImageFormProps) {
     >
       <Card
         as="section"
-        className={cn("shadow-themed-border rounded-md border-none", className)}
+        className={cn("rounded-md border-none shadow-themed-border", className)}
         {...props}
       >
         <div className="relative border-b p-6">

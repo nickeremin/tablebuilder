@@ -35,8 +35,6 @@ function UpdateNotificationPreferencesForm({
     suspense: true,
   })
 
-  if (!user) return null
-
   const utils = trpc.useContext()
   const { mutateAsync: updateNotificationPreferences } =
     trpc.account.updateNotificationPreferences.useMutation({
@@ -50,7 +48,7 @@ function UpdateNotificationPreferencesForm({
 
   // Memoize public metadata during rendering
   const metadata = React.useMemo(() => {
-    return user.publicMetadata.notificationPreferences[type]
+    return user?.publicMetadata.notificationPreferences[type]
   }, [user])
 
   // Initialize react-hook-form with zod and set current user values
@@ -79,6 +77,8 @@ function UpdateNotificationPreferencesForm({
       }
     })
   }
+
+  if (!user) return null
 
   return (
     <Form {...form}>

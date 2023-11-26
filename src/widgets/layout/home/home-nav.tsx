@@ -3,9 +3,7 @@
 import React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { FeedbackButton, NotificationButton } from "@/features"
 import { useUser } from "@clerk/nextjs"
-import { useScroll } from "@react-spring/web"
 
 import { UserNav } from "@/features/nav"
 import { Icons } from "@/shared/components/icons"

@@ -6,7 +6,7 @@ interface HighlightCardProps {
 }
 
 function HighlightCard({ highlight }: HighlightCardProps) {
-  const Icon = Icons.about[highlight.icon]
+  const Icon = Icons[highlight.icon]
 
   return (
     <div

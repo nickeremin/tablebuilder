@@ -42,8 +42,6 @@ function DeleteAccountrForm({
     suspense: true,
   })
 
-  if (!user) return null
-
   const utils = trpc.useContext()
   const { mutateAsync: deleteAccount } = trpc.account.deleteAccount.useMutation(
     {
@@ -61,9 +59,10 @@ function DeleteAccountrForm({
 
   // Getting dynamic schema based on username and delete sentence
   const deleteAccountSchema = getDeleteAccountSchema({
-    username: user.username ?? "",
+    username: user?.username ?? "",
     deleteString,
   })
+
   type Inputs = z.infer<typeof deleteAccountSchema>
 
   // Initialize react-hook-form with zod
@@ -92,6 +91,8 @@ function DeleteAccountrForm({
       }
     })
   }
+
+  if (!user) return null
 
   return (
     <Dialog

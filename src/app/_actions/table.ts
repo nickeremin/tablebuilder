@@ -1,6 +1,6 @@
 "use server"
 
-import { and, desc, eq, ilike } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import { v4 as uuidv4 } from "uuid"
 import * as z from "zod"
 

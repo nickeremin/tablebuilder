@@ -148,7 +148,7 @@ export const timelineActions: TimelineAction[] = [
 
 // About
 export type AboutHighlight = {
-  icon: keyof typeof Icons.about
+  icon: keyof typeof Icons
   title: string
   description: string
 }
@@ -243,7 +243,7 @@ export const pricingPlans: PricingPlan[] = [
 ]
 
 export type PricingAddOn = {
-  icon: keyof typeof Icons.pricing
+  icon: keyof typeof Icons
   title: string
   price: number
   description: string

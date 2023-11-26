@@ -33,7 +33,6 @@ export const Icons = {
   send: Send,
   light: Sun,
   dark: Moon,
-  check: Check,
   upDown: ChevronsUpDown,
   search: Search,
   user: User,
@@ -41,19 +40,18 @@ export const Icons = {
   emailVerified: MailCheck,
   emailNotVerified: MailX,
   add: Plus,
+
   // Stable
   spinner: LoaderIcon,
   storage: DatabaseIcon,
   settings: UserCogIcon,
   table: TableIcon,
-  about: {
-    easy: RocketIcon,
-    globe: GlobeIcon,
-    accessible: AccessibilityIcon,
-  },
-  pricing: {
-    check: Check,
-  },
+  // About page
+  easy: RocketIcon,
+  globe: GlobeIcon,
+  accessible: AccessibilityIcon,
+  // Pricing page
+  check: Check,
   logo: ({ ...props }: LogoIconProps) => <LogoIcon {...props} />,
   discord: ({ ...props }: IconProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" {...props}>

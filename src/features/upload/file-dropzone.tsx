@@ -50,7 +50,6 @@ function FileDropzone<TFieldValues extends FieldValues>({
   isUploading = false,
   disabled = false,
   className,
-  children,
   ...props
 }: FileDropzoneProps<TFieldValues>) {
   const onDrop = React.useCallback(

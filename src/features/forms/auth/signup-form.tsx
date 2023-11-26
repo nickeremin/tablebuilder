@@ -47,8 +47,8 @@ const SignUpForm = () => {
   const [isPending, startTransition] = useTransition()
 
   const [isVerifying, setIsVerifying] = React.useState(false)
-  const [expired, setExpired] = React.useState(false)
-  const [verified, setVerified] = React.useState(false)
+  const [, setExpired] = React.useState(false)
+  const [, setVerified] = React.useState(false)
   const { isLoaded, setActive, signUp } = useSignUp()
 
   const styles = useSpring({
@@ -76,8 +76,7 @@ const SignUpForm = () => {
 
   if (!isLoaded) return null
 
-  const { startMagicLinkFlow, cancelMagicLinkFlow } =
-    signUp.createMagicLinkFlow()
+  const { startMagicLinkFlow } = signUp.createMagicLinkFlow()
 
   async function oauthSignUp(provider: OAuthStrategy) {
     if (!isLoaded) return null
@@ -461,7 +460,7 @@ const SignUpForm = () => {
                         />
                       ) : null}
                       <Button
-                        aria-aria-label="Перейти к следующему шагу"
+                        aria-label="Перейти к следующему шагу"
                         type="button"
                         onClick={() => setNextStep(true)}
                         disabled={

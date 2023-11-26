@@ -7,7 +7,6 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTrigger,
 } from "@/shared/components/ui/dialog"
 
 function CreateTeamForm() {

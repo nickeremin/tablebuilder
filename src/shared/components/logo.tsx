@@ -1,6 +1,5 @@
 import * as React from "react"
 
-import { themeVariants } from "@/shared/config/site/themes"
 import { cn } from "@/shared/lib/utils"
 
 export interface LogoIconProps extends React.HTMLAttributes<HTMLDivElement> {}

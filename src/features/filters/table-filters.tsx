@@ -21,7 +21,6 @@ import {
   SheetTrigger,
 } from "@/shared/components/ui/sheet"
 import { useCreateQueryString } from "@/shared/lib/hooks"
-import { toTitleCase } from "@/shared/lib/utils"
 import { Option } from "@/shared/types"
 import { trpc } from "@/app/_trpc/client"
 
@@ -32,8 +31,6 @@ const TableFilters = () => {
       suspense: true,
     }
   )
-
-  if (!tables) return null
 
   const router = useRouter()
   const searchParams = useSearchParams() as ReadonlyURLSearchParams
@@ -64,6 +61,8 @@ const TableFilters = () => {
       )
     })
   }, [selectedTableTypes])
+
+  if (!tables) return null
 
   return (
     <Sheet>

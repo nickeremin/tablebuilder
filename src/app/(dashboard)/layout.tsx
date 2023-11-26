@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation"
-import { currentUser } from "@clerk/nextjs"
+// import { redirect } from "next/navigation"
+// import { currentUser } from "@clerk/nextjs"
 
 import { DashboardNav } from "@/widgets/layout/dashboard"
 import { SiteFooter } from "@/widgets/layout/home"

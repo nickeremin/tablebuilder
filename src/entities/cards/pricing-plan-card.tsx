@@ -50,7 +50,7 @@ function PricingPlanCard({ plan }: PricingPlanCardProps) {
         planRef.current?.removeEventListener("mousemove", updateMousePosition)
       }
     }
-  }, [])
+  }, [plan.id])
 
   return (
     <Card

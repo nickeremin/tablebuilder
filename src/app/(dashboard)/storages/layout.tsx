@@ -2,7 +2,6 @@ import * as React from "react"
 
 import { StoragesPageHeader } from "@/widgets/layout/page-headers"
 import { Shell } from "@/shared/components/shells/shell"
-import { Spacer } from "@/shared/components/ui/spacer"
 
 interface StoragesLayoutProps {
   children: React.ReactNode

@@ -32,7 +32,7 @@ function FeedbackButton() {
     },
   })
 
-  function onSubmit(input: Inputs) {}
+  function onSubmit() {}
 
   return (
     <Popover>

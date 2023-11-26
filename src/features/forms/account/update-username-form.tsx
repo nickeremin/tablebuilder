@@ -33,8 +33,6 @@ function UpdateUsernameForm({ className, ...props }: UpdateUsernameFormProps) {
     suspense: true,
   })
 
-  if (!user) return null
-
   const utils = trpc.useContext()
   const { mutateAsync: updateUsername } =
     trpc.account.updateUsername.useMutation({
@@ -50,7 +48,7 @@ function UpdateUsernameForm({ className, ...props }: UpdateUsernameFormProps) {
   const form = useForm<Inputs>({
     resolver: zodResolver(usernameSchema),
     defaultValues: {
-      username: user.username ?? "",
+      username: user?.username ?? "",
     },
   })
 
@@ -69,10 +67,12 @@ function UpdateUsernameForm({ className, ...props }: UpdateUsernameFormProps) {
     })
   }
 
+  if (!user) return null
+
   return (
     <Card
       as="section"
-      className={cn("shadow-themed-border rounded-md border-none", className)}
+      className={cn("rounded-md border-none shadow-themed-border", className)}
       {...props}
     >
       <Form {...form}>

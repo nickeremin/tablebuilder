@@ -227,7 +227,7 @@ function ContactProductsPage() {
             </Card>
 
             {/* Guides support */}
-            <Card className="mx-autoflex max-w-[520px] flex-col">
+            <Card className="mx-auto flex max-w-[520px] flex-col">
               <CardHeader className="border-b">
                 <CardTitle>Руководства Tablebuilder</CardTitle>
               </CardHeader>

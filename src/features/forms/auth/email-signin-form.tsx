@@ -31,8 +31,8 @@ type Inputs = z.infer<typeof checkEmailSchema>
 function EmailSignInForm() {
   const router = useRouter()
   const { isLoaded, signIn, setActive } = useSignIn()
-  const [expired, setExpired] = React.useState(false)
-  const [verified, setVerified] = React.useState(false)
+  const [, setExpired] = React.useState(false)
+  const [, setVerified] = React.useState(false)
   const [isVerifying, setIsVerifying] = React.useState(false)
   const [isPending, startTransition] = React.useTransition()
 
@@ -46,8 +46,7 @@ function EmailSignInForm() {
 
   if (!isLoaded) return null
 
-  const { startMagicLinkFlow, cancelMagicLinkFlow } =
-    signIn.createMagicLinkFlow()
+  const { startMagicLinkFlow } = signIn.createMagicLinkFlow()
 
   async function onSubmit(input: Inputs) {
     if (!signIn) return
@@ -75,6 +74,7 @@ function EmailSignInForm() {
         // Pass your app URL that users will be navigated
         // res will hold the updated sign in object.
         const res = await startMagicLinkFlow({
+          /* eslint-disable */
           emailAddressId: emailLinkFactor?.emailAddressId!,
           redirectUrl: `http://localhost:3000/verification?mode=signin`,
         })

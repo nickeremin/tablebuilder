@@ -1,8 +1,6 @@
 import { InferInsertModel, InferSelectModel, relations } from "drizzle-orm"
 import {
   boolean,
-  decimal,
-  integer,
   json,
   pgEnum,
   pgTable,

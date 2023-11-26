@@ -1,7 +1,6 @@
 import Balancer from "react-wrap-balancer"
 
 import { type ContactAction } from "@/shared/config/site/constants"
-import { cn } from "@/shared/lib/utils"
 
 interface ContactActionCardProps extends React.HTMLAttributes<HTMLDivElement> {
   action: ContactAction

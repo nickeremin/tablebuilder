@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid"
 
 import { db } from "@/shared/db"
 import { tableRecords, tables } from "@/shared/db/schema"
-import { TableColumnData, TableRecord } from "@/shared/types"
+import { TableColumnData } from "@/shared/types"
 
 export async function addRecord(tableId: string, input: TableColumnData[]) {
   const table = await db.query.tables.findFirst({

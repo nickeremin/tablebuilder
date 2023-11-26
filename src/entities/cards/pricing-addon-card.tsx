@@ -12,7 +12,7 @@ interface PricingAddOnCardProps {
 }
 
 function PricingAddOnCard({ addOn }: PricingAddOnCardProps) {
-  const Icon = Icons.pricing[addOn.icon]
+  const Icon = Icons[addOn.icon]
 
   return (
     <Card>

@@ -98,8 +98,8 @@ function PreviewImage() {
                 fill={"currentColor"}
                 style={{
                   transformOrigin: `${5 + OFFSET * 2}px ${5 + OFFSET * 2}px`,
-                  transform: `translate(${COORDS[index][0] + OFFSET}px, ${
-                    COORDS[index][1] + OFFSET
+                  transform: `translate(${COORDS![index]![0]! + OFFSET}px, ${
+                    COORDS![index]![1]! + OFFSET
                   }px)`,
                   scale,
                 }}

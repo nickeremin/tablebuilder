@@ -3,7 +3,7 @@ import * as React from "react"
 import "./globals.css"
 
 import { type Metadata } from "next"
-import { Inter, Noto_Sans } from "next/font/google"
+import { Inter } from "next/font/google"
 import { ClerkProvider } from "@clerk/nextjs"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 

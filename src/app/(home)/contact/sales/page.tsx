@@ -77,10 +77,10 @@ function ContactSalesPage() {
             <div className="-mx-4 flex flex-col gap-6 border-b px-4 pb-8 lg:mx-0 lg:px-0 lg:pb-12">
               <blockquote>
                 <p className="text-xl text-secondary-foreground">
-                  "Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                  Dolor esse hic repellat officia eum harum? Excepturi mollitia
-                  perferendis voluptatum maiores commodi, quis vitae! Odit,
-                  molestias numquam sequi saepe dolorem velit?"
+                  &quot;Lorem ipsum dolor sit amet consectetur, adipisicing
+                  elit. Dolor esse hic repellat officia eum harum? Excepturi
+                  mollitia perferendis voluptatum maiores commodi, quis vitae!
+                  Odit, molestias numquam sequi saepe dolorem velit?&quot;
                 </p>
               </blockquote>
               <span className="text-xl font-bold">Tablebuilder</span>

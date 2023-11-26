@@ -6,7 +6,7 @@ import { Webhook } from "svix"
 import { env } from "@/shared/components/env.mjs"
 import { setDefaultNotificationPreferences } from "@/app/_actions/account"
 
-export async function handler(req: Request) {
+async function handler(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
   const WEBHOOK_SECRET =
     env.CLERK_WEBHOOK_SECRET_SET_DEFAULT_NOTIFICATION_PREFERENCES

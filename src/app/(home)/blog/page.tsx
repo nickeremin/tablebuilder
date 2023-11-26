@@ -4,13 +4,6 @@ import Balancer from "react-wrap-balancer"
 
 import { SearchPosts } from "@/features/search"
 import { Shell } from "@/shared/components/shells/shell"
-import { Button } from "@/shared/components/ui/button"
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/shared/components/ui/card"
 import { PageHeading } from "@/shared/components/ui/page-header"
 import { cn } from "@/shared/lib/utils"
 
@@ -137,7 +130,7 @@ function BlogPage() {
                 <div className="z-10 flex flex-col gap-3 text-white">
                   <p className="text-xl font-bold">{post.title}</p>
                   <div className="flex items-center justify-between gap-2">
-                    <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm text-gray-400">
+                    <p className="truncate text-sm text-gray-400">
                       {post.authors.join(", ")}
                     </p>
                     <p className="shrink-0 text-sm text-gray-400">
