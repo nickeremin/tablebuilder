@@ -1,8 +1,6 @@
 import * as React from "react"
 
-import { StarsBackground } from "@/widgets/layout"
-import { AuthNav } from "@/widgets/layout/auth"
-import { SiteFooter } from "@/widgets/layout/home"
+import { AuthHeader, SiteFooter, StarsBackground } from "@/widgets/layout"
 
 interface AuthLayoutProps {
   children: React.ReactNode
@@ -12,7 +10,7 @@ function AuthLayout({ children }: AuthLayoutProps) {
   return (
     <div>
       <div className="relative min-h-screen">
-        <AuthNav />
+        <AuthHeader />
         {children}
         <StarsBackground />
       </div>

@@ -1,4 +1,10 @@
-import { AccessibilityIcon, GlobeIcon, RocketIcon } from "@radix-ui/react-icons"
+import {
+  AccessibilityIcon,
+  ActivityLogIcon,
+  DashboardIcon,
+  GlobeIcon,
+  RocketIcon,
+} from "@radix-ui/react-icons"
 import {
   AlertTriangle,
   Check,
@@ -52,6 +58,9 @@ export const Icons = {
   accessible: AccessibilityIcon,
   // Pricing page
   check: Check,
+  // Dashboard page
+  cards: DashboardIcon,
+  entities: ActivityLogIcon,
   logo: ({ ...props }: LogoIconProps) => <LogoIcon {...props} />,
   discord: ({ ...props }: IconProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" {...props}>

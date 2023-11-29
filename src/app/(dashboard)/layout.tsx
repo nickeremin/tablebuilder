@@ -1,8 +1,7 @@
 // import { redirect } from "next/navigation"
 // import { currentUser } from "@clerk/nextjs"
 
-import { DashboardNav } from "@/widgets/layout/dashboard"
-import { SiteFooter } from "@/widgets/layout/home"
+import { DashboardNav, SiteFooter } from "@/widgets/layout"
 
 interface DashboardLayoutProps {
   children: React.ReactNode

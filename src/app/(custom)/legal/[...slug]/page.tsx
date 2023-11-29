@@ -5,7 +5,7 @@ import "@/mdx/mdx.css"
 
 import { Mdx } from "@/mdx/mdx-components"
 
-import { HomeNav, SiteFooter } from "@/widgets/layout/home"
+import { HomeHeader, SiteFooter } from "@/widgets/layout"
 import { Shell } from "@/shared/components/shells/shell"
 import { PageHeading } from "@/shared/components/ui/page-header"
 import { Spacer } from "@/shared/components/ui/spacer"
@@ -52,7 +52,7 @@ async function Page({ params }: PageProps) {
   return (
     <div>
       <div className="relative min-h-screen">
-        <HomeNav />
+        <HomeHeader />
         <div className="flex flex-col items-center">
           <Spacer size="lg" className="sm:mt-[143px]" />
           {/* <h1 className="my-6 px-2 text-center text-[32px] font-bold leading-[1.05] tracking-tighter sm:text-[60px] md:text-[72px] lg:text-[80px]">

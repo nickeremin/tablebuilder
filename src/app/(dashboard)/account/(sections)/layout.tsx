@@ -2,7 +2,7 @@ import * as React from "react"
 import Link from "next/link"
 import { ChevronLeftIcon } from "@radix-ui/react-icons"
 
-import { AccountNav } from "@/widgets/layout/dashboard"
+import { AccountNav } from "@/widgets/layout"
 
 interface AccountSectionsLayoutProps {
   children: React.ReactNode

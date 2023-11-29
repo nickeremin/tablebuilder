@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 
-import { ContactSalesSupportForm } from "@/features/forms/contact"
+import { ContactSalesSupportForm } from "@/features/forms"
 import { Shell } from "@/shared/components/shells/shell"
 import { PageHeading } from "@/shared/components/ui/page-header"
 
@@ -12,6 +12,8 @@ function ContactSalesPage() {
   const formRef = React.useRef<HTMLDivElement | null>(null)
 
   React.useEffect(() => {
+    const ref = shellRef.current
+
     const updateMousePosition = (e: MouseEvent) => {
       if (!formRef.current) return
 
@@ -28,16 +30,16 @@ function ContactSalesPage() {
 
       const angle = Math.atan2(deltaY, deltaX)
 
-      shellRef.current?.style.setProperty(
+      ref?.style.setProperty(
         "--contact-gradient-rotation",
         `${angle - Math.PI / 2}rad`
       )
     }
 
-    shellRef.current?.addEventListener("mousemove", updateMousePosition)
+    ref?.addEventListener("mousemove", updateMousePosition)
 
     return () => {
-      shellRef.current?.removeEventListener("mousemove", updateMousePosition)
+      ref?.removeEventListener("mousemove", updateMousePosition)
     }
   }, [])
 

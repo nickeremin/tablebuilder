@@ -1,4 +1,7 @@
-import SSOCallback from "./sso-callback"
-import TableLoading from "./table-loading"
+/*
+  Here are all the components that are used as loaders.
+*/
 
-export { TableLoading, SSOCallback }
+import SSOCallback from "./sso-callback"
+
+export { SSOCallback }

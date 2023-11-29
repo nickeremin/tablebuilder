@@ -3,13 +3,13 @@ import { redirect } from "next/navigation"
 import { currentUser } from "@clerk/nextjs"
 import { ErrorBoundary } from "react-error-boundary"
 
+import { FallbackComponent } from "@/widgets/layout"
 import {
   DeleteAccountrForm,
   UpdateEmailForm,
   UpdateImageForm,
   UpdateUsernameForm,
-} from "@/features/forms/account"
-import { FallbackComponentErrorCard } from "@/entities/cards/error"
+} from "@/features/forms"
 
 async function AccountPage() {
   const user = await currentUser()
@@ -18,7 +18,7 @@ async function AccountPage() {
 
   return (
     <>
-      <ErrorBoundary FallbackComponent={FallbackComponentErrorCard}>
+      <ErrorBoundary FallbackComponent={FallbackComponent}>
         <Suspense fallback={<p>Loading...</p>}>
           <UpdateImageForm className="mb-8" />
           <UpdateUsernameForm className="mb-8" />

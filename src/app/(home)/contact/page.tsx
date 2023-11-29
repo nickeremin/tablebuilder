@@ -1,4 +1,4 @@
-import { TablesPreview } from "@/widgets/layout/home"
+import { TrialPreveiw } from "@/widgets/layout"
 import { ContactActionCard, ContactSupportCard } from "@/entities/cards"
 import { Shell } from "@/shared/components/shells/shell"
 import { PageHeading } from "@/shared/components/ui/page-header"
@@ -35,7 +35,7 @@ function ContactPage() {
         </Shell>
       </div>
       <div className="relative z-10 flex w-full flex-col overflow-hidden bg-background">
-        <TablesPreview />
+        <TrialPreveiw />
       </div>
     </>
   )

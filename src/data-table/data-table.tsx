@@ -95,6 +95,7 @@ const DataTable = <TData, TValue>({
         scroll: false,
       }
     )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageIndex, pageSize])
 
   const table = useReactTable({

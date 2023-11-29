@@ -49,6 +49,7 @@ function UpdateNotificationPreferencesForm({
   // Memoize public metadata during rendering
   const metadata = React.useMemo(() => {
     return user?.publicMetadata.notificationPreferences[type]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   // Initialize react-hook-form with zod and set current user values

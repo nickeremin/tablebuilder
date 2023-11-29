@@ -7,8 +7,12 @@ import { BoxIcon, CheckIcon, HeadphonesIcon } from "lucide-react"
 import { useInView } from "react-intersection-observer"
 import { Drawer } from "vaul"
 
-import { StarsBackground } from "@/widgets/layout"
-import { HomeNav, SiteFooter, TablesPreview } from "@/widgets/layout/home"
+import {
+  HomeHeader,
+  SiteFooter,
+  StarsBackground,
+  TrialPreveiw,
+} from "@/widgets/layout"
 import { PricingAddOnCard, PricingPlanCard } from "@/entities/cards"
 import { Shell } from "@/shared/components/shells/shell"
 import {
@@ -79,7 +83,7 @@ function PricingPage() {
   return (
     <div>
       <div ref={ref} className="relative min-h-screen">
-        <HomeNav />
+        <HomeHeader />
         <div className="relative mb-20">
           <Shell className="flex flex-col">
             <PageHeading
@@ -397,7 +401,7 @@ function PricingPage() {
         <Spacer size="xl" />
       </div>
       <div className="relative z-10 flex w-full flex-col overflow-hidden bg-background">
-        <TablesPreview />
+        <TrialPreveiw />
       </div>
       <SiteFooter />
     </div>

@@ -1,6 +1,6 @@
 import { type Metadata } from "next"
 
-import { SignUpForm } from "@/features/forms/auth"
+import { SignUpForm } from "@/features/forms"
 import { env } from "@/shared/components/env.mjs"
 
 export const metadata: Metadata = {

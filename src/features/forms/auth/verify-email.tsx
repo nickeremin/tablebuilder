@@ -48,6 +48,7 @@ function VerifyEmail() {
       }
     }
     verify()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (verificationStatus === "failed" || verificationStatus === "expired") {

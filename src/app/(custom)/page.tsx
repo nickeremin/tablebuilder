@@ -1,30 +1,28 @@
 import * as React from "react"
 
-import { StarsBackground } from "@/widgets/layout"
+import { HomeHeader, SiteFooter, StarsBackground } from "@/widgets/layout"
 import {
-  HomeNav,
+  HomeImage,
   HomePreview,
-  PreviewImage,
-  SiteFooter,
-} from "@/widgets/layout/home"
-import PreviewTestimonials from "@/widgets/layout/home/home-page/preview-testimonials"
-import PreviewTimeline from "@/widgets/layout/home/home-page/preview-timeline"
-import PreviewTour from "@/widgets/layout/home/home-page/preview-tour"
+  HomeTestimonials,
+  HomeTimeline,
+  HomeTrial,
+} from "@/widgets/pages"
 
 function HomePage() {
   return (
     <div>
       <div className="relative">
-        <HomeNav />
+        <HomeHeader />
         <StarsBackground rotationX={45} rotationY={70} />
         <div className="flex h-[calc(100vh-64px)] w-full flex-col items-center lg:gap-8">
           <HomePreview />
-          <PreviewImage />
+          <HomeImage />
         </div>
-        <PreviewTestimonials />
-        <PreviewTimeline />
+        <HomeTestimonials />
+        <HomeTimeline />
       </div>
-      <PreviewTour />
+      <HomeTrial />
       <SiteFooter />
     </div>
   )

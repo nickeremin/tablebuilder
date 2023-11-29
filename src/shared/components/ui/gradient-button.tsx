@@ -35,13 +35,15 @@ function GradientButton({
 }: GradientButtonProps) {
   const gradient =
     "linear-gradient(0deg, hsl(var(--foreground)/.05), hsl(var(--foreground)/.05)), radial-gradient(50% 50% at 50% 100%, hsl(var(--foreground)/.1) 0%, hsl(var(--foreground)/0) 100%)"
-  const ref = React.useRef<HTMLDivElement | null>(null)
+  const btnRef = React.useRef<HTMLDivElement | null>(null)
 
   React.useEffect(() => {
-    const updateMousePosition = (e: MouseEvent) => {
-      if (!ref.current) return
+    const ref = btnRef.current
 
-      const rect = ref.current.getBoundingClientRect()
+    const updateMousePosition = (e: MouseEvent) => {
+      if (!ref) return
+
+      const rect = ref.getBoundingClientRect()
       const { left, top } = rect
 
       const { clientX, clientY } = e
@@ -49,20 +51,20 @@ function GradientButton({
       const pointX = clientX - left
       const pointY = clientY - top
 
-      ref.current.style.setProperty("--x", `${pointX}px`)
-      ref.current.style.setProperty("--y", `${pointY}px`)
+      ref.style.setProperty("--x", `${pointX}px`)
+      ref.style.setProperty("--y", `${pointY}px`)
     }
 
-    ref.current?.addEventListener("mousemove", updateMousePosition)
+    ref?.addEventListener("mousemove", updateMousePosition)
 
     return () => {
-      ref.current?.removeEventListener("mousemove", updateMousePosition)
+      ref?.removeEventListener("mousemove", updateMousePosition)
     }
   }, [])
 
   return (
     <div className="relative overflow-visible transition-all">
-      <div ref={ref} className="group relative overflow-hidden rounded-xl">
+      <div ref={btnRef} className="group relative overflow-hidden rounded-xl">
         <div
           className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-30"
           style={{

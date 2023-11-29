@@ -39,7 +39,6 @@ function Stars({ rotationX = 20, rotationY = 30 }: BackgroundProps) {
       <Points ref={ref} stride={3} positions={positions} frustumCulled>
         <PointMaterial
           transparent
-          // color="hsl(var(--foreground))"
           color={theme === "light" ? "#000" : "#fff"}
           size={0.75}
           sizeAttenuation={true}

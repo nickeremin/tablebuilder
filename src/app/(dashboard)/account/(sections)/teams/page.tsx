@@ -1,7 +1,7 @@
 import React from "react"
 
-import { SearchTeams } from "@/widgets/account"
-import { CreateTeamForm } from "@/features/forms/account"
+import SearchTeams from "@/widgets/pages/account/search-teams"
+import { CreateTeamForm } from "@/features/forms"
 
 function TeamsPage() {
   return (

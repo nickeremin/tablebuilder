@@ -56,21 +56,23 @@ function ContactProductsPage() {
   }, [])
 
   React.useEffect(() => {
+    const ref = shellRef.current
+
     const updateMousePosition = (e: MouseEvent) => {
-      if (!shellRef.current || !imageRef.current) return
+      if (!ref || !imageRef.current) return
 
       const { clientX, clientY } = e
 
-      const { left, top } = shellRef.current.getBoundingClientRect()
+      const { left, top } = ref.getBoundingClientRect()
 
       positionRef.current.mouseX = clientX - left - 64
       positionRef.current.mouseY = clientY - top - 52
     }
 
-    shellRef.current?.addEventListener("mousemove", updateMousePosition)
+    ref?.addEventListener("mousemove", updateMousePosition)
 
     return () => {
-      shellRef.current?.removeEventListener("mousemove", updateMousePosition)
+      ref?.removeEventListener("mousemove", updateMousePosition)
     }
   }, [])
 

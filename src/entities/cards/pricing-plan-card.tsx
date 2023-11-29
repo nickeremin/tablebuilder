@@ -22,10 +22,12 @@ function PricingPlanCard({ plan }: PricingPlanCardProps) {
 
   React.useEffect(() => {
     if (plan.id === "pro") {
-      const updateMousePosition = (e: MouseEvent) => {
-        if (!planRef.current) return
+      const ref = planRef.current
 
-        const rect = planRef.current.getBoundingClientRect()
+      const updateMousePosition = (e: MouseEvent) => {
+        if (!ref) return
+
+        const rect = ref.getBoundingClientRect()
         const { left, top, right, bottom } = rect
 
         const centerX = (right + left) / 2
@@ -38,16 +40,16 @@ function PricingPlanCard({ plan }: PricingPlanCardProps) {
 
         const angle = Math.atan2(deltaY, deltaX)
 
-        planRef.current.style.setProperty(
+        ref.style.setProperty(
           "--pricing-gradient-rotation",
           `${angle - Math.PI / 2}rad`
         )
       }
 
-      planRef.current?.addEventListener("mousemove", updateMousePosition)
+      ref?.addEventListener("mousemove", updateMousePosition)
 
       return () => {
-        planRef.current?.removeEventListener("mousemove", updateMousePosition)
+        ref?.removeEventListener("mousemove", updateMousePosition)
       }
     }
   }, [plan.id])

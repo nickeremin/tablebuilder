@@ -1,12 +1,12 @@
 import { Suspense } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 
+import { FallbackComponent } from "@/widgets/layout"
 import UpdateNotificationPreferencesForm from "@/features/forms/account/update-notification-preferences-form"
-import { FallbackComponentErrorCard } from "@/entities/cards/error"
 
 function NotificationsPage() {
   return (
-    <ErrorBoundary FallbackComponent={FallbackComponentErrorCard}>
+    <ErrorBoundary FallbackComponent={FallbackComponent}>
       <Suspense fallback={<p>Loading...</p>}>
         <div className="space-y-8">
           <div className="flex flex-col gap-4">
