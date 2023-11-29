@@ -4,6 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import {
   ChevronDownIcon,
+  CrossCircledIcon,
   MagnifyingGlassIcon,
   PlusIcon,
 } from "@radix-ui/react-icons"
@@ -27,6 +28,7 @@ type SwitchButtonType = "cards" | "entities"
 function DashboardTables() {
   const { data: tables } = trpc.table.getAllUserTables.useQuery()
 
+  const inputRef = React.useRef<HTMLInputElement | null>(null)
   const [value, setValue] = React.useState("")
   const debouncedValue = useDebounce(value, 500)
   const [isFocused, setIsFocused] = React.useState(false)
@@ -61,7 +63,7 @@ function DashboardTables() {
             isFocused && "ring-1 ring-ring "
           )}
         >
-          <div className="-mr-3 flex h-full flex-col items-center justify-center bg-transparent px-3 text-muted-foreground">
+          <div className="-mr-3 flex h-full shrink-0 flex-col items-center justify-center bg-transparent px-3 text-muted-foreground">
             {isPending ? (
               <Icons.spinner className="h-5 w-5" aria-hidden="true" />
             ) : (
@@ -69,17 +71,34 @@ function DashboardTables() {
             )}
           </div>
           <input
+            ref={inputRef}
             autoComplete="off"
             autoCorrect="off"
-            autoCapitalize="off"
+            autoCapitalize="none"
+            spellCheck="false"
             type="search"
             placeholder="Поиск..."
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             value={value}
             onChange={handleChange}
-            className="h-full flex-1 bg-transparent pl-3 text-sm placeholder:text-muted-foreground focus-visible:outline-none"
+            className="h-full flex-1 bg-transparent px-3 text-base placeholder:text-muted-foreground focus-visible:outline-none"
           />
+          <button
+            onMouseDown={(e) => {
+              e.preventDefault()
+            }}
+            onClick={() => {
+              setValue("")
+              inputRef.current?.focus()
+            }}
+            className={cn(
+              "-ml-3 inline-flex h-full shrink-0 flex-col items-center justify-center px-3 text-muted-foreground transition-colors hover:text-foreground",
+              value.length > 0 ? "opacity-100" : "opacity-0"
+            )}
+          >
+            <CrossCircledIcon className="h-4 w-4" aria-hidden="true" />
+          </button>
         </div>
 
         {/* Switchbar */}
@@ -159,10 +178,12 @@ function DashboardTables() {
         </Popover>
 
         {/* Mobile add-new button */}
-
         <Drawer.Root open={open} onOpenChange={setOpen}>
           <Drawer.Trigger asChild>
-            <Button size="icon" className="h-12 w-12 rounded-xl lg:hidden">
+            <Button
+              size="icon"
+              className="h-12 w-12 shrink-0 rounded-xl lg:hidden"
+            >
               <PlusIcon className="h-4 w-4" aria-hidden="true" />
             </Button>
           </Drawer.Trigger>
