@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import {
   ChevronDownIcon,
   MagnifyingGlassIcon,
@@ -8,10 +9,16 @@ import {
 } from "@radix-ui/react-icons"
 import { LayoutGridIcon, ListIcon } from "lucide-react"
 import { useDebounce } from "usehooks-ts"
+import { Drawer } from "vaul"
 
 import { DashboardTableCard } from "@/entities/cards"
 import { Icons } from "@/shared/components/icons"
 import { Button } from "@/shared/components/ui/button"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/shared/components/ui/popover"
 import { cn } from "@/shared/lib/utils"
 import { trpc } from "@/app/_trpc/client"
 
@@ -29,6 +36,8 @@ function DashboardTables() {
 
   const [mode, setMode] = React.useState<SwitchButtonType>("cards")
 
+  const [open, setOpen] = React.useState(false)
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
   }
@@ -45,6 +54,7 @@ function DashboardTables() {
   return (
     <div className="flex flex-col gap-8 lg:gap-10">
       <div className="flex h-12 gap-3">
+        {/* Searchbar */}
         <div
           className={cn(
             "bg-background-100 flex flex-1 items-center rounded-xl border transition-all",
@@ -62,7 +72,7 @@ function DashboardTables() {
             autoComplete="off"
             autoCorrect="off"
             autoCapitalize="off"
-            type="text"
+            type="search"
             placeholder="Поиск..."
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
@@ -71,6 +81,8 @@ function DashboardTables() {
             className="h-full flex-1 bg-transparent pl-3 text-sm placeholder:text-muted-foreground focus-visible:outline-none"
           />
         </div>
+
+        {/* Switchbar */}
         <div className="bg-background-100 hidden items-center rounded-xl border p-2 lg:flex">
           <SwitchButton
             onClick={() => setMode("cards")}
@@ -106,15 +118,87 @@ function DashboardTables() {
         </div>
 
         {/* Desktop add-new button */}
-        <Button size="xl" className="hidden gap-4 px-4 text-sm lg:inline-flex">
-          Добавить...
-          <ChevronDownIcon className="h-4 w-4" aria-hidden="true" />
-        </Button>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              size="xl"
+              className="hidden w-[140px] justify-between px-4 text-sm lg:inline-flex"
+            >
+              Добавить...
+              <ChevronDownIcon className="h-4 w-4" aria-hidden="true" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[140px] rounded-xl p-2">
+            <ul className="flex list-none flex-col">
+              <li>
+                <Link
+                  href="/dashboard"
+                  className="flex h-10 items-center rounded-md px-2 text-sm transition-colors hover:bg-muted"
+                >
+                  Таблицу
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/dashboard"
+                  className="flex h-10 items-center rounded-md px-2 text-sm transition-colors hover:bg-muted"
+                >
+                  Хранилище
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/dashboard"
+                  className="flex h-10 items-center rounded-md px-2 text-sm transition-colors hover:bg-muted"
+                >
+                  Участника
+                </Link>
+              </li>
+            </ul>
+          </PopoverContent>
+        </Popover>
 
         {/* Mobile add-new button */}
-        <Button size="icon" className="h-12 w-12 rounded-xl lg:hidden">
-          <PlusIcon className="h-4 w-4" aria-hidden="true" />
-        </Button>
+
+        <Drawer.Root open={open} onOpenChange={setOpen}>
+          <Drawer.Trigger asChild>
+            <Button size="icon" className="h-12 w-12 rounded-xl lg:hidden">
+              <PlusIcon className="h-4 w-4" aria-hidden="true" />
+            </Button>
+          </Drawer.Trigger>
+
+          <Drawer.Portal>
+            <Drawer.Overlay className="fixed inset-0 z-50 bg-black/40" />
+            <Drawer.Content className="bg-background-100 fixed inset-x-0 bottom-0 z-50 mt-24 flex flex-col rounded-t-lg border-t p-2 shadow-menu-border">
+              <ul className="flex list-none flex-col">
+                <li onClick={() => setOpen(false)}>
+                  <Link
+                    href="/dashboard"
+                    className="flex h-12 items-center rounded-md px-2 transition-colors hover:bg-muted"
+                  >
+                    Таблицу
+                  </Link>
+                </li>
+                <li onClick={() => setOpen(false)}>
+                  <Link
+                    href="/dashboard"
+                    className="flex h-12 items-center rounded-md px-2 transition-colors hover:bg-muted"
+                  >
+                    Хранилище
+                  </Link>
+                </li>
+                <li onClick={() => setOpen(false)}>
+                  <Link
+                    href="/dashboard"
+                    className="flex h-12 items-center rounded-md px-2 transition-colors hover:bg-muted"
+                  >
+                    Участника
+                  </Link>
+                </li>
+              </ul>
+            </Drawer.Content>
+          </Drawer.Portal>
+        </Drawer.Root>
       </div>
       <div
         className={cn(
