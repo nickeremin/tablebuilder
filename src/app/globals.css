@@ -237,6 +237,16 @@ input[type="search"]::-webkit-search-results-decoration {
     );
 }
 
+/* Dashboard */
+
+.dashboard-submenu {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 50;
+}
+
 /* Gradients */
 .animated-gradient-text-fade-blue {
   animation: fade-text-blue 8s infinite;

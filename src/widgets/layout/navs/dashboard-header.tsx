@@ -4,7 +4,6 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { BellIcon } from "@radix-ui/react-icons"
-import { useInView } from "@react-spring/web"
 
 import { MultiSwitcher, UserNav } from "@/features/nav"
 import LogoIcon from "@/shared/components/logo"
@@ -16,18 +15,30 @@ import { cn } from "@/shared/lib/utils"
 
 function DashboardHeader() {
   const pathname = usePathname()
+  const submenuRef = React.useRef<HTMLDivElement>(null)
 
-  const [ref, inView] = useInView({
-    rootMargin: "-10px",
-  })
+  React.useEffect(() => {
+    const ref = submenuRef.current
+
+    const handleScroll = () => {
+      if (!ref) return
+
+      if (window.scrollY >= 54) {
+        ref.classList.add("dashboard-submenu")
+      } else {
+        ref.classList.remove("dashboard-submenu")
+      }
+    }
+
+    window.addEventListener("scroll", handleScroll)
+
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   return (
     <>
       {/* Main nav */}
-      <nav
-        ref={ref}
-        className="relative m-auto flex h-16 select-none items-center bg-background px-4 lg:px-6"
-      >
+      <nav className="relative m-auto flex h-16 select-none items-center bg-background px-4 lg:px-6">
         <div className="flex flex-1 items-center pr-6">
           <div className="flex max-w-full items-center">
             <Link href="/dashboard" className="hidden md:block">
@@ -67,10 +78,60 @@ function DashboardHeader() {
       </nav>
 
       {/* Submenu nav */}
-      <div>
+      <nav className="relative -mt-2.5 h-12 overflow-hidden">
+        <div className="h-12 overflow-hidden">
+          {/* TODO: Transition */}
+          <div
+            ref={submenuRef}
+            className={cn("bg-background shadow-nav-border")}
+          >
+            <div className="flex h-12 items-end overflow-auto px-4 text-sm font-medium lg:px-6">
+              <Link
+                href="/"
+                className={cn(
+                  "invisible my-auto hidden h-6 w-6 appearance-none items-center transition-all duration-300 md:inline-flex",
+
+                  "translate-y-0 opacity-100"
+                  // "invisible -translate-y-7 opacity-0"
+                )}
+              >
+                <LogoIcon className="h-6 w-6" />
+              </Link>
+              <div
+                className={cn(
+                  "flex flex-1  items-center transition-transform duration-300"
+                )}
+              >
+                {submenuLinks.map((link, index) => (
+                  <Link
+                    key={index}
+                    href={link.href ?? ""}
+                    className={cn(
+                      "group relative py-3.5",
+                      String(pathname).includes(link.href!)
+                        ? "text-primary before:absolute before:inset-x-2.5 before:bottom-0 before:border-b-2 before:border-primary before:content-['']"
+                        : "text-muted-foreground"
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        "select-none whitespace-nowrap rounded px-3 py-2 transition-colors duration-300 group-hover:bg-muted group-hover:hover:text-primary"
+                      )}
+                    >
+                      {link.title}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Version 2 */}
+      {/* <div>
         <nav>
           <div className="relative -mt-2.5 h-12 overflow-hidden">
-            {/* TODO: Transition */}
             <div
               className={cn(
                 "shadow-nav-border",
@@ -119,7 +180,9 @@ function DashboardHeader() {
             </div>
           </div>
         </nav>
-      </div>
+      </div> */}
+
+      {/* Version 1 */}
       {/* <nav className="">
         <div className="relative -mt-2.5 h-12 overflow-hidden">
           <div
