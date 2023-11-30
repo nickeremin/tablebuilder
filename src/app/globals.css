@@ -238,13 +238,30 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 /* Dashboard */
-
 .dashboard-submenu {
   position: fixed;
   left: 0;
   right: 0;
   top: 0;
   z-index: 50;
+}
+
+.dashboard-submenu-icon {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-submenu-nav {
+    @apply !translate-x-2;
+  }
+}
+
+@media (max-width: 1024px) {
+  .dashboard-submenu-nav {
+    @apply !-translate-x-2;
+  }
 }
 
 /* Gradients */

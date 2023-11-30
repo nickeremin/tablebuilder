@@ -15,19 +15,51 @@ import { cn } from "@/shared/lib/utils"
 
 function DashboardHeader() {
   const pathname = usePathname()
-  const submenuRef = React.useRef<HTMLDivElement>(null)
+  const submenuRef = React.useRef<HTMLDivElement | null>(null)
+  const iconRef = React.useRef<HTMLAnchorElement | null>(null)
+  const navRef = React.useRef<HTMLDivElement | null>(null)
 
+  // Submenu
   React.useEffect(() => {
     const ref = submenuRef.current
 
     const handleScroll = () => {
       if (!ref) return
 
-      if (window.scrollY >= 54) {
-        ref.classList.add("dashboard-submenu")
-      } else {
-        ref.classList.remove("dashboard-submenu")
-      }
+      if (window.scrollY >= 54) ref.classList.add("dashboard-submenu")
+      else ref.classList.remove("dashboard-submenu")
+    }
+
+    window.addEventListener("scroll", handleScroll)
+
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  // Icon
+  React.useEffect(() => {
+    const ref = iconRef.current
+
+    const handleScroll = () => {
+      if (!ref) return
+
+      if (window.scrollY >= 54) ref.classList.add("dashboard-submenu-icon")
+      else ref.classList.remove("dashboard-submenu-icon")
+    }
+
+    window.addEventListener("scroll", handleScroll)
+
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  // Nav
+  React.useEffect(() => {
+    const ref = navRef.current
+
+    const handleScroll = () => {
+      if (!ref) return
+
+      if (window.scrollY >= 54) ref.classList.add("dashboard-submenu-nav")
+      else ref.classList.remove("dashboard-submenu-nav")
     }
 
     window.addEventListener("scroll", handleScroll)
@@ -81,25 +113,21 @@ function DashboardHeader() {
       <nav className="relative -mt-2.5 h-12 overflow-hidden">
         <div className="h-12 overflow-hidden">
           {/* TODO: Transition */}
-          <div
-            ref={submenuRef}
-            className={cn("bg-background shadow-nav-border")}
-          >
+          <div ref={submenuRef} className="bg-background shadow-nav-border">
             <div className="flex h-12 items-end overflow-auto px-4 text-sm font-medium lg:px-6">
               <Link
+                ref={iconRef}
                 href="/"
                 className={cn(
-                  "invisible my-auto hidden h-6 w-6 appearance-none items-center transition-all duration-300 md:inline-flex",
-
-                  "translate-y-0 opacity-100"
-                  // "invisible -translate-y-7 opacity-0"
+                  "invisible my-auto hidden h-6 w-6 -translate-y-7 appearance-none items-center opacity-0 transition-all duration-300 md:inline-flex"
                 )}
               >
                 <LogoIcon className="h-6 w-6" />
               </Link>
               <div
+                ref={navRef}
                 className={cn(
-                  "flex flex-1  items-center transition-transform duration-300"
+                  "flex flex-1 -translate-x-2 items-center transition-transform duration-300 lg:-translate-x-9"
                 )}
               >
                 {submenuLinks.map((link, index) => (
