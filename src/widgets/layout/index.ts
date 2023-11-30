@@ -10,7 +10,7 @@ import AuthHeader from "./headers/auth-header"
 import HomeHeader from "./headers/home-header"
 import VerificationHeader from "./headers/verification-header"
 import AccountNav from "./navs/account-nav"
-import DashboardNav from "./navs/dashboard-nav"
+import DashboardHeader from "./navs/dashboard-header"
 import MobileNavMenu from "./navs/mobile-nav-menu"
 import StarsBackground from "./stars-background"
 import { TrialPreveiw } from "./tables-preview"
@@ -22,7 +22,7 @@ export {
   AuthHeader,
   VerificationHeader,
   AccountNav,
-  DashboardNav,
+  DashboardHeader,
   MobileNavMenu,
   StarsBackground,
   TrialPreveiw,

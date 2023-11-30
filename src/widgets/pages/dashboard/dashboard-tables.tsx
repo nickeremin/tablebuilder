@@ -59,7 +59,7 @@ function DashboardTables() {
         {/* Searchbar */}
         <div
           className={cn(
-            "bg-background-100 flex flex-1 items-center rounded-xl border transition-all",
+            "flex flex-1 items-center rounded-xl border bg-background-100 transition-all",
             isFocused && "ring-1 ring-ring "
           )}
         >
@@ -97,12 +97,12 @@ function DashboardTables() {
               value.length > 0 ? "opacity-100" : "opacity-0"
             )}
           >
-            <CrossCircledIcon className="h-4 w-4" aria-hidden="true" />
+            <CrossCircledIcon className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
 
         {/* Switchbar */}
-        <div className="bg-background-100 hidden items-center rounded-xl border p-2 lg:flex">
+        <div className="hidden items-center rounded-xl border bg-background-100 p-2 lg:flex">
           <SwitchButton
             onClick={() => setMode("cards")}
             isActive={mode === "cards"}
@@ -190,7 +190,7 @@ function DashboardTables() {
 
           <Drawer.Portal>
             <Drawer.Overlay className="fixed inset-0 z-50 bg-black/40" />
-            <Drawer.Content className="bg-background-100 fixed inset-x-0 bottom-0 z-50 mt-24 flex flex-col rounded-t-lg border-t p-2 shadow-menu-border">
+            <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 mt-24 flex flex-col rounded-t-lg border-t bg-background-100 p-2 shadow-menu-border">
               <ul className="flex list-none flex-col">
                 <li onClick={() => setOpen(false)}>
                   <Link

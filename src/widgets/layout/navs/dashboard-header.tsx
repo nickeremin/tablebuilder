@@ -4,7 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { BellIcon } from "@radix-ui/react-icons"
-import { useInView } from "react-intersection-observer"
+import { useInView } from "@react-spring/web"
 
 import { MultiSwitcher, UserNav } from "@/features/nav"
 import LogoIcon from "@/shared/components/logo"
@@ -14,20 +14,19 @@ import { Separator } from "@/shared/components/ui/separator"
 import { submenuLinks } from "@/shared/config/site/nav"
 import { cn } from "@/shared/lib/utils"
 
-function DashboardNav() {
+function DashboardHeader() {
   const pathname = usePathname()
 
-  const { ref, inView, entry } = useInView({
+  const [ref, inView] = useInView({
     rootMargin: "-10px",
-    threshold: 0,
   })
 
   return (
-    <div className="bg-background">
+    <>
       {/* Main nav */}
       <nav
         ref={ref}
-        className="relative m-auto flex h-16 select-none items-center px-4 md:px-6"
+        className="relative m-auto flex h-16 select-none items-center bg-background px-4 lg:px-6"
       >
         <div className="flex flex-1 items-center pr-6">
           <div className="flex max-w-full items-center">
@@ -68,34 +67,79 @@ function DashboardNav() {
       </nav>
 
       {/* Submenu nav */}
-      <nav className="shadow-nav-border">
+      <div>
+        <nav>
+          <div className="relative -mt-2.5 h-12 overflow-hidden">
+            {/* TODO: Transition */}
+            <div
+              className={cn(
+                "shadow-nav-border",
+                !inView && "fixed inset-x-0 top-0 z-10 bg-background"
+              )}
+            >
+              <div className="mb-[-1px] flex h-12 items-end overflow-auto px-4 text-sm font-medium lg:px-6">
+                <Link
+                  href="/"
+                  className={cn(
+                    "invisible my-auto hidden h-6 w-6 appearance-none items-center transition-all duration-300 md:inline-flex",
+
+                    "visible translate-y-0 opacity-100"
+                    // "invisible -translate-y-7 opacity-0"
+                  )}
+                >
+                  <LogoIcon className="h-6 w-6" />
+                </Link>
+                <div
+                  className={cn(
+                    "flex flex-1  items-center transition-transform duration-300"
+                  )}
+                >
+                  {submenuLinks.map((link, index) => (
+                    <Link
+                      key={index}
+                      href={link.href ?? ""}
+                      className={cn(
+                        "group relative py-3.5",
+                        String(pathname).includes(link.href!)
+                          ? "text-primary before:absolute before:inset-x-2.5 before:bottom-0 before:border-b-2 before:border-primary before:content-['']"
+                          : "text-muted-foreground"
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          "select-none whitespace-nowrap rounded px-3 py-2 transition-colors duration-300 group-hover:bg-muted group-hover:hover:text-primary"
+                        )}
+                      >
+                        {link.title}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+      {/* <nav className="">
         <div className="relative -mt-2.5 h-12 overflow-hidden">
           <div
-            className={cn(
-              "transition-shadow",
-              entry?.target &&
-                !inView &&
-                "fixed inset-x-0 top-0 z-10 bg-background shadow-nav-border"
-            )}
+            className={cn("bg-background shadow-nav-border transition-shadow")}
           >
             <div className="flex h-12 max-w-full items-center overflow-auto px-4 text-sm/6 font-medium md:gap-2 md:px-6">
               <Link
                 href="/"
                 className={cn(
                   "my-auto hidden h-6 w-6 appearance-none items-center transition-all duration-300 md:inline-flex",
-                  entry?.target && !inView
-                    ? "visible translate-y-0 opacity-100"
-                    : "invisible -translate-y-7 opacity-0"
+
+                  "visible translate-y-0 opacity-100"
+                  // "invisible -translate-y-7 opacity-0"
                 )}
               >
                 <LogoIcon className="h-6 w-6" />
               </Link>
               <div
                 className={cn(
-                  "flex flex-1 -translate-x-2 items-center transition-transform duration-300",
-                  entry?.target && !inView
-                    ? "md:translate-x-0"
-                    : "md:-translate-x-11"
+                  "flex flex-1  items-center transition-transform duration-300"
                 )}
               >
                 {submenuLinks.map((link, index) => (
@@ -122,9 +166,9 @@ function DashboardNav() {
             </div>
           </div>
         </div>
-      </nav>
-    </div>
+      </nav> */}
+    </>
   )
 }
 
-export default DashboardNav
+export default DashboardHeader
