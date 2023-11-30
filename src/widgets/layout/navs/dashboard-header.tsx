@@ -83,7 +83,7 @@ function DashboardHeader() {
                   className={cn(
                     "invisible my-auto hidden h-6 w-6 appearance-none items-center transition-all duration-300 md:inline-flex",
 
-                    "visible translate-y-0 opacity-100"
+                    "translate-y-0 opacity-100"
                     // "invisible -translate-y-7 opacity-0"
                   )}
                 >
