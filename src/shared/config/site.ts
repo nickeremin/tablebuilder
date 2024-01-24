@@ -1,5 +1,37 @@
 import { type NavItemWithOptionalChildren } from "../types"
 
+export const mobileNavLinks: NavItemWithOptionalChildren[] = [
+  {
+    title: "Продукты",
+    items: [
+      {
+        title: "Таблицы",
+        href: "/tables",
+        icon: "Table2",
+        items: [],
+      },
+      {
+        title: "Хранилище",
+        href: "/storages",
+        icon: "Database",
+        items: [],
+      },
+    ],
+  },
+  {
+    title: "Документация",
+    href: "/",
+  },
+  {
+    title: "Тарифы",
+    href: "/",
+  },
+  {
+    title: "Связаться с Нами",
+    href: "/",
+  },
+]
+
 export const footerLinks: NavItemWithOptionalChildren[] = [
   {
     title: "Панель управления",

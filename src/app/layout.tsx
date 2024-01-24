@@ -1,6 +1,7 @@
 import React from "react"
 import { type Metadata } from "next"
 import { Inter } from "next/font/google"
+import { ruRU } from "@clerk/localizations"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
 import "./globals.css"
@@ -11,6 +12,7 @@ import {
   ThemeProvider,
   TRPCReactQueryProvider,
 } from "@/shared/components/providers"
+import { Toaster } from "@/shared/components/ui/sonner"
 import { cn } from "@/shared/lib/utils"
 
 const font = Inter({
@@ -29,7 +31,7 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <ClerkProvider>
+      <ClerkProvider localization={ruRU}>
         <body
           className={cn(
             font.className,
@@ -40,6 +42,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <TRPCReactQueryProvider>
             <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
               {children}
+              <Toaster />
             </ThemeProvider>
             <ReactQueryDevtools
               buttonPosition="bottom-left"

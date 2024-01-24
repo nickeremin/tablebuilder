@@ -46,7 +46,7 @@ function MobileMenuToggleButton({ isOpen, toggleOpen }: MenuToggleButtonProps) {
     <button
       data-shadcnui-button
       onClick={toggleOpen}
-      className="relative h-8 w-8 outline-none"
+      className="relative size-8 outline-none"
     >
       <motion.span
         variants={crustContainerVariants}

@@ -31,7 +31,7 @@ export const themes: Theme[] = [
   },
 ]
 
-function ThemeSelect() {
+function ThemeSelectMobile() {
   const themeSelectId = React.useId()
   const { theme, setTheme } = useTheme()
   const [selectedTheme, setSelectedTheme] = React.useState(() =>
@@ -43,9 +43,13 @@ function ThemeSelect() {
   }, [theme])
 
   return (
-    <Label htmlFor={themeSelectId} className="group relative flex items-center">
-      <span className="pointer-events-none absolute left-1.5 text-muted-foreground transition-colors group-hover:text-primary">
-        <LucideIcon name={selectedTheme?.icon!} className="sm:h-4 sm:w-4" />
+    <Label
+      data-shadcnui-input-wrapper
+      htmlFor={themeSelectId}
+      className="group relative flex items-center overflow-hidden rounded-md"
+    >
+      <span className="pointer-events-none absolute left-1.5 text-tertiary transition-colors group-hover:text-primary">
+        <LucideIcon name={selectedTheme!.icon} />
       </span>
       <select
         aria-invalid="false"
@@ -55,7 +59,7 @@ function ThemeSelect() {
         onChange={(e) => {
           setTheme(e.target.value)
         }}
-        className="search-input-border h-8 cursor-pointer appearance-none rounded-md bg-accent px-8 text-primary outline-none transition-all  sm:h-6 sm:pl-7 sm:pr-5 sm:text-xs"
+        className="h-8 cursor-pointer appearance-none bg-background-100 px-8 text-primary outline-none transition-all"
       >
         {themes.map((theme, i) => (
           <option key={i} value={theme.mode}>
@@ -64,10 +68,53 @@ function ThemeSelect() {
         ))}
       </select>
       <span className="pointer-events-none absolute right-1 text-muted-foreground transition-colors group-hover:text-primary">
-        <LucideIcon name="ChevronsUpDown" className="h-4 w-4 sm:h-3 sm:w-3" />
+        <LucideIcon name="ChevronsUpDown" className="size-4" />
       </span>
     </Label>
   )
 }
 
-export default ThemeSelect
+function ThemeSelectDesktop() {
+  const themeSelectId = React.useId()
+  const { theme, setTheme } = useTheme()
+  const [selectedTheme, setSelectedTheme] = React.useState(() =>
+    themes.find((item) => item.mode === theme)
+  )
+
+  React.useEffect(() => {
+    setSelectedTheme(themes.find((t) => t.mode === theme))
+  }, [theme])
+
+  return (
+    <Label
+      data-shadcnui-input-wrapper
+      htmlFor={themeSelectId}
+      className="group relative flex items-center overflow-hidden rounded-md"
+    >
+      <span className="pointer-events-none absolute left-1.5 text-muted-foreground transition-colors group-hover:text-primary">
+        <LucideIcon name={selectedTheme!.icon} className="size-4" />
+      </span>
+      <select
+        aria-invalid="false"
+        aria-label="Сменить цветовую тему"
+        id={themeSelectId}
+        value={theme}
+        onChange={(e) => {
+          setTheme(e.target.value)
+        }}
+        className="h-6 cursor-pointer appearance-none rounded-md bg-accent px-8 pl-7 pr-5 text-xs text-primary outline-none transition-all"
+      >
+        {themes.map((theme, i) => (
+          <option key={i} value={theme.mode}>
+            {theme.title}
+          </option>
+        ))}
+      </select>
+      <span className="pointer-events-none absolute right-1 text-muted-foreground transition-colors group-hover:text-primary">
+        <LucideIcon name="ChevronsUpDown" className="size-3" />
+      </span>
+    </Label>
+  )
+}
+
+export { ThemeSelectMobile, ThemeSelectDesktop }

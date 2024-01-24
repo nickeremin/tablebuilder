@@ -4,7 +4,7 @@ import React from "react"
 import { useSignIn, useSignUp } from "@clerk/nextjs"
 import { type OAuthStrategy } from "@clerk/types"
 
-import { Icons } from "@/shared/components/icons"
+import { Icons, LucideIcon } from "@/shared/components/icons"
 import CustomIcon from "@/shared/components/icons/custom-icon"
 import { Button } from "@/shared/components/ui/button"
 import { catchClerkError, cn } from "@/shared/lib/utils"
@@ -95,7 +95,11 @@ function OAuthSignUpButtons({
           size="lg"
           className={cn("gap-2 text-white", provider.background)}
         >
-          <CustomIcon name={provider.icon} className="h-6 w-6" />
+          {isPending === provider.strategy ? (
+            <LucideIcon name="Loader" className="animate-spin" />
+          ) : (
+            <CustomIcon name={provider.icon} className="size-6" />
+          )}
           {provider.title}
         </Button>
       ))}
@@ -137,9 +141,13 @@ function OAuthSignInButtons() {
             oauthSignIn(provider.strategy)
           }}
           size="lg"
-          className={cn("text-gray-light gap-2", provider.background)}
+          className={cn("gap-2 text-gray-light", provider.background)}
         >
-          <CustomIcon name={provider.icon} className="h-6 w-6" />
+          {isPending === provider.strategy ? (
+            <LucideIcon name="Loader" className="animate-spin" />
+          ) : (
+            <CustomIcon name={provider.icon} className="size-6" />
+          )}
           {provider.title}
         </Button>
       ))}

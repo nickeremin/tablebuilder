@@ -7,7 +7,7 @@ const headingVariants = cva("tracking-tighter", {
   variants: {
     variant: {
       gradient:
-        "text-transparent bg-clip-text bg-gradient-to-b from-foreground/80 to-foreground",
+        "text-transparent bg-clip-text bg-gradient-to-b from-primary/80 to-primary",
     },
     size: {
       default: "text-[32px] leading-[1.1]",

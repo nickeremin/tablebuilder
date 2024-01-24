@@ -161,6 +161,10 @@
       @apply px-4;
     }
   }
+
+  .underline-link {
+    @apply relative hover:after:absolute hover:after:bottom-0 hover:after:left-0 hover:after:right-0 hover:after:border-b hover:after:border-b-link hover:after:content-[''];
+  }
 }
 
 @layer components {

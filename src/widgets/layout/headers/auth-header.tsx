@@ -5,13 +5,13 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useCycle } from "framer-motion"
 
-import CustomIcon from "@/shared/components/icons/custom-icon"
-import { Button, buttonVariants } from "@/shared/components/ui/button"
+import { buttonVariants } from "@/shared/components/ui/button"
 import { PageHeading } from "@/shared/components/ui/page-heading"
+import { Wrapper } from "@/shared/components/ui/wrapper"
 import { cn } from "@/shared/lib/utils"
 
 import MobileMenuToggleButton from "../mobile-menu-toggle-button"
-import MobileMenuHeaderWrapper from "./mobile-menu-header-wrapper"
+import MobileMenuHeaderWrapper from "./mobile-menu/mobile-menu-header-wrapper"
 
 function AuthHeader() {
   const [isOpen, toggleOpen] = useCycle(false, true)
@@ -26,20 +26,41 @@ function AuthHeader() {
   return (
     <MobileMenuHeaderWrapper
       isOpen={isOpen}
+      toggleOpen={toggleOpen}
+      isSignedIn={false}
       backgroundColor="var(--background-hsl)"
     >
-      <div className="flex h-16 w-full items-center px-6">
+      <Wrapper as="header" variant="header">
         <div className="flex flex-1 items-center">
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center gap-2">
             <PageHeading size="logo" className="font-bold">
               Tablebuilder
             </PageHeading>
           </Link>
         </div>
-        <div>
+        <div className="hidden items-center gap-3 lg:flex">
+          <Link
+            href="/contact"
+            className="px-1 py-0.5 text-sm font-medium text-tertiary transition-colors hover:text-primary"
+          >
+            Связаться с Нами
+          </Link>
+          <Link
+            data-shadcnui-button
+            href={href}
+            className={cn(
+              buttonVariants({
+                variant: "outline",
+              })
+            )}
+          >
+            {title}
+          </Link>
+        </div>
+        <div className="lg:hidden">
           <MobileMenuToggleButton isOpen={isOpen} toggleOpen={toggleOpen} />
         </div>
-      </div>
+      </Wrapper>
     </MobileMenuHeaderWrapper>
     // <div className="shadow-border-nav sticky inset-x-0 top-0 z-50 flex h-16 justify-center bg-background/70 backdrop-blur-[20px] backdrop-saturate-200">
     //   <Shell as="header" variant="header">

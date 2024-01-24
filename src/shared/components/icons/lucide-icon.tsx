@@ -12,7 +12,7 @@ function LucideIcon({ name, className, ...props }: LucideIconProps) {
   return (
     <Icon
       strokeWidth={1.5}
-      className={cn("h-5 w-5", className)}
+      className={cn("size-5", className)}
       aria-hidden="true"
       {...props}
     />

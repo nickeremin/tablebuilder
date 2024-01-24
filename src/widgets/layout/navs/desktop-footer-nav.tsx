@@ -13,27 +13,27 @@ function DesktopFooterNav() {
       <div className="flex flex-1 flex-col justify-between gap-[10px] pt-[10px]">
         <div className="flex items-center gap-3">
           <Link href="/" className="m-[-3px] p-[3px]">
-            <CustomIcon name="Logo" className="h-6 w-6" />
+            <CustomIcon name="Logo" className="size-6" />
           </Link>
-          <p className="whitespace-nowrap text-sm font-medium text-muted-foreground">
+          <p className="whitespace-nowrap text-sm font-medium text-tertiary">
             &copy; 2023
           </p>
         </div>
 
         {/* System status that shows site problems */}
-        <div className="text-primary-blue -ml-2 flex h-9 max-w-[300px] cursor-default items-center gap-[6px] whitespace-nowrap rounded-md p-2 text-sm transition-colors hover:bg-accent">
-          <span className="bg-primary-blue inline-block h-[10px] w-[10px] rounded-full" />
+        <div className="-ml-2 flex h-9 max-w-[300px] cursor-default items-center gap-[6px] whitespace-nowrap rounded-md p-2 text-sm text-blue transition-colors hover:bg-accent">
+          <span className="inline-block size-[10px] rounded-full bg-blue" />
           <small className="inline-block overflow-hidden text-ellipsis text-sm font-medium">
             Все системы в норме.
           </small>
         </div>
 
-        <div className="mt-auto whitespace-nowrap text-sm/9 text-muted-foreground">
+        <div className="mt-auto whitespace-nowrap text-sm/9 text-tertiary">
           Создано{" "}
           <Link
             aria-label="Перейти на страницу разработчика на GitHub"
             href="/"
-            className="font-semibold transition-colors hover:text-foreground"
+            className="font-semibold transition-colors hover:text-secondary"
           >
             nickeremin
           </Link>
@@ -53,7 +53,7 @@ function DesktopFooterNav() {
               <li key={item.title} className="py-[6px]">
                 <Link
                   href={item.href ?? "/"}
-                  className="whitespace-nowrap text-sm text-muted-foreground transition-colors hover:text-primary"
+                  className="whitespace-nowrap text-sm text-tertiary transition-colors hover:text-primary"
                 >
                   {item.title}
                 </Link>
@@ -66,6 +66,7 @@ function DesktopFooterNav() {
       <div className="flex flex-col items-end justify-end">
         <div className="flex items-center gap-1">
           <Link
+            data-shadcnui-button
             aria-label="Перейти на страницу проекта на GitHub"
             href="/"
             className={cn(
@@ -75,7 +76,7 @@ function DesktopFooterNav() {
               })
             )}
           >
-            <CustomIcon name="GitHub" className="h-6 w-6" />
+            <CustomIcon name="GitHub" className="size-6" />
           </Link>
           <ThemeToggle />
         </div>

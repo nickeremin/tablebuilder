@@ -10,7 +10,7 @@ function CustomIcon({ name, className, ...props }: CustomIconProps) {
   const Icon = Icons[name]
 
   return (
-    <Icon className={cn("h-5 w-5", className)} {...props} aria-hidden="true" />
+    <Icon className={cn("size-5", className)} {...props} aria-hidden="true" />
   )
 }
 

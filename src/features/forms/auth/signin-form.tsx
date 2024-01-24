@@ -1,6 +1,7 @@
 import React from "react"
 import Link from "next/link"
 
+import { ContinueAuthWith } from "@/entities/auth"
 import { LucideIcon } from "@/shared/components/icons"
 import { buttonVariants } from "@/shared/components/ui/button"
 import { cn } from "@/shared/lib/utils"
@@ -12,16 +13,7 @@ function SignInForm() {
     <div className="flex w-full max-w-[320px] flex-col">
       <OAuthSignInButtons />
 
-      <div className="relative my-5">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
-        </div>
-        <div className="relative flex justify-center text-xs ">
-          <span className="bg-background px-2 text-muted-foreground">
-            ИЛИ ПРОДОЛЖИТЕ
-          </span>
-        </div>
-      </div>
+      <ContinueAuthWith />
 
       <Link
         data-shadcnui-button
