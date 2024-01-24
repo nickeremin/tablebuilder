@@ -49,11 +49,13 @@ type SignUpStep = "initial" | "oauth" | "email"
 type SignUpContextData = {
   step: SignUpStep
   setStep: React.Dispatch<React.SetStateAction<SignUpStep>>
+  isPending: boolean
 }
 
 const SignUpContext = React.createContext<SignUpContextData>({
   step: "initial",
   setStep: () => {},
+  isPending: false,
 })
 
 function SignUpForm() {
@@ -74,73 +76,79 @@ function SignUpForm() {
   const [isVerifying, setIsVerifying] = React.useState(false)
   const [, setExpired] = React.useState(false)
   const [, setVerified] = React.useState(false)
+  const [isPending, startTransition] = React.useTransition()
 
   if (!isLoaded) return null
-  const { startEmailLinkFlow, cancelEmailLinkFlow } =
-    signUp.createEmailLinkFlow()
 
-  async function emailSignUp(input: Inputs) {
+  const { startEmailLinkFlow } = signUp.createEmailLinkFlow()
+
+  function emailSignUp(input: Inputs) {
     if (!isLoaded) return null
 
     setExpired(false)
     setVerified(false)
 
-    try {
-      // Start the sign up flow, by collecting the user's data
-      await signUp.create({
-        emailAddress: input.email,
-        username: input.username,
-        unsafeMetadata: {
-          subscriptionPlan: input.subscriptionPlan,
-        },
-      })
-
-      setIsVerifying(true)
-
-      const su = await startEmailLinkFlow({
-        redirectUrl: `http://localhost:3000/verification?email=${input.email}&mode=signup`,
-      })
-
-      // Check the verification result.
-      const verification = su.verifications.emailAddress
-
-      if (verification.verifiedFromTheSameClient()) {
-        setVerified(true)
-        // If you're handling the verification result from
-        // another route/component, you should return here.
-        // See the <MagicLinkVerification/> component as an
-        // example below.
-        // If you want to complete the flow on this tab,
-        // don't return. Check the sign up status instead.
-        return
-      } else if (verification.status === "expired") {
-        setExpired(true)
-      }
-
-      if (su.status === "complete") {
-        // Sign up is complete, we have a session.
-        // Navigate to the after sign up URL.
-        setActive({
-          session: su.createdSessionId,
-          beforeEmit: () => router.push("/dashboard"),
+    startTransition(async () => {
+      try {
+        // Start the sign up flow, by collecting the user's data
+        await signUp.create({
+          emailAddress: input.email,
+          username: input.username,
+          unsafeMetadata: {
+            subscriptionPlan: input.subscriptionPlan,
+          },
         })
-        return
+
+        setIsVerifying(true)
+
+        const su = await startEmailLinkFlow({
+          redirectUrl: `http://localhost:3000/verification?email=${input.email}&mode=signup`,
+        })
+
+        // Check the verification result.
+        const verification = su.verifications.emailAddress
+
+        if (verification.verifiedFromTheSameClient()) {
+          setVerified(true)
+          // If you're handling the verification result from
+          // another route/component, you should return here.
+          // See the <MagicLinkVerification/> component as an
+          // example below.
+          // If you want to complete the flow on this tab,
+          // don't return. Check the sign up status instead.
+          return
+        } else if (verification.status === "expired") {
+          setExpired(true)
+        }
+
+        if (su.status === "complete") {
+          // Sign up is complete, we have a session.
+          // Navigate to the after sign up URL.
+          setActive({
+            session: su.createdSessionId,
+            beforeEmit: () => router.push("/dashboard"),
+          })
+          return
+        }
+      } catch (error) {
+        setIsVerifying(false)
+        catchClerkError(error)
       }
-    } catch (error) {
-      setIsVerifying(false)
-      catchClerkError(error)
-    }
+    })
   }
 
   if (isVerifying) return <VerifyEmail email={form.getValues("email")} />
 
   return (
-    <SignUpContext.Provider value={{ step, setStep }}>
+    <SignUpContext.Provider value={{ step, setStep, isPending }}>
       <div className="flex min-h-[85vh] flex-col justify-between px-6">
         <div className="flex flex-col items-center">
-          <div className="flex w-full flex-col items-center pt-28">
+          <div className="flex w-full max-w-[456px] flex-col items-center pt-28">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(emailSignUp)}>
+              <form
+                className="w-full"
+                onSubmit={form.handleSubmit(emailSignUp)}
+              >
                 {step === "initial" && <InitialStep />}
                 {step === "oauth" && <OAuthStep />}
                 {step === "email" && <EmailStep />}
@@ -189,7 +197,7 @@ function InitialStep() {
   const isValid = subscriptionPlan && isUsernameValid
 
   return (
-    <div className="flex w-full max-w-[456px] flex-col items-center gap-7">
+    <div className="flex flex-col items-center gap-7">
       <AuthHeading>Создайте Аккаунт Tablebuilder</AuthHeading>
 
       <div className="w-full">
@@ -297,7 +305,7 @@ function OAuthStep() {
   const { setStep } = React.useContext(SignUpContext)
 
   return (
-    <div className="flex w-full max-w-[456px] flex-col items-center gap-7">
+    <div className="flex flex-col items-center gap-7">
       <AuthHeading>Выберите Способ Создать Аккаунт</AuthHeading>
 
       <div className="flex w-full max-w-[320px] flex-col">
@@ -327,7 +335,7 @@ function OAuthStep() {
 function EmailStep() {
   const form = useFormContext<Inputs>()
 
-  const { setStep } = React.useContext(SignUpContext)
+  const { setStep, isPending } = React.useContext(SignUpContext)
 
   const handleClick = () => {
     setStep("oauth")
@@ -335,7 +343,7 @@ function EmailStep() {
   }
 
   return (
-    <div className="flex w-full max-w-[456px] flex-col items-center gap-7">
+    <div className="flex flex-col items-center gap-7">
       <AuthHeading>Зарегистрируйтесь в Tablebuilder</AuthHeading>
 
       <div className="flex w-full max-w-[320px] flex-col">
@@ -359,8 +367,13 @@ function EmailStep() {
             )}
           />
 
-          <Button type="submit" size="lg" className="gap-2">
-            {false ? (
+          <Button
+            type="submit"
+            disabled={isPending}
+            size="lg"
+            className="gap-2"
+          >
+            {isPending ? (
               <LucideIcon name="Loader" className="animate-spin" />
             ) : (
               <LucideIcon name="Mail" />
@@ -377,7 +390,7 @@ function EmailStep() {
                 handleClick()
               }
             }}
-            className="underline-link flex cursor-pointer items-center gap-1 text-sm text-link"
+            className="underline-link flex cursor-pointer items-center gap-1 text-link"
             role="link"
             tabIndex={0}
           >

@@ -21,7 +21,6 @@ import {
   FormMessage,
 } from "@/shared/components/ui/form"
 import { Input } from "@/shared/components/ui/input"
-import { PageHeading } from "@/shared/components/ui/page-heading"
 import { catchClerkError } from "@/shared/lib/utils"
 import { checkEmailSchema } from "@/shared/lib/validations/auth"
 
@@ -111,59 +110,64 @@ function SignInEmailForm() {
 
   return (
     <>
-      <div className="flex flex-1 flex-col items-center justify-center gap-7 p-6">
-        <AuthHeading>Войдите в Tablebuilder</AuthHeading>
-
-        <div className="flex w-full max-w-[320px] flex-col">
+      <div className="flex flex-1 flex-col items-center justify-center p-6">
+        <div className="flex w-full max-w-[456px] flex-col items-center">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="flex flex-col gap-3">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="Электронная Почта"
-                          className="h-12 rounded-lg"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button
-                  type="button"
-                  disabled={isPending}
-                  size="lg"
-                  className="gap-2"
-                >
-                  {isPending ? (
-                    <LucideIcon name="Loader" className="animate-spin" />
-                  ) : (
-                    <LucideIcon name="Mail" />
-                  )}
-                  Продолжить по Почте
-                </Button>
+            <form className="w-full" onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="flex flex-col items-center gap-7">
+                <AuthHeading>Войдите в Tablebuilder</AuthHeading>
+
+                <div className="flex w-full max-w-[320px] flex-col">
+                  <div className="flex flex-col gap-3">
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              type="email"
+                              placeholder="Электронная Почта"
+                              className="h-12 rounded-lg"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button
+                      type="submit"
+                      disabled={isPending}
+                      size="lg"
+                      className="gap-2"
+                    >
+                      {isPending ? (
+                        <LucideIcon name="Loader" className="animate-spin" />
+                      ) : (
+                        <LucideIcon name="Mail" />
+                      )}
+                      Продолжить по Почте
+                    </Button>
+                  </div>
+
+                  <div className="mt-6 flex flex-col items-center">
+                    <Link
+                      href="/signin"
+                      className="underline-link flex items-center gap-1 text-link"
+                    >
+                      <LucideIcon name="MoveLeft" />
+                      Другие варианты входа
+                    </Link>
+                  </div>
+                </div>
               </div>
             </form>
           </Form>
-          <div className="flex flex-col items-center">
-            <Link
-              href="/signin"
-              className="underline-link mt-6 flex items-center gap-1 text-sm text-link"
-            >
-              <LucideIcon name="MoveLeft" />
-              Другие варианты входа
-            </Link>
-          </div>
         </div>
       </div>
 
-      <CreateAccountLinkForMobiles />
+      {!isVerifying && <CreateAccountLinkForMobiles />}
     </>
   )
 }

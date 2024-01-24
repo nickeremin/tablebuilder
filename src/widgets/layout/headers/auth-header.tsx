@@ -27,7 +27,7 @@ function AuthHeader() {
     <MobileMenuHeaderWrapper
       isOpen={isOpen}
       toggleOpen={toggleOpen}
-      isSignedIn={false}
+      isSignedIn={true}
       backgroundColor="var(--background-hsl)"
     >
       <Wrapper as="header" variant="header">
