@@ -9,7 +9,7 @@ export default authMiddleware({
     // "/sso-callback(.*)",
     // "/api/webhook(.*)",
   ],
-  async afterAuth(auth, req) {
+  async afterAuth() {
     return NextResponse.next()
     //console.log(req.nextUrl)
 

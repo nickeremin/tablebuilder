@@ -1,20 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { useTransition } from "react"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useEmailLink, useSignUp } from "@clerk/nextjs"
-import { type OAuthStrategy } from "@clerk/nextjs/server"
+import { useSignUp } from "@clerk/nextjs"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { MoveLeftIcon } from "lucide-react"
-import {
-  useForm,
-  useFormContext,
-  UseFormReturn,
-  useFormState,
-  useWatch,
-} from "react-hook-form"
+import { motion, MotionConfig } from "framer-motion"
+import { useForm, useFormContext, useWatch } from "react-hook-form"
 import * as z from "zod"
 
 import {
@@ -35,7 +26,6 @@ import {
 } from "@/shared/components/ui/form"
 import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
-import { PageHeading } from "@/shared/components/ui/page-heading"
 import { RadioGroup, RadioGroupItem } from "@/shared/components/ui/radio-group"
 import { catchClerkError, cn } from "@/shared/lib/utils"
 import { createAccountSchema } from "@/shared/lib/validations/auth"
@@ -141,24 +131,32 @@ function SignUpForm() {
 
   return (
     <SignUpContext.Provider value={{ step, setStep, isPending }}>
-      <div className="flex min-h-[85vh] flex-col justify-between px-6">
-        <div className="flex flex-col items-center">
-          <div className="flex w-full max-w-[456px] flex-col items-center pt-28">
-            <Form {...form}>
-              <form
-                className="w-full"
-                onSubmit={form.handleSubmit(emailSignUp)}
-              >
-                {step === "initial" && <InitialStep />}
-                {step === "oauth" && <OAuthStep />}
-                {step === "email" && <EmailStep />}
-              </form>
-            </Form>
+      <MotionConfig
+        transition={{ duration: 0.5, ease: [0.52, 0.16, 0.52, 0.84] }}
+      >
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex min-h-[85vh] flex-col justify-between px-6"
+        >
+          <div className="flex flex-col items-center">
+            <div className="flex w-full max-w-[456px] flex-col items-center pt-28">
+              <Form {...form}>
+                <form
+                  className="w-full"
+                  onSubmit={form.handleSubmit(emailSignUp)}
+                >
+                  {step === "initial" && <InitialStep />}
+                  {step === "oauth" && <OAuthStep />}
+                  {step === "email" && <EmailStep />}
+                </form>
+              </Form>
+            </div>
           </div>
-        </div>
 
-        <PrivacyAndTermsLinks />
-      </div>
+          <PrivacyAndTermsLinks />
+        </motion.div>
+      </MotionConfig>
     </SignUpContext.Provider>
   )
 }
@@ -223,10 +221,9 @@ function InitialStep() {
                       <Label
                         htmlFor={plan.value}
                         className={cn(
-                          "flex items-center justify-between rounded-md p-3 ring-1 transition hover:cursor-pointer hover:bg-muted",
-                          field.value === plan.value
-                            ? "bg-blue/10 ring-blue/30 hover:bg-blue/10"
-                            : "ring-border"
+                          "flex items-center justify-between rounded-md border p-3 transition hover:cursor-pointer hover:bg-muted",
+                          field.value === plan.value &&
+                            "border-blue/30 bg-blue/10 hover:bg-blue/10"
                         )}
                       >
                         <div className="flex flex-col gap-1 text-sm">
@@ -390,7 +387,7 @@ function EmailStep() {
                 handleClick()
               }
             }}
-            className="underline-link flex cursor-pointer items-center gap-1 text-link"
+            className="flex cursor-pointer items-center gap-1 border-b border-b-transparent text-link hover:border-link"
             role="link"
             tabIndex={0}
           >

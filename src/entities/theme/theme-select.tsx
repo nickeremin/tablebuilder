@@ -9,37 +9,40 @@ import { Label } from "@/shared/components/ui/label"
 
 type Theme = {
   title: string
-  mode: "light" | "dark" | "system"
+  type: "light" | "dark" | "system"
   icon: keyof typeof icons
 }
 
-export const themes: Theme[] = [
-  {
+type Themes = { [key in "light" | "dark" | "system"]: Theme }
+
+export const themes: Themes = {
+  light: {
     title: "Светлая",
-    mode: "light",
+    type: "light",
     icon: "Sun",
   },
-  {
+  dark: {
     title: "Темная",
-    mode: "dark",
+    type: "dark",
     icon: "Moon",
   },
-  {
+  system: {
     title: "Системная",
-    mode: "system",
+    type: "system",
     icon: "Monitor",
   },
-]
+}
 
 function ThemeSelectMobile() {
   const themeSelectId = React.useId()
   const { theme, setTheme } = useTheme()
-  const [selectedTheme, setSelectedTheme] = React.useState(() =>
-    themes.find((item) => item.mode === theme)
-  )
+  const [selectedTheme, setSelectedTheme] = React.useState(themes.system)
 
   React.useEffect(() => {
-    setSelectedTheme(themes.find((t) => t.mode === theme))
+    if (theme && theme in themes) {
+      //@ts-expect-error because themes return string wich value is "light" | "dark" | "system"
+      setSelectedTheme(themes[theme])
+    }
   }, [theme])
 
   return (
@@ -61,8 +64,8 @@ function ThemeSelectMobile() {
         }}
         className="h-8 cursor-pointer appearance-none bg-background-100 px-8 text-primary outline-none transition-all"
       >
-        {themes.map((theme, i) => (
-          <option key={i} value={theme.mode}>
+        {Object.values(themes).map((theme, i) => (
+          <option key={i} value={theme.type}>
             {theme.title}
           </option>
         ))}
@@ -77,12 +80,13 @@ function ThemeSelectMobile() {
 function ThemeSelectDesktop() {
   const themeSelectId = React.useId()
   const { theme, setTheme } = useTheme()
-  const [selectedTheme, setSelectedTheme] = React.useState(() =>
-    themes.find((item) => item.mode === theme)
-  )
+  const [selectedTheme, setSelectedTheme] = React.useState(themes.system)
 
   React.useEffect(() => {
-    setSelectedTheme(themes.find((t) => t.mode === theme))
+    if (theme && theme in themes) {
+      //@ts-expect-error because themes return string wich value is "light" | "dark" | "system"
+      setSelectedTheme(themes[theme])
+    }
   }, [theme])
 
   return (
@@ -104,8 +108,8 @@ function ThemeSelectDesktop() {
         }}
         className="h-6 cursor-pointer appearance-none rounded-md bg-accent px-8 pl-7 pr-5 text-xs text-primary outline-none transition-all"
       >
-        {themes.map((theme, i) => (
-          <option key={i} value={theme.mode}>
+        {Object.values(themes).map((theme, i) => (
+          <option key={i} value={theme.type}>
             {theme.title}
           </option>
         ))}

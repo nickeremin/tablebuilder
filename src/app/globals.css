@@ -163,7 +163,7 @@
   }
 
   .underline-link {
-    @apply relative hover:after:absolute hover:after:bottom-0 hover:after:left-0 hover:after:right-0 hover:after:border-b hover:after:border-b-link hover:after:content-[''];
+    @apply relative hover:after:absolute hover:after:bottom-0 hover:after:left-0 hover:after:right-0 hover:after:border-b hover:after:border-b-inherit hover:after:content-[''];
   }
 }
 

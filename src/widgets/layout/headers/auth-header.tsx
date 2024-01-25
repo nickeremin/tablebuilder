@@ -27,13 +27,13 @@ function AuthHeader() {
     <MobileMenuHeaderWrapper
       isOpen={isOpen}
       toggleOpen={toggleOpen}
-      isSignedIn={true}
+      isSignedIn={false}
       backgroundColor="var(--background-hsl)"
     >
       <Wrapper as="header" variant="header">
         <div className="flex flex-1 items-center">
           <Link href="/" className="flex items-center gap-2">
-            <PageHeading size="logo" className="font-bold">
+            <PageHeading size="logo" variant="gradient" className="font-bold">
               Tablebuilder
             </PageHeading>
           </Link>
@@ -62,39 +62,6 @@ function AuthHeader() {
         </div>
       </Wrapper>
     </MobileMenuHeaderWrapper>
-    // <div className="shadow-border-nav sticky inset-x-0 top-0 z-50 flex h-16 justify-center bg-background/70 backdrop-blur-[20px] backdrop-saturate-200">
-    //   <Shell as="header" variant="header">
-    //     <div className="flex flex-1 items-center">
-    //       <Link href="/" className="flex items-center gap-2">
-    //         <PageHeading size="logo" className="font-bold">
-    //           Tablebuilder
-    //         </PageHeading>
-    //       </Link>
-    //     </div>
-    //     <div className="hidden items-center gap-3 lg:flex">
-    //       <Link
-    //         href="/contact"
-    //         className="text-tertiary px-1 py-0.5 text-sm font-medium transition-colors hover:text-primary"
-    //       >
-    //         Связаться с Нами
-    //       </Link>
-    //       <Link
-    //         data-shadcnui-button
-    //         href={href}
-    //         className={cn(
-    //           buttonVariants({
-    //             variant: "outline",
-    //           })
-    //         )}
-    //       >
-    //         {title}
-    //       </Link>
-    //     </div>
-    //     <div>
-    //       <MobileNavMenu />
-    //     </div>
-    //   </Shell>
-    // </div>
   )
 }
 

@@ -5,5 +5,6 @@
 import SignInEmailForm from "./auth/signin-email-form"
 import SignInForm from "./auth/signin-form"
 import SignUpForm from "./auth/signup-form"
+import VerifyEmail from "./auth/verify-email"
 
-export { SignInForm, SignInEmailForm, SignUpForm }
+export { SignInForm, SignInEmailForm, SignUpForm, VerifyEmail }

@@ -145,7 +145,7 @@ function UnauthorizedMenuContent() {
 }
 
 function AuthorizedMenuContent() {
-  const { user, isLoaded } = useUser()
+  const { user } = useUser()
   const { signOut } = useClerk()
 
   const router = useRouter()
@@ -180,8 +180,8 @@ function AuthorizedMenuContent() {
       <ul className="flex flex-col">
         <MenuListItem custom={1} className="h-[72px] justify-between">
           <div className="flex flex-col">
-            <p className="text-sm">{user?.username}</p>
-            <p className="text-sm text-secondary">
+            <p className="text-sm font-medium">{user?.username}</p>
+            <p className="text-sm font-medium text-tertiary">
               {user?.primaryEmailAddress?.emailAddress}
             </p>
           </div>

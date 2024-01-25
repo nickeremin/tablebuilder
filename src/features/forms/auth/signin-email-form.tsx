@@ -126,6 +126,7 @@ function SignInEmailForm() {
                         <FormItem>
                           <FormControl>
                             <Input
+                              autoFocus
                               type="email"
                               placeholder="Электронная Почта"
                               className="h-12 rounded-lg"
@@ -152,13 +153,12 @@ function SignInEmailForm() {
                   </div>
 
                   <div className="mt-6 flex flex-col items-center">
-                    <Link
-                      href="/signin"
-                      className="underline-link flex items-center gap-1 text-link"
-                    >
-                      <LucideIcon name="MoveLeft" />
-                      Другие варианты входа
-                    </Link>
+                    <span className="border-b border-b-transparent text-link hover:border-link">
+                      <Link href="/signin" className="flex items-center gap-1">
+                        <LucideIcon name="MoveLeft" />
+                        Другие варианты входа
+                      </Link>
+                    </span>
                   </div>
                 </div>
               </div>

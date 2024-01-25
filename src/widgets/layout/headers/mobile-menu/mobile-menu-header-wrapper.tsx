@@ -1,22 +1,8 @@
 "use client"
 
-import React, { useContext } from "react"
-import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
-import { useClerk, useUser } from "@clerk/nextjs"
+import React from "react"
 import { motion, type Variants } from "framer-motion"
 
-import { ThemeSelectMobile } from "@/entities/theme"
-import { LucideIcon } from "@/shared/components/icons"
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/shared/components/ui/accordion"
-import { Avatar, AvatarImage } from "@/shared/components/ui/avatar"
-import { Button, buttonVariants } from "@/shared/components/ui/button"
-import { mobileNavLinks } from "@/shared/config/site"
 import { cn } from "@/shared/lib/utils"
 
 import { AuthorizedMenuContent, UnauthorizedMenuContent } from "./menu-content"

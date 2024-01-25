@@ -11,7 +11,7 @@ const headingVariants = cva("tracking-tighter", {
     },
     size: {
       default: "text-[32px] leading-[1.1]",
-      logo: "text-[20px] leading-none",
+      logo: "text-[24px] leading-none",
       xs: "text-[32px] sm:text-[36px] leading-[1.1]",
       sm: "text-[32px] sm:text-[40px] leading-[1.1]",
       md: "text-[32px] sm:text-[52px] leading-[1.1]",

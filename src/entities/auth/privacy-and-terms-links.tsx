@@ -9,36 +9,45 @@ function PrivacyAndTermsLinks() {
       <div className="flex w-fit flex-col items-center gap-8 py-8">
         <p className="text-center text-sm text-tertiary">
           Присоединяясь, вы соглашаетесь с{" "}
-          <span>
+          <span className="border-b-primary text-primary hover:border-b">
             <Link
               href="/legal/terms"
-              className="underline-link inline-flex items-center gap-0.5 text-link"
+              target="_blank"
+              className="inline-flex items-center gap-0.5 font-medium"
             >
-              условиями использования
-              <LucideIcon name="ExternalLink" className="size-4" />
+              Условиями Использования
+              <LucideIcon
+                name="ExternalLink"
+                strokeWidth={2}
+                className="size-[14px]"
+              />
             </Link>
           </span>{" "}
           и{" "}
-          <span>
+          <span className="border-b-primary text-primary hover:border-b">
             <Link
               href="/legal/privacy-policy"
-              className="underline-link inline-flex items-center gap-0.5 text-link"
+              target="_blank"
+              className="inline-flex items-center gap-0.5 font-medium"
             >
-              политикой конфиденциальности
-              <LucideIcon name="ExternalLink" className="size-4" />
+              Политикой Конфиденциальности
+              <LucideIcon
+                name="ExternalLink"
+                strokeWidth={2}
+                className="size-[14px]"
+              />
             </Link>
           </span>
         </p>
         <div className="w-[90%] border-b" />
         <p className="text-center text-sm text-tertiary">
           У вас сложныe требования в компании?{" "}
-          <span>
+          <span className="border-b-primary text-primary hover:border-b">
             <Link
               href="/contact/sales"
-              className="underline-link inline-flex items-center gap-0.5 text-link"
+              className="inline-flex items-center gap-0.5 font-medium"
             >
               Получите помощь корпоративного уровня
-              <LucideIcon name="ExternalLink" className="size-4" />
             </Link>
           </span>
         </p>

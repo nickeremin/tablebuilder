@@ -6,5 +6,6 @@
 
 import SiteFooter from "./footers/site-footer"
 import AuthHeader from "./headers/auth-header"
+import VerificationHeader from "./headers/verification-header"
 
-export { AuthHeader, SiteFooter }
+export { AuthHeader, SiteFooter, VerificationHeader }

@@ -1,7 +1,7 @@
 export type IconProps = React.HTMLAttributes<SVGElement>
 
 export const Icons = {
-  Logo: ({ className, ...props }: IconProps) => <div></div>,
+  Logo: ({}: IconProps) => <div></div>,
   Discord: ({ ...props }: IconProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" {...props}>
       <path
