@@ -61,19 +61,16 @@ function SignUpForm() {
   })
 
   const router = useRouter()
-
   const { isLoaded, setActive, signUp } = useSignUp()
   const [isVerifying, setIsVerifying] = React.useState(false)
   const [, setExpired] = React.useState(false)
   const [, setVerified] = React.useState(false)
   const [isPending, startTransition] = React.useTransition()
 
-  if (!isLoaded) return null
-
-  const { startEmailLinkFlow } = signUp.createEmailLinkFlow()
-
   function emailSignUp(input: Inputs) {
     if (!isLoaded) return null
+
+    const { startEmailLinkFlow } = signUp.createEmailLinkFlow()
 
     setExpired(false)
     setVerified(false)
@@ -127,6 +124,8 @@ function SignUpForm() {
     })
   }
 
+  if (!isLoaded) return null
+
   if (isVerifying) return <VerifyEmail email={form.getValues("email")} />
 
   return (
@@ -137,7 +136,7 @@ function SignUpForm() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="flex min-h-[85vh] flex-col justify-between px-6"
+          className="flex min-h-[85vh] flex-col justify-between gap-8 px-6"
         >
           <div className="flex flex-col items-center">
             <div className="flex w-full max-w-[456px] flex-col items-center pt-28">
@@ -387,7 +386,7 @@ function EmailStep() {
                 handleClick()
               }
             }}
-            className="flex cursor-pointer items-center gap-1 border-b border-b-transparent text-link hover:border-link"
+            className="flex cursor-pointer items-center gap-1 border-b border-b-transparent text-sm text-link hover:border-link"
             role="link"
             tabIndex={0}
           >

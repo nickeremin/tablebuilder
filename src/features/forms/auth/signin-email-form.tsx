@@ -9,8 +9,11 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
-import { AuthHeading, VerifyEmail } from "@/entities/auth"
-import CreateAccountLinkForMobiles from "@/entities/auth/create-account-link-for-mobiles"
+import {
+  AuthHeading,
+  CreateAccountLinkForMobiles,
+  VerifyEmail,
+} from "@/entities/auth"
 import { LucideIcon } from "@/shared/components/icons"
 import { Button } from "@/shared/components/ui/button"
 import {
@@ -95,7 +98,7 @@ function SignInEmailForm() {
         if (res.status === "complete") {
           setActive({
             session: res.createdSessionId,
-            beforeEmit: () => router.push("/tables"),
+            beforeEmit: () => router.push("/"),
           })
           return
         }
@@ -154,7 +157,10 @@ function SignInEmailForm() {
 
                   <div className="mt-6 flex flex-col items-center">
                     <span className="border-b border-b-transparent text-link hover:border-link">
-                      <Link href="/signin" className="flex items-center gap-1">
+                      <Link
+                        href="/signin"
+                        className="flex items-center gap-1 text-sm"
+                      >
                         <LucideIcon name="MoveLeft" />
                         Другие варианты входа
                       </Link>

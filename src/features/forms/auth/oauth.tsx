@@ -4,6 +4,7 @@ import React from "react"
 import { useSignIn, useSignUp } from "@clerk/nextjs"
 import { type OAuthStrategy } from "@clerk/types"
 
+import { OAuthLoading } from "@/entities/auth"
 import { Icons, LucideIcon } from "@/shared/components/icons"
 import CustomIcon from "@/shared/components/icons/custom-icon"
 import { Button } from "@/shared/components/ui/button"
@@ -82,6 +83,8 @@ function OAuthSignUpButtons({
     }
   }
 
+  if (!isLoaded) return <OAuthLoading />
+
   return (
     <div className="flex flex-col gap-3">
       {oauthProviders.map((provider) => (
@@ -129,6 +132,8 @@ function OAuthSignInButtons() {
       catchClerkError(error)
     }
   }
+
+  if (!isLoaded) return <OAuthLoading />
 
   return (
     <div className="flex flex-col gap-3">

@@ -3,34 +3,26 @@ import { authMiddleware } from "@clerk/nextjs"
 
 export default authMiddleware({
   publicRoutes: [
-    "/(.*)",
-    // "/signin(.*)",
-    // "/signup(.*)",
-    // "/sso-callback(.*)",
-    // "/api/webhook(.*)",
+    "/",
+    "/not-auth",
+    "/signin(.*)",
+    "/signup(.*)",
+    "/verification(.*)",
+    "/api/trpc(.*)",
   ],
-  async afterAuth() {
-    return NextResponse.next()
-    //console.log(req.nextUrl)
+  async afterAuth(auth, req) {
+    if (auth.isPublicRoute) {
+      //  For public routes, we don't need to do anything
+      return NextResponse.next()
+    }
 
-    // if (auth.isApiRoute) {
-    //   console.log({
-    //     apiRoute: req.nextUrl.pathname,
-    //   })
-    // }
-
-    // if (auth.isPublicRoute || auth.isApiRoute) {
-    //   //  For public routes, we don't need to do anything
-    //   return NextResponse.next()
-    // }
-
-    // if (!auth.userId) {
-    //   //  If user tries to access a private route without being authenticated,
-    //   //  redirect them to the sign in page
-    //   const url = new URL(req.nextUrl.origin)
-    //   url.pathname = "/auth/signin"
-    //   return NextResponse.redirect(url)
-    // }
+    if (!auth.userId) {
+      //  If user tries to access a private route without being authenticated,
+      //  redirect them to the sign in page
+      const url = new URL(req.nextUrl.origin)
+      url.pathname = "/signin"
+      return NextResponse.redirect(url)
+    }
   },
 })
 

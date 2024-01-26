@@ -53,7 +53,7 @@ function SignUpComplete({ email }: { email: string }) {
           variant="gradient"
           className="text-center font-bold"
         >
-          Регистрация Завершена
+          Регистрация Успешна
         </PageHeading>
         <p className="text-secondary">
           <span className="font-semibold text-primary">{email}</span> был
@@ -73,11 +73,11 @@ function SignInComplete() {
           variant="gradient"
           className="text-center font-bold"
         >
-          Успешный Вход
+          Аутентификация Успешна
         </PageHeading>
         <p className="text-secondary">
-          Ваш адрес электронной почты был успешно аутентифицирован. Вы можете
-          закрыть это окно.
+          Ваш адрес электронной почты был успешно подтвержден. Вы можете закрыть
+          это окно.
         </p>
       </div>
     </div>

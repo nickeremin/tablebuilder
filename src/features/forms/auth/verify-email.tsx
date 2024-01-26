@@ -8,12 +8,11 @@ import { LucideIcon } from "@/shared/components/icons"
 import { PageHeading } from "@/shared/components/ui/page-heading"
 import { useCreateQueryString } from "@/shared/lib/hooks"
 
-type VerificationStatus = "verified" | "failed"
+type VerificationStatus = "pending" | "verified" | "failed"
 
 function VerifyEmail() {
-  const [verificationStatus, setVerificationStatus] = React.useState<
-    VerificationStatus | undefined
-  >()
+  const [verificationStatus, setVerificationStatus] =
+    React.useState<VerificationStatus>("pending")
   const { handleEmailLinkVerification } = useClerk()
 
   // Check your search params to navigate to the correct verification completion option
@@ -32,12 +31,11 @@ function VerifyEmail() {
               mode,
             }
           )}`,
+          onVerifiedOnOtherDevice: () => {
+            setVerificationStatus("verified")
+          },
         })
-        // If we're not redirected at this point, it means
-        // that the flow has completed on another device.
-        setVerificationStatus("verified")
       } catch (error) {
-        // Verification has failed.
         if (error instanceof Error) {
           setVerificationStatus("failed")
         }
@@ -52,19 +50,12 @@ function VerifyEmail() {
   }
 
   if (verificationStatus === "verified") {
-    return <VerificationSucceed />
+    return <VerificationVerified />
   }
 
-  return (
-    <div className="max-w-[50rem] p-6">
-      <div className="flex items-center gap-4">
-        <PageHeading size="sm" variant="gradient" className="font-bold">
-          Проверка
-        </PageHeading>
-        <LucideIcon name="Loader" className="size-6 animate-spin sm:size-8" />
-      </div>
-    </div>
-  )
+  if (verificationStatus === "pending") {
+    return <VerificationPending />
+  }
 }
 
 function VerificationFailed() {
@@ -88,7 +79,23 @@ function VerificationFailed() {
   )
 }
 
-function VerificationSucceed() {
+function VerificationPending() {
+  return (
+    <div className="max-w-[50rem] p-6">
+      <div className="flex items-center gap-3">
+        <PageHeading size="sm" variant="gradient" className="font-bold">
+          Проверка
+        </PageHeading>
+        <LucideIcon
+          name="Loader"
+          className="mt-1 size-6 animate-spin sm:size-8"
+        />
+      </div>
+    </div>
+  )
+}
+
+function VerificationVerified() {
   return (
     <div className="max-w-[50rem] p-6 text-center">
       <div className="flex flex-col items-center gap-4">
