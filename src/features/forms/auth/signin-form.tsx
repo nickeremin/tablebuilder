@@ -4,7 +4,12 @@ import React from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 
-import { ContinueAuthWith, OAuthLoading } from "@/entities/auth"
+import {
+  AuthHeading,
+  ContinueAuthWith,
+  CreateAccountLinkForMobiles,
+  OAuthLoading,
+} from "@/entities/auth"
 import { ClerkLoaded } from "@/shared/components/clerk"
 import { LucideIcon } from "@/shared/components/icons"
 import { buttonVariants } from "@/shared/components/ui/button"
@@ -16,28 +21,45 @@ function SignInForm() {
   const searchParams = useSearchParams()
 
   return (
-    <div className="flex min-h-[320px] w-full max-w-[320px] flex-col">
-      <ClerkLoaded fallbackComponent={<OAuthLoading />}>
-        <OAuthSignInButtons />
+    <>
+      <div className="flex flex-1 flex-col items-center justify-center gap-7 p-6">
+        <div className="flex w-full max-w-[456px] flex-col items-center">
+          <div className="flex flex-col items-center gap-7">
+            <AuthHeading className="text-[32px]">
+              Войдите в Tablebuilder
+            </AuthHeading>
 
-        <ContinueAuthWith />
+            <div className="flex min-h-[320px] w-full max-w-[320px] flex-col">
+              <ClerkLoaded fallbackComponent={<OAuthLoading />}>
+                <OAuthSignInButtons />
 
-        <Link
-          data-shadcnui-button
-          href={{ pathname: "/signin/email", query: searchParams.toString() }}
-          className={cn(
-            buttonVariants({
-              variant: "outline",
-              size: "xl",
-              className: "w-full gap-2 outline-none",
-            })
-          )}
-        >
-          <LucideIcon name="Mail" />
-          Продолжить по Почте
-        </Link>
-      </ClerkLoaded>
-    </div>
+                <ContinueAuthWith />
+
+                <Link
+                  data-shadcnui-button
+                  href={{
+                    pathname: "/signin/email",
+                    query: searchParams.toString(),
+                  }}
+                  className={cn(
+                    buttonVariants({
+                      variant: "outline",
+                      size: "xl",
+                      className: "w-full gap-2 outline-none",
+                    })
+                  )}
+                >
+                  <LucideIcon name="Mail" />
+                  Продолжить по Почте
+                </Link>
+              </ClerkLoaded>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <CreateAccountLinkForMobiles />
+    </>
   )
 }
 

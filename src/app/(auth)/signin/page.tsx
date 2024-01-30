@@ -12,18 +12,7 @@ export const metadata: Metadata = {
 }
 
 function SignInPage() {
-  return (
-    <>
-      <div className="flex flex-1 flex-col items-center justify-center gap-7 p-6">
-        <AuthHeading className="text-[32px]">
-          Войдите в Tablebuilder
-        </AuthHeading>
-        <SignInForm />
-      </div>
-
-      <CreateAccountLinkForMobiles />
-    </>
-  )
+  return <SignInForm />
 }
 
 export default SignInPage
