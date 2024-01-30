@@ -2,7 +2,6 @@ import React from "react"
 import { type Metadata } from "next"
 
 import { SignInForm } from "@/features/forms"
-import { AuthHeading, CreateAccountLinkForMobiles } from "@/entities/auth"
 import { env } from "@/shared/components/env.mjs"
 
 export const metadata: Metadata = {
