@@ -8,8 +8,12 @@ interface VerifyEmailProps {
 
 function VerifyEmail({ email }: VerifyEmailProps) {
   return (
-    <div className="flex flex-col items-center justify-center gap-4 p-6 pb-24">
-      <PageHeading className="text-center text-[28px] font-bold" size="xs">
+    <div className="flex flex-col items-center justify-center gap-4">
+      <PageHeading
+        size="xs"
+        variant="gradient"
+        className="text-center text-[24px] font-bold"
+      >
         Подтверждение Почты
       </PageHeading>
       <p className="text-center text-muted-foreground">

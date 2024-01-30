@@ -12,14 +12,13 @@ import MobileMenuToggleButton from "../mobile-menu-toggle-button"
 import MobileMenuHeaderWrapper from "./mobile-menu/mobile-menu-header-wrapper"
 
 function VerificationHeader() {
-  const { isSignedIn, isLoaded } = useUser()
+  const { isLoaded } = useUser()
   const [isOpen, toggleOpen] = useCycle(false, true)
 
   return (
     <MobileMenuHeaderWrapper
       isOpen={isOpen}
       toggleOpen={toggleOpen}
-      isSignedIn={isLoaded && isSignedIn}
       backgroundColor="var(--background-hsl)"
     >
       <Wrapper as="header" variant="header">

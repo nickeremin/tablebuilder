@@ -16,8 +16,8 @@ function VerifyEmail() {
   const { handleEmailLinkVerification } = useClerk()
 
   // Check your search params to navigate to the correct verification completion option
-  const searchParams = useSearchParams()
   const createQueryString = useCreateQueryString()
+  const searchParams = useSearchParams()
   const email = searchParams.get("email")
   const mode = searchParams.get("mode")
 

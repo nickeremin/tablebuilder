@@ -15,7 +15,9 @@ function SignInPage() {
   return (
     <>
       <div className="flex flex-1 flex-col items-center justify-center gap-7 p-6">
-        <AuthHeading>Войдите в Tablebuilder</AuthHeading>
+        <AuthHeading className="text-[32px]">
+          Войдите в Tablebuilder
+        </AuthHeading>
         <SignInForm />
       </div>
 

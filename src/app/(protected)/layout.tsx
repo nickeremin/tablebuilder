@@ -1,6 +1,4 @@
 import React from "react"
-import { redirect } from "next/navigation"
-import { auth, currentUser } from "@clerk/nextjs"
 
 interface ProtectedLayoutProps {
   children: React.ReactNode

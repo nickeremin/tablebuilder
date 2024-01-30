@@ -10,15 +10,13 @@ interface AuthHeadingProps {
 
 function AuthHeading({ children, className }: AuthHeadingProps) {
   return (
-    <div className="max-w-[400px]">
-      <PageHeading
-        className={cn("text-center font-bold", className)}
-        variant="gradient"
-        size="xs"
-      >
-        {children}
-      </PageHeading>
-    </div>
+    <PageHeading
+      className={cn("text-center font-bold", className)}
+      variant="gradient"
+      size="sm"
+    >
+      {children}
+    </PageHeading>
   )
 }
 

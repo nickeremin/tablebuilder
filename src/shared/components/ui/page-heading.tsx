@@ -7,13 +7,13 @@ const headingVariants = cva("tracking-tighter", {
   variants: {
     variant: {
       gradient:
-        "text-transparent bg-clip-text bg-gradient-to-b from-primary/80 to-primary",
+        "text-transparent bg-clip-text bg-gradient-to-b from-primary/85 to-primary",
     },
     size: {
       default: "text-[32px] leading-[1.1]",
       logo: "text-[24px] leading-none",
       xs: "text-[32px] sm:text-[36px] leading-[1.1]",
-      sm: "text-[32px] sm:text-[40px] leading-[1.1]",
+      sm: "text-[36px] sm:text-[40px] leading-[1.1]",
       md: "text-[32px] sm:text-[52px] leading-[1.1]",
       lg: "text-[32px] sm:text-[60px] leading-[1.1]",
       xl: "text-[32px] sm:text-[56px] lg:text-[72px] leading-[1.05]",

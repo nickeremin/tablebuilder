@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useSignIn } from "@clerk/nextjs"
 import { type EmailLinkFactor, type SignInFirstFactor } from "@clerk/types"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -31,9 +31,9 @@ type Inputs = z.infer<typeof checkEmailSchema>
 
 function SignInEmailForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+
   const { isLoaded, signIn, setActive } = useSignIn()
-  const [, setExpired] = React.useState(false)
-  const [, setVerified] = React.useState(false)
   const [isVerifying, setIsVerifying] = React.useState(false)
   const [isPending, startTransition] = React.useTransition()
 
@@ -44,12 +44,10 @@ function SignInEmailForm() {
     },
   })
 
-  if (!isLoaded) return null
-
-  const { startEmailLinkFlow } = signIn.createEmailLinkFlow()
-
   async function onSubmit(input: Inputs) {
-    if (!signIn) return
+    if (!isLoaded) return
+
+    const { startEmailLinkFlow } = signIn.createEmailLinkFlow()
 
     startTransition(async () => {
       try {
@@ -79,26 +77,14 @@ function SignInEmailForm() {
           redirectUrl: `http://localhost:3000/verification?mode=signin`,
         })
 
-        // Check the verification result.
-        const verification = res.firstFactorVerification
-
-        if (verification.verifiedFromTheSameClient()) {
-          setVerified(true)
-          // If you're handling the verification result from
-          // another route/component, you should return here.
-          // See the <Verification/> component as an
-          // example below.
-          // If you want to complete the flow on this tab,
-          // don't return. Simply check the sign in status.
-          return
-        } else if (verification.status === "expired") {
-          setExpired(true)
-        }
-
         if (res.status === "complete") {
+          // Sign in is complete, we have a session.
+          // Navigate to the after sign in URL.
+          const redirect = searchParams.get("redirect")
+
           setActive({
             session: res.createdSessionId,
-            beforeEmit: () => router.push("/"),
+            beforeEmit: () => router.push(redirect ?? "/"),
           })
           return
         }
@@ -109,7 +95,13 @@ function SignInEmailForm() {
     })
   }
 
-  if (isVerifying) return <VerifyEmail email={form.getValues("email")} />
+  if (isVerifying) {
+    return (
+      <div className="p-6 pb-32">
+        <VerifyEmail email={form.getValues("email")} />
+      </div>
+    )
+  }
 
   return (
     <>
@@ -118,7 +110,9 @@ function SignInEmailForm() {
           <Form {...form}>
             <form className="w-full" onSubmit={form.handleSubmit(onSubmit)}>
               <div className="flex flex-col items-center gap-7">
-                <AuthHeading>Войдите в Tablebuilder</AuthHeading>
+                <AuthHeading className="text-[32px]">
+                  Войдите в Tablebuilder
+                </AuthHeading>
 
                 <div className="flex w-full max-w-[320px] flex-col">
                   <div className="flex flex-col gap-3">
@@ -132,7 +126,7 @@ function SignInEmailForm() {
                               autoFocus
                               type="email"
                               placeholder="Электронная Почта"
-                              className="h-12 rounded-lg"
+                              className="h-14 rounded-2xl"
                               {...field}
                             />
                           </FormControl>
@@ -143,7 +137,7 @@ function SignInEmailForm() {
                     <Button
                       type="submit"
                       disabled={isPending}
-                      size="lg"
+                      size="xl"
                       className="gap-2"
                     >
                       {isPending ? (
@@ -158,7 +152,10 @@ function SignInEmailForm() {
                   <div className="mt-6 flex flex-col items-center">
                     <span className="border-b border-b-transparent text-link hover:border-link">
                       <Link
-                        href="/signin"
+                        href={{
+                          pathname: "/signin",
+                          query: searchParams.toString(),
+                        }}
                         className="flex items-center gap-1 text-sm"
                       >
                         <LucideIcon name="MoveLeft" />

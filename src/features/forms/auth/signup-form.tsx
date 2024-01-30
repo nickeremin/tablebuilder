@@ -1,13 +1,19 @@
 "use client"
 
 import * as React from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useSignUp } from "@clerk/nextjs"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { motion, MotionConfig } from "framer-motion"
 import { useForm, useFormContext, useWatch } from "react-hook-form"
-import * as z from "zod"
 
+import {
+  EmailInputs,
+  InitialInputs,
+  SignUpContextData,
+  SignUpStep,
+} from "@/shared/types/signup"
+import { SubscriptionPlan } from "@/shared/types/user"
 import {
   AuthHeading,
   ContinueAuthWith,
@@ -28,108 +34,36 @@ import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/shared/components/ui/radio-group"
 import { catchClerkError, cn } from "@/shared/lib/utils"
-import { createAccountSchema } from "@/shared/lib/validations/auth"
+import {
+  initialSignUpDataSchema,
+  verifyEmailSchema,
+} from "@/shared/lib/validations/auth"
 
 import { OAuthSignUpButtons } from "./oauth"
 
-type Inputs = z.infer<typeof createAccountSchema>
-
-type SignUpStep = "initial" | "oauth" | "email"
-
-type SignUpContextData = {
-  step: SignUpStep
-  setStep: React.Dispatch<React.SetStateAction<SignUpStep>>
-  isPending: boolean
-}
-
 const SignUpContext = React.createContext<SignUpContextData>({
-  step: "initial",
+  step: "initial_data",
   setStep: () => {},
-  isPending: false,
+  isEmailVerifying: false,
+  setIsEmailVerifying: () => {},
 })
 
 function SignUpForm() {
-  const [step, setStep] = React.useState<SignUpStep>("initial")
-
-  const form = useForm<Inputs>({
-    resolver: zodResolver(createAccountSchema),
+  const initialForm = useForm<InitialInputs>({
+    resolver: zodResolver(initialSignUpDataSchema),
     defaultValues: {
       username: "",
       subscriptionPlan: undefined,
-      email: "",
     },
   })
 
-  const router = useRouter()
-  const { isLoaded, setActive, signUp } = useSignUp()
-  const [isVerifying, setIsVerifying] = React.useState(false)
-  const [, setExpired] = React.useState(false)
-  const [, setVerified] = React.useState(false)
-  const [isPending, startTransition] = React.useTransition()
-
-  function emailSignUp(input: Inputs) {
-    if (!isLoaded) return null
-
-    const { startEmailLinkFlow } = signUp.createEmailLinkFlow()
-
-    setExpired(false)
-    setVerified(false)
-
-    startTransition(async () => {
-      try {
-        // Start the sign up flow, by collecting the user's data
-        await signUp.create({
-          emailAddress: input.email,
-          username: input.username,
-          unsafeMetadata: {
-            subscriptionPlan: input.subscriptionPlan,
-          },
-        })
-
-        setIsVerifying(true)
-
-        const su = await startEmailLinkFlow({
-          redirectUrl: `http://localhost:3000/verification?email=${input.email}&mode=signup`,
-        })
-
-        // Check the verification result.
-        const verification = su.verifications.emailAddress
-
-        if (verification.verifiedFromTheSameClient()) {
-          setVerified(true)
-          // If you're handling the verification result from
-          // another route/component, you should return here.
-          // See the <MagicLinkVerification/> component as an
-          // example below.
-          // If you want to complete the flow on this tab,
-          // don't return. Check the sign up status instead.
-          return
-        } else if (verification.status === "expired") {
-          setExpired(true)
-        }
-
-        if (su.status === "complete") {
-          // Sign up is complete, we have a session.
-          // Navigate to the after sign up URL.
-          setActive({
-            session: su.createdSessionId,
-            beforeEmit: () => router.push("/dashboard"),
-          })
-          return
-        }
-      } catch (error) {
-        setIsVerifying(false)
-        catchClerkError(error)
-      }
-    })
-  }
-
-  if (!isLoaded) return null
-
-  if (isVerifying) return <VerifyEmail email={form.getValues("email")} />
+  const [step, setStep] = React.useState<SignUpStep>("initial_data")
+  const [isEmailVerifying, setIsEmailVerifying] = React.useState(false)
 
   return (
-    <SignUpContext.Provider value={{ step, setStep, isPending }}>
+    <SignUpContext.Provider
+      value={{ step, setStep, isEmailVerifying, setIsEmailVerifying }}
+    >
       <MotionConfig
         transition={{ duration: 0.5, ease: [0.52, 0.16, 0.52, 0.84] }}
       >
@@ -138,32 +72,19 @@ function SignUpForm() {
           animate={{ opacity: 1 }}
           className="flex min-h-[85vh] flex-col justify-between gap-8 px-6"
         >
-          <div className="flex flex-col items-center">
-            <div className="flex w-full max-w-[456px] flex-col items-center pt-28">
-              <Form {...form}>
-                <form
-                  className="w-full"
-                  onSubmit={form.handleSubmit(emailSignUp)}
-                >
-                  {step === "initial" && <InitialStep />}
-                  {step === "oauth" && <OAuthStep />}
-                  {step === "email" && <EmailStep />}
-                </form>
-              </Form>
+          <Form {...initialForm}>
+            <div className="flex flex-col items-center">
+              {step === "initial_data" && <InitialDataStep />}
+              {step === "choose_signup_method" && <ChooseSignUpMethodStep />}
+              {step === "email_signup" && <EmailSignUpStep />}
             </div>
-          </div>
+          </Form>
 
-          <PrivacyAndTermsLinks />
+          {!isEmailVerifying && <PrivacyAndTermsLinks />}
         </motion.div>
       </MotionConfig>
     </SignUpContext.Provider>
   )
-}
-
-type SubscriptionPlan = {
-  title: string
-  description: string
-  value: string
 }
 
 const subscriptionPlans: SubscriptionPlan[] = [
@@ -179,222 +100,284 @@ const subscriptionPlans: SubscriptionPlan[] = [
   },
 ]
 
-function InitialStep() {
-  const form = useFormContext<Inputs>()
-
+function InitialDataStep() {
   const { setStep } = React.useContext(SignUpContext)
 
-  const { username, subscriptionPlan } = useWatch({
+  const form = useFormContext<InitialInputs>()
+
+  const { subscriptionPlan } = useWatch({
     control: form.control,
   })
 
   const isSubscriptionPlanSelected = !!subscriptionPlan
-  const isUsernameValid =
-    Number(username?.length) >= 2 && Number(username?.length) <= 32
-  const isValid = subscriptionPlan && isUsernameValid
 
-  return (
-    <div className="flex flex-col items-center gap-7">
-      <AuthHeading>Создайте Аккаунт Tablebuilder</AuthHeading>
-
-      <div className="w-full">
-        <FormItem>
-          <FormLabel className="text-sm text-tertiary">План подписки</FormLabel>
-          <FormField
-            control={form.control}
-            name="subscriptionPlan"
-            render={({ field }) => (
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex flex-col gap-3"
-                >
-                  {subscriptionPlans.map((plan, i) => (
-                    <div key={i}>
-                      <RadioGroupItem
-                        value={plan.value}
-                        id={plan.value}
-                        className="sr-only"
-                      />
-                      <Label
-                        htmlFor={plan.value}
-                        className={cn(
-                          "flex items-center justify-between rounded-md border p-3 transition hover:cursor-pointer hover:bg-muted",
-                          field.value === plan.value &&
-                            "border-blue/30 bg-blue/10 hover:bg-blue/10"
-                        )}
-                      >
-                        <div className="flex flex-col gap-1 text-sm">
-                          <p className="font-medium">{plan.title}</p>
-                          <p className="text-tertiary">{plan.description}</p>
-                        </div>
-                        <span
-                          className={cn(
-                            "flex size-4 items-center justify-center rounded-full ring-1 transition",
-                            field.value === plan.value
-                              ? "bg-blue ring-blue"
-                              : "ring-border"
-                          )}
-                        >
-                          {field.value === plan.value && (
-                            <LucideIcon
-                              name="Check"
-                              strokeWidth={2}
-                              className="size-3 text-white"
-                            />
-                          )}
-                        </span>
-                      </Label>
-                    </div>
-                  ))}
-                </RadioGroup>
-              </FormControl>
-            )}
-          />
-        </FormItem>
-
-        <div className="flex flex-col gap-4 pt-10">
-          {isSubscriptionPlanSelected && (
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm text-tertiary">
-                    Имя пользователя
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      autoFocus
-                      type="text"
-                      maxLength={32}
-                      className="h-12 rounded-lg"
-                      {...field}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          )}
-          <Button
-            type="button"
-            onClick={() => {
-              if (isValid) {
-                setStep("oauth")
-              }
-            }}
-            disabled={!isValid}
-            size="lg"
-          >
-            Продолжить
-          </Button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function OAuthStep() {
-  const form = useFormContext<Inputs>()
-
-  const { setStep } = React.useContext(SignUpContext)
-
-  return (
-    <div className="flex flex-col items-center gap-7">
-      <AuthHeading>Выберите Способ Создать Аккаунт</AuthHeading>
-
-      <div className="flex w-full max-w-[320px] flex-col">
-        <OAuthSignUpButtons
-          username={form.getValues("username")}
-          subscription={form.getValues("subscriptionPlan")}
-        />
-
-        <ContinueAuthWith />
-
-        <Button
-          variant="outline"
-          className="w-full gap-2"
-          size="lg"
-          onClick={() => {
-            setStep("email")
-          }}
-        >
-          <LucideIcon name="Mail" />
-          Продолжить по Почте
-        </Button>
-      </div>
-    </div>
-  )
-}
-
-function EmailStep() {
-  const form = useFormContext<Inputs>()
-
-  const { setStep, isPending } = React.useContext(SignUpContext)
-
-  const handleClick = () => {
-    setStep("oauth")
-    form.resetField("email")
+  function onSubmit() {
+    setStep("choose_signup_method")
   }
 
   return (
-    <div className="flex flex-col items-center gap-7">
-      <AuthHeading>Зарегистрируйтесь в Tablebuilder</AuthHeading>
+    <div className="flex w-full max-w-[456px] flex-col items-center pt-28">
+      <form className="w-full" onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="flex flex-col gap-7">
+          <AuthHeading>Создайте Аккаунт Tablebuilder</AuthHeading>
 
-      <div className="flex w-full max-w-[320px] flex-col">
-        <div className="flex flex-col gap-3">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
+          <FormItem>
+            <FormLabel className="text-sm text-tertiary">
+              План подписки
+            </FormLabel>
+            <FormField
+              control={form.control}
+              name="subscriptionPlan"
+              render={({ field }) => (
                 <FormControl>
-                  <Input
-                    autoFocus
-                    type="email"
-                    placeholder="Электронная Почта"
-                    className="h-12 rounded-lg"
-                    {...field}
-                  />
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex flex-col gap-3"
+                  >
+                    {subscriptionPlans.map((plan, i) => (
+                      <div key={i}>
+                        <RadioGroupItem
+                          value={plan.value}
+                          id={plan.value}
+                          className="sr-only"
+                        />
+                        <Label
+                          htmlFor={plan.value}
+                          className={cn(
+                            "flex items-center justify-between rounded-md border p-3 transition hover:cursor-pointer hover:bg-muted",
+                            field.value === plan.value &&
+                              "border-blue/30 bg-blue/10 hover:bg-blue/10"
+                          )}
+                        >
+                          <div className="flex flex-col gap-1 text-sm">
+                            <p className="font-medium">{plan.title}</p>
+                            <p className="text-tertiary">{plan.description}</p>
+                          </div>
+                          <span
+                            className={cn(
+                              "flex size-4 items-center justify-center rounded-full ring-1 transition",
+                              field.value === plan.value
+                                ? "bg-blue ring-blue"
+                                : "ring-border"
+                            )}
+                          >
+                            {field.value === plan.value && (
+                              <LucideIcon
+                                name="Check"
+                                strokeWidth={2}
+                                className="size-3 text-white"
+                              />
+                            )}
+                          </span>
+                        </Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
                 </FormControl>
-                <FormMessage />
-              </FormItem>
+              )}
+            />
+          </FormItem>
+
+          <div className="flex flex-col gap-4 pt-3">
+            {isSubscriptionPlanSelected && (
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm text-tertiary">
+                      Имя пользователя
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        autoFocus
+                        type="text"
+                        maxLength={32}
+                        className="h-14 rounded-2xl"
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
             )}
-          />
+
+            <Button type="submit" disabled={!form.formState.isValid} size="xl">
+              Продолжить
+            </Button>
+          </div>
+        </div>
+      </form>
+    </div>
+  )
+}
+
+function ChooseSignUpMethodStep() {
+  const { setStep } = React.useContext(SignUpContext)
+
+  const initialForm = useFormContext<InitialInputs>()
+
+  return (
+    <div className="flex w-full max-w-[456px] flex-col items-center pt-28">
+      <div className="flex flex-col items-center gap-7">
+        <AuthHeading>Выберите Способ Создать Аккаунт</AuthHeading>
+
+        <div className="flex w-full max-w-[320px] flex-col">
+          <OAuthSignUpButtons {...initialForm.getValues()} />
+
+          <ContinueAuthWith />
 
           <Button
-            type="submit"
-            disabled={isPending}
-            size="lg"
-            className="gap-2"
+            variant="outline"
+            className="w-full gap-2"
+            size="xl"
+            onClick={() => {
+              setStep("email_signup")
+            }}
           >
-            {isPending ? (
-              <LucideIcon name="Loader" className="animate-spin" />
-            ) : (
-              <LucideIcon name="Mail" />
-            )}
+            <LucideIcon name="Mail" />
             Продолжить по Почте
           </Button>
         </div>
-
-        <div className="mt-6 flex items-center justify-center">
-          <span
-            onClick={handleClick}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleClick()
-              }
-            }}
-            className="flex cursor-pointer items-center gap-1 border-b border-b-transparent text-sm text-link hover:border-link"
-            role="link"
-            tabIndex={0}
-          >
-            <LucideIcon name="MoveLeft" />
-            Другие варианты регистрации
-          </span>
-        </div>
       </div>
+    </div>
+  )
+}
+
+function EmailSignUpStep() {
+  const { setStep, isEmailVerifying, setIsEmailVerifying } =
+    React.useContext(SignUpContext)
+
+  const initialForm = useFormContext<InitialInputs>()
+  const emailForm = useForm<EmailInputs>({
+    resolver: zodResolver(verifyEmailSchema),
+    defaultValues: {
+      email: "",
+    },
+  })
+
+  const handleClick = () => {
+    setStep("choose_signup_method")
+    emailForm.resetField("email")
+  }
+
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [isPending, startTransition] = React.useTransition()
+  const { isLoaded, signUp, setActive } = useSignUp()
+
+  function onSubmit(input: EmailInputs) {
+    if (!isLoaded) return
+
+    const { startEmailLinkFlow } = signUp.createEmailLinkFlow()
+
+    startTransition(async () => {
+      try {
+        // Start the sign up flow, by collecting the user's data
+        await signUp.create({
+          emailAddress: input.email,
+          username: initialForm.getValues("username"),
+          unsafeMetadata: {
+            subscriptionPlan: initialForm.getValues("subscriptionPlan"),
+          },
+        })
+
+        setIsEmailVerifying(true)
+
+        const su = await startEmailLinkFlow({
+          redirectUrl: `http://localhost:3000/verification?email=${input.email}&mode=signup`,
+        })
+
+        if (su.status === "complete") {
+          // Sign up is complete, we have a session.
+          // Navigate to the after sign up URL.
+          const redirect = searchParams.get("redirect")
+
+          setActive({
+            session: su.createdSessionId,
+            beforeEmit: () => router.push(redirect ?? "/"),
+          })
+          return
+        }
+      } catch (error) {
+        setIsEmailVerifying(false)
+        catchClerkError(error)
+      }
+    })
+  }
+
+  if (isEmailVerifying) {
+    return (
+      <div className="py-28">
+        <VerifyEmail email={emailForm.getValues("email")} />
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex w-full max-w-[456px] flex-col items-center pt-28">
+      <Form {...emailForm}>
+        <form className="w-full" onSubmit={emailForm.handleSubmit(onSubmit)}>
+          <div className="flex flex-col items-center gap-7">
+            <AuthHeading>Зарегистрируйтесь в Tablebuilder</AuthHeading>
+
+            <div className="flex w-full max-w-[320px] flex-col">
+              <div className="flex flex-col gap-3">
+                <FormField
+                  control={emailForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          autoFocus
+                          type="email"
+                          placeholder="Электронная Почта"
+                          className="h-14 rounded-xl"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button
+                  type="submit"
+                  disabled={isPending}
+                  size="xl"
+                  className="gap-2"
+                >
+                  {isPending ? (
+                    <LucideIcon name="Loader" className="animate-spin" />
+                  ) : (
+                    <LucideIcon name="Mail" />
+                  )}
+                  Продолжить по Почте
+                </Button>
+              </div>
+
+              <div className="mt-6 flex items-center justify-center">
+                <span
+                  onClick={handleClick}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleClick()
+                    }
+                  }}
+                  className="flex cursor-pointer items-center gap-1 border-b border-b-transparent text-sm text-link hover:border-link"
+                  role="link"
+                  tabIndex={0}
+                >
+                  <LucideIcon name="MoveLeft" />
+                  Другие варианты регистрации
+                </span>
+              </div>
+            </div>
+          </div>
+        </form>
+      </Form>
     </div>
   )
 }

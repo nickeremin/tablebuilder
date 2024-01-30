@@ -1,6 +1,7 @@
 "use client"
 
 import React from "react"
+import { SignedIn, SignedOut } from "@clerk/nextjs"
 import { motion, type Variants } from "framer-motion"
 
 import { cn } from "@/shared/lib/utils"
@@ -40,7 +41,6 @@ const menuVariants: Variants = {
 interface MobileMenuHeaderWrapperProps extends MenuContextData {
   backgroundColor: string
   scrollTop?: boolean
-  isSignedIn: boolean
   className?: string
   children?: React.ReactNode
 }
@@ -50,7 +50,6 @@ function MobileMenuHeaderWrapper({
   toggleOpen,
   backgroundColor,
   scrollTop,
-  isSignedIn,
   className,
   children,
 }: MobileMenuHeaderWrapperProps) {
@@ -122,7 +121,12 @@ function MobileMenuHeaderWrapper({
           animate={isOpen ? "open" : "closed"}
           className="absolute top-16 w-full px-6"
         >
-          {isSignedIn ? <AuthorizedMenuContent /> : <UnauthorizedMenuContent />}
+          <SignedIn>
+            <AuthorizedMenuContent />
+          </SignedIn>
+          <SignedOut>
+            <UnauthorizedMenuContent />
+          </SignedOut>
         </motion.nav>
       </motion.div>
     </MenuContext.Provider>

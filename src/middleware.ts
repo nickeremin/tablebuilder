@@ -19,8 +19,12 @@ export default authMiddleware({
     if (!auth.userId) {
       //  If user tries to access a private route without being authenticated,
       //  redirect them to the sign in page
+      const redirect = req.nextUrl.pathname
+
       const url = new URL(req.nextUrl.origin)
       url.pathname = "/signin"
+      url.searchParams.set("redirect", redirect)
+
       return NextResponse.redirect(url)
     }
   },

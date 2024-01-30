@@ -1,6 +1,5 @@
 import React from "react"
 import { type Metadata } from "next"
-import { ErrorBoundary } from "react-error-boundary"
 
 import { VerifyEmail } from "@/features/forms"
 import { env } from "@/shared/components/env.mjs"
@@ -12,11 +11,7 @@ export const metadata: Metadata = {
 }
 
 function VerificationPage() {
-  return (
-    <ErrorBoundary fallback={<p>Errror </p>}>
-      <VerifyEmail />
-    </ErrorBoundary>
-  )
+  return <VerifyEmail />
 }
 
 export default VerificationPage
