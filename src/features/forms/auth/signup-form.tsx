@@ -342,7 +342,7 @@ function EmailSignUpStep() {
                           autoFocus
                           type="email"
                           placeholder="Электронная Почта"
-                          className="h-14 rounded-xl"
+                          className="h-14 rounded-2xl"
                           {...field}
                         />
                       </FormControl>

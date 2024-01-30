@@ -114,7 +114,7 @@ function SignInEmailForm() {
                   Войдите в Tablebuilder
                 </AuthHeading>
 
-                <div className="flex w-full max-w-[320px] flex-col">
+                <div className="flex w-full flex-col xs:max-w-[320px]">
                   <div className="flex flex-col gap-3">
                     <FormField
                       control={form.control}

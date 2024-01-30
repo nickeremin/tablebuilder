@@ -29,7 +29,7 @@ function SignInForm() {
               Войдите в Tablebuilder
             </AuthHeading>
 
-            <div className="flex min-h-[320px] w-full max-w-[320px] flex-col">
+            <div className="flex min-h-[320px] w-full flex-col xs:max-w-[320px]">
               <ClerkLoaded fallbackComponent={<OAuthLoading />}>
                 <OAuthSignInButtons />
 
