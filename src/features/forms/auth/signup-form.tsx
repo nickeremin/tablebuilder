@@ -117,11 +117,11 @@ function InitialDataStep() {
 
   return (
     <div className="flex w-full max-w-[456px] flex-col items-center pt-28">
-      <form className="w-full" onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="flex flex-col items-center gap-7">
-          <AuthHeading>Создайте Аккаунт Tablebuilder</AuthHeading>
+      <div className="flex w-full flex-col items-center gap-7">
+        <AuthHeading>Создайте Аккаунт Tablebuilder</AuthHeading>
 
-          <div className="flex w-full flex-col">
+        <div className="flex w-full flex-col">
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <FormItem>
               <FormLabel className="text-sm text-tertiary">
                 План подписки
@@ -214,9 +214,9 @@ function InitialDataStep() {
                 Продолжить
               </Button>
             </div>
-          </div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   )
 }
@@ -228,7 +228,7 @@ function ChooseSignUpMethodStep() {
 
   return (
     <div className="flex w-full max-w-[456px] flex-col items-center pt-28">
-      <div className="flex flex-col items-center gap-7">
+      <div className="flex w-full flex-col items-center gap-7">
         <AuthHeading>Выберите Способ Создать&nbsp;Аккаунт</AuthHeading>
 
         <div className="flex w-full flex-col xs:max-w-[320px]">
@@ -325,12 +325,12 @@ function EmailSignUpStep() {
 
   return (
     <div className="flex w-full max-w-[456px] flex-col items-center pt-28">
-      <Form {...emailForm}>
-        <form className="w-full" onSubmit={emailForm.handleSubmit(onSubmit)}>
-          <div className="flex flex-col items-center gap-7">
-            <AuthHeading>Зарегистрируйтесь в&nbsp;Tablebuilder</AuthHeading>
+      <div className="flex w-full flex-col items-center gap-7">
+        <AuthHeading>Зарегистрируйтесь в&nbsp;Tablebuilder</AuthHeading>
 
-            <div className="flex w-full flex-col xs:max-w-[320px]">
+        <div className="flex w-full flex-col xs:max-w-[320px]">
+          <Form {...emailForm}>
+            <form onSubmit={emailForm.handleSubmit(onSubmit)}>
               <div className="flex flex-col gap-3">
                 <FormField
                   control={emailForm.control}
@@ -365,27 +365,27 @@ function EmailSignUpStep() {
                   Продолжить по Почте
                 </Button>
               </div>
+            </form>
+          </Form>
 
-              <div className="mt-6 flex items-center justify-center">
-                <span
-                  onClick={handleClick}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleClick()
-                    }
-                  }}
-                  className="flex cursor-pointer items-center gap-1 border-b border-b-transparent text-sm text-link hover:border-link"
-                  role="link"
-                  tabIndex={0}
-                >
-                  <LucideIcon name="MoveLeft" />
-                  Другие варианты регистрации
-                </span>
-              </div>
-            </div>
+          <div className="mt-6 flex items-center justify-center">
+            <span
+              onClick={handleClick}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleClick()
+                }
+              }}
+              className="flex cursor-pointer items-center gap-1 border-b border-b-transparent text-link hover:border-link"
+              role="link"
+              tabIndex={0}
+            >
+              <LucideIcon name="MoveLeft" />
+              Другие варианты регистрации
+            </span>
           </div>
-        </form>
-      </Form>
+        </div>
+      </div>
     </div>
   )
 }

@@ -24,7 +24,7 @@ function SignInForm() {
     <>
       <div className="flex flex-1 flex-col items-center justify-center gap-7 p-6">
         <div className="flex w-full max-w-[456px] flex-col items-center">
-          <div className="flex flex-col items-center gap-7">
+          <div className="flex w-full flex-col items-center gap-7">
             <AuthHeading className="text-[32px]">
               Войдите в Tablebuilder
             </AuthHeading>

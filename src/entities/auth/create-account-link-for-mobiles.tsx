@@ -7,7 +7,7 @@ function CreateAccountLinkForMobiles() {
     <div className="flex h-[100px] items-center justify-center border-t bg-background p-8 lg:border-none">
       <Link
         href="/signup"
-        className="underline-link whitespace-nowrap text-sm text-link lg:hidden"
+        className="underline-link whitespace-nowrap text-link lg:hidden"
       >
         У вас нет учетной записи? Создать Аккаунт
       </Link>

@@ -107,14 +107,14 @@ function SignInEmailForm() {
     <>
       <div className="flex flex-1 flex-col items-center justify-center p-6">
         <div className="flex w-full max-w-[456px] flex-col items-center">
-          <Form {...form}>
-            <form className="w-full" onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="flex flex-col items-center gap-7">
-                <AuthHeading className="text-[32px]">
-                  Войдите в Tablebuilder
-                </AuthHeading>
+          <div className="flex w-full flex-col items-center gap-7">
+            <AuthHeading className="text-[32px]">
+              Войдите в Tablebuilder
+            </AuthHeading>
 
-                <div className="flex w-full flex-col xs:max-w-[320px]">
+            <div className="flex w-full flex-col xs:max-w-[320px]">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
                   <div className="flex flex-col gap-3">
                     <FormField
                       control={form.control}
@@ -148,25 +148,25 @@ function SignInEmailForm() {
                       Продолжить по Почте
                     </Button>
                   </div>
+                </form>
+              </Form>
 
-                  <div className="mt-6 flex flex-col items-center">
-                    <span className="border-b border-b-transparent text-link hover:border-link">
-                      <Link
-                        href={{
-                          pathname: "/signin",
-                          query: searchParams.toString(),
-                        }}
-                        className="flex items-center gap-1 text-sm"
-                      >
-                        <LucideIcon name="MoveLeft" />
-                        Другие варианты входа
-                      </Link>
-                    </span>
-                  </div>
-                </div>
+              <div className="mt-6 flex flex-col items-center">
+                <span className="border-b border-b-transparent text-link hover:border-link">
+                  <Link
+                    href={{
+                      pathname: "/signin",
+                      query: searchParams.toString(),
+                    }}
+                    className="flex items-center gap-1"
+                  >
+                    <LucideIcon name="MoveLeft" />
+                    Другие варианты входа
+                  </Link>
+                </span>
               </div>
-            </form>
-          </Form>
+            </div>
+          </div>
         </div>
       </div>
 
