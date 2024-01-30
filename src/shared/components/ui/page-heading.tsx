@@ -1,23 +1,24 @@
 import { cva, VariantProps } from "class-variance-authority"
-import { Balancer } from "react-wrap-balancer"
+
+// import { Balancer } from "react-wrap-balancer"
 
 import { cn } from "@/shared/lib/utils"
 
-const headingVariants = cva("tracking-tighter", {
+const headingVariants = cva("!tracking-tighter !leading-tight", {
   variants: {
     variant: {
       gradient:
         "text-transparent bg-clip-text bg-gradient-to-b from-primary/85 to-primary",
     },
     size: {
-      default: "text-[32px] leading-[1.1]",
+      default: "text-[32px]",
       logo: "text-[24px] leading-none",
-      xs: "text-[32px] sm:text-[36px] leading-[1.1]",
-      sm: "text-[36px] sm:text-[40px] leading-[1.1]",
-      md: "text-[32px] sm:text-[52px] leading-[1.1]",
-      lg: "text-[32px] sm:text-[60px] leading-[1.1]",
-      xl: "text-[32px] sm:text-[56px] lg:text-[72px] leading-[1.05]",
-      xxl: "text-[40px] sm:text-[64px] lg:text-[80px] leading-[1.05]",
+      xs: "text-[32px] sm:text-[36px]",
+      sm: "text-[36px] sm:text-[40px] ",
+      md: "text-[32px] sm:text-[52px] ",
+      lg: "text-[32px] sm:text-[60px] ",
+      xl: "text-[32px] sm:text-[56px] lg:text-[72px]",
+      xxl: "text-[40px] sm:text-[64px] lg:text-[80px]",
     },
   },
   defaultVariants: {
@@ -39,8 +40,7 @@ function PageHeading({
   ...props
 }: PageHeadingProps) {
   return (
-    <Balancer
-      as={Comp}
+    <Comp
       className={cn(headingVariants({ variant, size, className }))}
       {...props}
     />

@@ -118,94 +118,102 @@ function InitialDataStep() {
   return (
     <div className="flex w-full max-w-[456px] flex-col items-center pt-28">
       <form className="w-full" onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="flex flex-col gap-7">
+        <div className="flex flex-col items-center gap-7">
           <AuthHeading>Создайте Аккаунт Tablebuilder</AuthHeading>
 
-          <FormItem>
-            <FormLabel className="text-sm text-tertiary">
-              План подписки
-            </FormLabel>
-            <FormField
-              control={form.control}
-              name="subscriptionPlan"
-              render={({ field }) => (
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="flex flex-col gap-3"
-                  >
-                    {subscriptionPlans.map((plan, i) => (
-                      <div key={i}>
-                        <RadioGroupItem
-                          value={plan.value}
-                          id={plan.value}
-                          className="sr-only"
-                        />
-                        <Label
-                          htmlFor={plan.value}
-                          className={cn(
-                            "flex items-center justify-between rounded-md border p-3 transition hover:cursor-pointer hover:bg-muted",
-                            field.value === plan.value &&
-                              "border-blue/30 bg-blue/10 hover:bg-blue/10"
-                          )}
-                        >
-                          <div className="flex flex-col gap-1 text-sm">
-                            <p className="font-medium">{plan.title}</p>
-                            <p className="text-tertiary">{plan.description}</p>
-                          </div>
-                          <span
-                            className={cn(
-                              "flex size-4 items-center justify-center rounded-full ring-1 transition",
-                              field.value === plan.value
-                                ? "bg-blue ring-blue"
-                                : "ring-border"
-                            )}
-                          >
-                            {field.value === plan.value && (
-                              <LucideIcon
-                                name="Check"
-                                strokeWidth={2}
-                                className="size-3 text-white"
-                              />
-                            )}
-                          </span>
-                        </Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              )}
-            />
-          </FormItem>
-
-          <div className="flex flex-col gap-4 pt-3">
-            {isSubscriptionPlanSelected && (
+          <div className="flex w-full flex-col">
+            <FormItem>
+              <FormLabel className="text-sm text-tertiary">
+                План подписки
+              </FormLabel>
               <FormField
                 control={form.control}
-                name="username"
+                name="subscriptionPlan"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm text-tertiary">
-                      Имя пользователя
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        autoFocus
-                        type="text"
-                        maxLength={32}
-                        className="h-14 rounded-2xl"
-                        {...field}
-                      />
-                    </FormControl>
-                  </FormItem>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex flex-col gap-3"
+                    >
+                      {subscriptionPlans.map((plan, i) => (
+                        <div key={i}>
+                          <RadioGroupItem
+                            value={plan.value}
+                            id={plan.value}
+                            className="sr-only"
+                          />
+                          <Label
+                            htmlFor={plan.value}
+                            className={cn(
+                              "flex items-center justify-between rounded-md border p-3 transition hover:cursor-pointer hover:bg-muted",
+                              field.value === plan.value &&
+                                "border-blue/30 bg-blue/10 hover:bg-blue/10"
+                            )}
+                          >
+                            <div className="flex flex-col gap-1 text-sm">
+                              <p className="font-medium">{plan.title}</p>
+                              <p className="text-tertiary">
+                                {plan.description}
+                              </p>
+                            </div>
+                            <span
+                              className={cn(
+                                "flex size-4 items-center justify-center rounded-full ring-1 transition",
+                                field.value === plan.value
+                                  ? "bg-blue ring-blue"
+                                  : "ring-border"
+                              )}
+                            >
+                              {field.value === plan.value && (
+                                <LucideIcon
+                                  name="Check"
+                                  strokeWidth={2}
+                                  className="size-3 text-white"
+                                />
+                              )}
+                            </span>
+                          </Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
                 )}
               />
-            )}
+            </FormItem>
 
-            <Button type="submit" disabled={!form.formState.isValid} size="xl">
-              Продолжить
-            </Button>
+            <div className="flex flex-col gap-4 pt-10">
+              {isSubscriptionPlanSelected && (
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm text-tertiary">
+                        Имя пользователя
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          autoFocus
+                          type="text"
+                          maxLength={32}
+                          className="h-14 rounded-2xl"
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              )}
+
+              <Button
+                type="submit"
+                disabled={!form.formState.isValid}
+                size="xl"
+              >
+                Продолжить
+              </Button>
+            </div>
           </div>
         </div>
       </form>
@@ -221,9 +229,9 @@ function ChooseSignUpMethodStep() {
   return (
     <div className="flex w-full max-w-[456px] flex-col items-center pt-28">
       <div className="flex flex-col items-center gap-7">
-        <AuthHeading>Выберите Способ Создать Аккаунт</AuthHeading>
+        <AuthHeading>Выберите Способ Создать&nbsp;Аккаунт</AuthHeading>
 
-        <div className="flex w-full max-w-[320px] flex-col">
+        <div className="flex w-full flex-col xs:max-w-[320px]">
           <OAuthSignUpButtons {...initialForm.getValues()} />
 
           <ContinueAuthWith />
@@ -320,9 +328,9 @@ function EmailSignUpStep() {
       <Form {...emailForm}>
         <form className="w-full" onSubmit={emailForm.handleSubmit(onSubmit)}>
           <div className="flex flex-col items-center gap-7">
-            <AuthHeading>Зарегистрируйтесь в Tablebuilder</AuthHeading>
+            <AuthHeading>Зарегистрируйтесь в&nbsp;Tablebuilder</AuthHeading>
 
-            <div className="flex w-full max-w-[320px] flex-col">
+            <div className="flex w-full flex-col xs:max-w-[320px]">
               <div className="flex flex-col gap-3">
                 <FormField
                   control={emailForm.control}
